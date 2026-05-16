@@ -703,9 +703,74 @@
     .toc { grid-template-columns: 1fr; }
     .exp-result-grid { grid-template-columns: repeat(2, 1fr); }
   }
+
+  /* ── HUB NAV ── */
+  .hub-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 48px;
+    background: rgba(11, 13, 15, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(245,166,35,0.15);
+  }
+
+  .hub-back {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Cousine', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--fog);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .hub-back:hover { color: var(--gold); }
+
+  .hub-back-arrow {
+    font-size: 14px;
+    transition: transform 0.2s;
+  }
+
+  .hub-back:hover .hub-back-arrow { transform: translateX(-3px); }
+
+  .hub-title {
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(245,166,35,0.3);
+    text-transform: uppercase;
+  }
+
+  .hub-indicator {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: var(--glow-g);
+    animation: enginePulse 2s infinite;
+  }
+
+  body { padding-top: 48px; }
 </style>
 </head>
 <body>
+
+<nav class="hub-nav">
+  <a class="hub-back" href="nms-hub.html">
+    <span class="hub-back-arrow">←</span>
+    <span>Traveller's Codex</span>
+  </a>
+  <span class="hub-title">Manual II · Fleet Operations</span>
+  <span class="hub-indicator"></span>
+</nav>
 
 <div class="engine-glow"></div>
 <div class="engine-glow2"></div>

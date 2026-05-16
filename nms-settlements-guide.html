@@ -530,9 +530,75 @@
   ::-webkit-scrollbar-track { background: var(--void); }
   ::-webkit-scrollbar-thumb { background: var(--muted); }
   ::-webkit-scrollbar-thumb:hover { background: var(--neon); }
+
+  /* ── HUB NAV ── */
+  .hub-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 48px;
+    background: rgba(5, 10, 15, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,229,255,0.12);
+  }
+
+  .hub-back {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .hub-back:hover { color: var(--neon); }
+
+  .hub-back-arrow {
+    font-size: 14px;
+    transition: transform 0.2s;
+  }
+
+  .hub-back:hover .hub-back-arrow { transform: translateX(-3px); }
+
+  .hub-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(0,229,255,0.35);
+    text-transform: uppercase;
+  }
+
+  .hub-indicator {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--neon);
+    box-shadow: 0 0 8px var(--neon);
+    animation: pulse 2s infinite;
+  }
+
+  /* Push content below fixed nav */
+  body { padding-top: 48px; }
 </style>
 </head>
 <body>
+
+<nav class="hub-nav">
+  <a class="hub-back" href="nms-hub.html">
+    <span class="hub-back-arrow">←</span>
+    <span>Traveller's Codex</span>
+  </a>
+  <span class="hub-title">Manual I · Settlements</span>
+  <span class="hub-indicator"></span>
+</nav>
 
 <div class="nebula"></div>
 <div class="nebula2"></div>
