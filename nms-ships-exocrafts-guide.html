@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No Man's Sky — Ships, Exocrafts & Upgrades</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:   #080808;
+    --dark:    #0f0f0f;
+    --base:    #141414;
+    --surface: #1a1a1a;
+    --raised:  #202020;
+    --border:  #2a2a2a;
+    --border2: #333;
+    --red:     #e8251a;
+    --red2:    #ff3d30;
+    --red-dim: rgba(232,37,26,0.12);
+    --red-glow:0 0 30px rgba(232,37,26,0.4);
+    --white:   #f5f5f5;
+    --offwhite:#d0d0d0;
+    --muted:   #666;
+    --text:    #999;
+    --dim:     #444;
+    --yellow:  #f0c040;
+    --blue:    #4a90d9;
+    --green:   #44bb77;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ── HALFTONE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 18px 18px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── RED GLOW PULSE ── */
+  .red-glow {
+    position: fixed;
+    width: 600px; height: 300px;
+    top: -100px; left: -100px;
+    background: radial-gradient(ellipse, rgba(232,37,26,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: glowPulse 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes glowPulse {
+    from { opacity: 0.5; transform: scale(1); }
+    to   { opacity: 1;   transform: scale(1.1); }
+  }
+
+  /* ── HUB NAV ── */
+  .hub-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 48px;
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(232,37,26,0.2);
+  }
+
+  .hub-back {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .hub-back:hover { color: var(--red2); }
+  .hub-back-arrow { font-size: 14px; transition: transform 0.2s; }
+  .hub-back:hover .hub-back-arrow { transform: translateX(-3px); }
+
+  .hub-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(232,37,26,0.35);
+    text-transform: uppercase;
+  }
+
+  .hub-indicator {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: var(--red-glow);
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 28px;
+    position: relative;
+    z-index: 1;
+    padding-top: 48px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 56px 0 48px;
+    position: relative;
+    border-bottom: 3px solid var(--red);
+    margin-bottom: 48px;
+  }
+
+  .header-stamp {
+    position: absolute;
+    top: 48px; right: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--red);
+    opacity: 0.06;
+    letter-spacing: 4px;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 32px; height: 2px;
+    background: var(--red);
+    box-shadow: var(--red-glow);
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 10vw, 100px);
+    color: var(--white);
+    line-height: 0.88;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  h1 span {
+    display: block;
+    color: var(--red);
+    text-shadow: var(--red-glow);
+    font-size: 0.38em;
+    letter-spacing: 8px;
+    margin-bottom: 4px;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .hm-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--border2);
+    padding: 5px 12px;
+    color: var(--muted);
+  }
+
+  .hm-pill.active {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--base);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--red);
+    padding: 20px 24px 20px 28px;
+    margin-bottom: 52px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 32px;
+  }
+
+  .toc-head {
+    grid-column: 1/-1;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--red);
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toc a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 1px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    transition: color 0.15s;
+  }
+
+  .toc a:hover { color: var(--offwhite); }
+  .toc-n { color: var(--red); font-size: 9px; opacity: 0.7; flex-shrink: 0; }
+
+  /* ── SECTION ── */
+  .section { margin: 56px 0; }
+
+  .sec-head {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 12px;
+  }
+
+  .sec-bar {
+    width: 4px;
+    align-self: stretch;
+    background: var(--red);
+    flex-shrink: 0;
+    margin-right: 16px;
+  }
+
+  .sec-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(26px, 4vw, 40px);
+    color: var(--white);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: var(--red2);
+    text-transform: uppercase;
+    margin: 24px 0 12px;
+  }
+
+  p { font-size: 15px; margin-bottom: 12px; }
+  strong { color: var(--offwhite); font-weight: 500; }
+
+  /* ── SHIP CLASS CARDS ── */
+  .ship-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
+  .ship-card {
+    background: var(--base);
+    padding: 20px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+
+  .ship-card:hover { background: var(--surface); }
+
+  .ship-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .ship-card:hover::after { transform: scaleX(1); }
+
+  .sc-icon { font-size: 28px; display: block; margin-bottom: 10px; }
+
+  .sc-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--white);
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .sc-role {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--red);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .ship-card p { font-size: 12px; margin: 0; }
+
+  /* ── STAT BARS ── */
+  .stat-group { margin: 14px 0; }
+
+  .sbar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 7px 0;
+  }
+
+  .sbar-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--dim);
+    text-transform: uppercase;
+    width: 120px;
+    flex-shrink: 0;
+  }
+
+  .sbar {
+    flex: 1;
+    height: 4px;
+    background: var(--raised);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sbar-fill {
+    height: 100%;
+    background: var(--red);
+    position: relative;
+  }
+
+  .sbar-fill.g { background: var(--green); }
+  .sbar-fill.b { background: var(--blue); }
+  .sbar-fill.y { background: var(--yellow); }
+
+  .sbar-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    width: 30px;
+    text-align: right;
+  }
+
+  /* ── TABLES ── */
+  .dtable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 14px 0;
+  }
+
+  .dtable th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--offwhite);
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    background: var(--raised);
+    border-bottom: 1px solid var(--red);
+  }
+
+  .dtable td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--base);
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .dtable tr:hover td { background: var(--surface); }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    text-transform: uppercase;
+    vertical-align: middle;
+  }
+
+  .bs { background: rgba(232,37,26,0.12);  color:var(--red2);   border:1px solid rgba(232,37,26,0.3); }
+  .ba { background: rgba(240,192,64,0.1);  color:var(--yellow); border:1px solid rgba(240,192,64,0.3); }
+  .bb { background: rgba(74,144,217,0.1);  color:var(--blue);   border:1px solid rgba(74,144,217,0.3); }
+  .bg { background: rgba(68,187,119,0.1);  color:var(--green);  border:1px solid rgba(68,187,119,0.3); }
+  .bd { background: rgba(80,80,80,0.15);   color:var(--muted);  border:1px solid rgba(80,80,80,0.25); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--base);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--red);
+    padding: 15px 18px;
+    margin: 14px 0;
+  }
+
+  .callout.yellow { border-left-color: var(--yellow); }
+  .callout.green  { border-left-color: var(--green); }
+  .callout.blue   { border-left-color: var(--blue); }
+
+  .ct {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 7px;
+  }
+
+  .callout.yellow .ct { color: var(--yellow); }
+  .callout.green  .ct { color: var(--green); }
+  .callout.blue   .ct { color: var(--blue); }
+
+  .callout p { font-size: 14px; margin: 0; }
+
+  /* ── STEPS ── */
+  .steps { margin: 14px 0; }
+
+  .step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 11px;
+    align-items: flex-start;
+  }
+
+  .step-n {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--black);
+    background: var(--red);
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    letter-spacing: 0;
+  }
+
+  .step-b { flex: 1; font-size: 14px; padding-top: 3px; }
+  .step-b strong { color: var(--offwhite); }
+
+  /* ── BULLET LIST ── */
+  ul.bl { list-style: none; margin: 10px 0; }
+
+  ul.bl li {
+    font-size: 14px;
+    padding: 6px 0 6px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  ul.bl li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--red);
+    font-size: 12px;
+  }
+
+  /* ── UPGRADE MODULE GRID ── */
+  .upgrade-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 10px;
+    margin: 14px 0;
+  }
+
+  .upg-card {
+    background: var(--base);
+    border: 1px solid var(--border);
+    padding: 16px 14px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+
+  .upg-card:hover { border-color: var(--red); }
+
+  .upg-icon { font-size: 20px; display: block; margin-bottom: 7px; }
+
+  .upg-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--offwhite);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .upg-type {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--red);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .upg-card p { font-size: 12px; margin: 0; }
+
+  /* ── EXOCRAFT CARDS ── */
+  .exo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin: 14px 0;
+  }
+
+  .exo-card {
+    background: var(--base);
+    border: 1px solid var(--border);
+    padding: 0;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .exo-card:hover { border-color: rgba(232,37,26,0.5); }
+
+  .exo-header {
+    background: var(--raised);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .exo-icon { font-size: 26px; }
+
+  .exo-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--white);
+    letter-spacing: 1px;
+    display: block;
+  }
+
+  .exo-role {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--red);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .exo-body { padding: 14px 16px; }
+  .exo-body p { font-size: 13px; margin-bottom: 10px; }
+
+  .exo-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .exo-stat {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+    background: var(--raised);
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── CLASS COMPARISON ── */
+  .class-compare {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin: 14px 0;
+  }
+
+  .cc-cell {
+    background: var(--base);
+    padding: 14px 12px;
+    text-align: center;
+  }
+
+  .cc-cell.hdr {
+    background: var(--raised);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 8px 10px;
+  }
+
+  .cc-letter {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .s-col .cc-letter { color: #ffdd44; text-shadow: 0 0 14px rgba(255,220,68,0.5); }
+  .a-col .cc-letter { color: #44ddaa; text-shadow: 0 0 12px rgba(68,221,170,0.4); }
+  .b-col .cc-letter { color: #6699ff; text-shadow: 0 0 12px rgba(100,150,255,0.4); }
+  .c-col .cc-letter { color: #888; }
+
+  .cc-cell p { font-size: 11px; margin: 0; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border2);
+  }
+
+  .divider span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--dim);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 3px solid var(--red);
+    padding: 32px 0 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 64px;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--red);
+    letter-spacing: 2px;
+    text-shadow: var(--red-glow);
+  }
+
+  .footer-info {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    text-transform: uppercase;
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--red); }
+
+  @media (max-width: 640px) {
+    .toc, footer { grid-template-columns: 1fr; }
+    .class-compare { grid-template-columns: repeat(2,1fr); }
+    .footer-info { text-align: left; }
+    h1 { font-size: clamp(44px, 12vw, 80px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="red-glow"></div>
+
+<nav class="hub-nav">
+  <a class="hub-back" href="nms-hub.html">
+    <span class="hub-back-arrow">←</span>
+    <span>Traveller's Codex</span>
+  </a>
+  <span class="hub-title">Manual IV · Vessels &amp; Craft</span>
+  <span class="hub-indicator"></span>
+</nav>
+
+<div class="page">
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="header-stamp">CLASSIFIED</div>
+    <div class="eyebrow">Starship Intelligence · Vessel Command</div>
+    <h1>
+      <span>// hangar manifest</span>
+      Ships,<br>Exocrafts<br>&amp; Upgrades
+    </h1>
+    <div class="header-meta">
+      <div class="hm-pill active">Manual IV</div>
+      <div class="hm-pill">All Platforms</div>
+      <div class="hm-pill">Worlds Update Era</div>
+    </div>
+  </header>
+
+  <!-- ── TOC ── -->
+  <nav class="toc reveal">
+    <div class="toc-head">// Contents</div>
+    <a href="#ship-classes"><span class="toc-n">01</span> Ship Classes</a>
+    <a href="#finding"><span class="toc-n">02</span> Finding Ships</a>
+    <a href="#ship-building"><span class="toc-n">03</span> Custom Ship Building</a>
+    <a href="#living-ships"><span class="toc-n">04</span> Living Ships</a>
+    <a href="#ship-upgrades"><span class="toc-n">05</span> Ship Upgrades</a>
+    <a href="#multi-tools"><span class="toc-n">06</span> Multi-Tools</a>
+    <a href="#exocrafts"><span class="toc-n">07</span> Exocrafts</a>
+    <a href="#exo-upgrades"><span class="toc-n">08</span> Exocraft Upgrades</a>
+    <a href="#tips"><span class="toc-n">09</span> Pro Tips</a>
+  </nav>
+
+  <!-- ══════════════════════════ -->
+  <!-- 01 · SHIP CLASSES         -->
+  <!-- ══════════════════════════ -->
+  <div class="section reveal" id="ship-classes">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <div>
+        <span class="sec-tag">Section 01</span>
+        <h2>Ship Classes</h2>
+      </div>
+    </div>
+
+    <p>Every ship in No Man's Sky belongs to one of six classes, each with distinct stats, bonuses, and visual silhouettes. Choosing the right class for your playstyle is the most impactful equipment decision in the game.</p>
+
+    <div class="ship-grid">
+      <div class="ship-card">
+        <span class="sc-icon">🚀</span>
+        <span class="sc-name">Fighter</span>
+        <span class="sc-role">Combat Specialist</span>
+        <p>Highest damage output and shields. Ideal for space combat, piracy, and sentinel battles. Agile and fast.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">🔭</span>
+        <span class="sc-name">Explorer</span>
+        <span class="sc-role">Hyperdrive Master</span>
+        <p>Best hyperdrive range and scanner bonuses. Built for reaching distant systems and surveying planets.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">📦</span>
+        <span class="sc-name">Hauler</span>
+        <span class="sc-role">Cargo King</span>
+        <p>Largest inventory capacity and best shields. Slow and wide — the trading workhorse for bulk runs.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">🛸</span>
+        <span class="sc-name">Shuttle</span>
+        <span class="sc-role">Jack of All Trades</span>
+        <p>Balanced stats across the board. A solid starter ship, but outclassed by specialists at higher tiers.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">⚡</span>
+        <span class="sc-name">Exotic</span>
+        <span class="sc-role">Rare All-Rounder</span>
+        <p>Always S-class, always unique. Near-maxed stats in all categories. Extremely rare — buy on sight.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">🌿</span>
+        <span class="sc-name">Living Ship</span>
+        <span class="sc-role">Organic Vessel</span>
+        <p>A biological starship grown, not built. Uses unique upgrade organs instead of modules. Separate system entirely.</p>
+      </div>
+    </div>
+
+    <h3>Class Rating System</h3>
+    <p>Each ship type also has a quality class — C, B, A, or S — that determines its base stats, inventory size, and technology slot count. S-class is always best. Within each class, stats are identical regardless of visual design.</p>
+
+    <div class="class-compare">
+      <div class="cc-cell hdr"></div>
+      <div class="cc-cell hdr">Inventory</div>
+      <div class="cc-cell hdr">Tech Slots</div>
+      <div class="cc-cell hdr">Stat Bonus</div>
+
+      <div class="cc-cell s-col"><span class="cc-letter">S</span><p>Best</p></div>
+      <div class="cc-cell"><p>Max (48–60)</p></div>
+      <div class="cc-cell"><p>Up to 21</p></div>
+      <div class="cc-cell"><p>+50–60%</p></div>
+
+      <div class="cc-cell a-col"><span class="cc-letter">A</span><p>Great</p></div>
+      <div class="cc-cell"><p>High</p></div>
+      <div class="cc-cell"><p>Up to 18</p></div>
+      <div class="cc-cell"><p>+35–45%</p></div>
+
+      <div class="cc-cell b-col"><span class="cc-letter">B</span><p>Good</p></div>
+      <div class="cc-cell"><p>Medium</p></div>
+      <div class="cc-cell"><p>Up to 14</p></div>
+      <div class="cc-cell"><p>+20–30%</p></div>
+
+      <div class="cc-cell c-col"><span class="cc-letter">C</span><p>Basic</p></div>
+      <div class="cc-cell"><p>Low</p></div>
+      <div class="cc-cell"><p>Up to 9</p></div>
+      <div class="cc-cell"><p>Minimal</p></div>
+    </div>
+
+    <h3>Ship Class Stat Comparison</h3>
+    <div class="stat-group">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;">Fighter — S-Class</p>
+      <div class="sbar-row"><div class="sbar-label">Damage</div><div class="sbar"><div class="sbar-fill" style="width:95%"></div></div><div class="sbar-val">S</div></div>
+      <div class="sbar-row"><div class="sbar-label">Shield</div><div class="sbar"><div class="sbar-fill" style="width:80%"></div></div><div class="sbar-val">A</div></div>
+      <div class="sbar-row"><div class="sbar-label">Hyperdrive</div><div class="sbar"><div class="sbar-fill b" style="width:40%"></div></div><div class="sbar-val">C</div></div>
+      <div class="sbar-row"><div class="sbar-label">Inventory</div><div class="sbar"><div class="sbar-fill b" style="width:35%"></div></div><div class="sbar-val">C</div></div>
+    </div>
+    <div class="stat-group">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;">Explorer — S-Class</p>
+      <div class="sbar-row"><div class="sbar-label">Damage</div><div class="sbar"><div class="sbar-fill b" style="width:40%"></div></div><div class="sbar-val">C</div></div>
+      <div class="sbar-row"><div class="sbar-label">Shield</div><div class="sbar"><div class="sbar-fill b" style="width:55%"></div></div><div class="sbar-val">B</div></div>
+      <div class="sbar-row"><div class="sbar-label">Hyperdrive</div><div class="sbar"><div class="sbar-fill g" style="width:95%"></div></div><div class="sbar-val">S</div></div>
+      <div class="sbar-row"><div class="sbar-label">Scanner</div><div class="sbar"><div class="sbar-fill g" style="width:90%"></div></div><div class="sbar-val">S</div></div>
+    </div>
+    <div class="stat-group">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;">Hauler — S-Class</p>
+      <div class="sbar-row"><div class="sbar-label">Damage</div><div class="sbar"><div class="sbar-fill b" style="width:45%"></div></div><div class="sbar-val">C</div></div>
+      <div class="sbar-row"><div class="sbar-label">Shield</div><div class="sbar"><div class="sbar-fill" style="width:95%"></div></div><div class="sbar-val">S</div></div>
+      <div class="sbar-row"><div class="sbar-label">Inventory</div><div class="sbar"><div class="sbar-fill g" style="width:98%"></div></div><div class="sbar-val">S</div></div>
+      <div class="sbar-row"><div class="sbar-label">Hyperdrive</div><div class="sbar"><div class="sbar-fill b" style="width:50%"></div></div><div class="sbar-val">B</div></div>
+    </div>
+  </div>
+
+  <div class="divider"><span>// 02</span></div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 02 · FINDING SHIPS        -->
+  <!-- ══════════════════════════ -->
+  <div class="section reveal" id="finding">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <div>
+        <span class="sec-tag">Section 02</span>
+        <h2>Finding Ships</h2>
+      </div>
+    </div>
+
+    <p>Ships are found through several methods. Knowing which method targets which class and type gives you control over what you collect rather than leaving it to chance.</p>
+
+    <h3>Discovery Methods</h3>
+    <div class="exo-grid">
+      <div class="exo-card">
+        <div class="exo-header">
+          <span class="exo-icon">🛸</span>
+          <div>
+            <span class="exo-name">Space Station</span>
+            <span class="exo-role">Passive Landing</span>
+          </div>
+        </div>
+        <div class="exo-body">
+          <p>Ships land regularly at the Space Station hangar. Inspect every ship that docks — check class and stats by approaching and holding the interaction prompt. Best for finding random deals without flying anywhere.</p>
+          <div class="exo-stats">
+            <span class="exo-stat">All types</span>
+            <span class="exo-stat">Random class</span>
+            <span class="exo-stat">Free to wait</span>
+          </div>
+        </div>
+      </div>
+      <div class="exo-card">
+        <div class="exo-header">
+          <span class="exo-icon">🪐</span>
+          <div>
+            <span class="exo-name">Trade Posts</span>
+            <span class="exo-role">Planet Surface</span>
+          </div>
+        </div>
+        <div class="exo-body">
+          <p>Planetary Trade Posts see a constant stream of landing ships. Higher traffic than stations and can spawn rarer designs. Use a Signal Scanner or Planetary Chart to locate them.</p>
+          <div class="exo-stats">
+            <span class="exo-stat">High volume</span>
+            <span class="exo-stat">Any class</span>
+            <span class="exo-stat">Best for S-class</span>
+          </div>
+        </div>
+      </div>
+      <div class="exo-card">
+        <div class="exo-header">
+          <span class="exo-icon">📡</span>
+          <div>
+            <span class="exo-name">Crashed Ships</span>
+            <span class="exo-role">Salvage Recovery</span>
+          </div>
+        </div>
+        <div class="exo-body">
+          <p>Crashed ships are found via Signal Scanner (select Distress Signal) or Planetary Charts. Free to claim but need repairs. Usually C or B class — but can sometimes yield rare designs.</p>
+          <div class="exo-stats">
+            <span class="exo-stat">Free</span>
+            <span class="exo-stat">Needs repair</span>
+            <span class="exo-stat">C/B class mainly</span>
+          </div>
+        </div>
+      </div>
+      <div class="exo-card">
+        <div class="exo-header">
+          <span class="exo-icon">🌌</span>
+          <div>
+            <span class="exo-name">Exotic Hunting</span>
+            <span class="exo-role">System Camping</span>
+          </div>
+        </div>
+        <div class="exo-body">
+          <p>Exotic ships appear in specific system types. Camp at a high-traffic Trade Post and reload saves to reroll landing ships. Coordinate databases (r/NMSCoordinateExchange) list systems with rare Exotic spawns.</p>
+          <div class="exo-stats">
+            <span class="exo-stat">Always S-class</span>
+            <span class="exo-stat">Patience required</span>
+            <span class="exo-stat">Highest value</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Save Scumming for S-Class</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b"><strong>Find an active Trade Post</strong> — land and watch ships arrive. Note the landing frequency.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b"><strong>Manual save</strong> — press the save button (not autosave). This locks your position but rerolls the landing queue.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b"><strong>Wait and inspect</strong> — check each ship that lands. If nothing good arrives after 5–6 ships, reload the save.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b"><strong>Repeat</strong> — each reload rerolls the ship queue. An S-class of your chosen type can appear within a few reloads.</div>
+      </div>
+    </div>
+
+    <div class="callout yellow">
+      <span class="ct">Trade-In Value</span>
+      <p>When buying a new ship, you can <strong>trade in your current ship</strong> for a credit discount on the new one. Always trade in your oldest/lowest-value ship. The trade-in value is based on the ship's class and slot count.</p>
+    </div>
+
+    <h3>Buying on Discount</h3>
+    <p>Ships can sometimes be purchased at a discount from NPCs in these situations:</p>
+    <ul class="bl">
+      <li>NPCs in Space Stations occasionally offer their personal ship for sale at 10–30% below market rate</li>
+      <li>Freighter battles: the defending freighter's captain sometimes offers their escort fighter at a discount after you save them</li>
+      <li>Settlement Hauler Landing Pad: ships that land at your settlement can be purchased at a discount</li>
+      <li>Space Anomaly: the Iteration: Helios sometimes marks ships down for travellers</li>
+    </ul>
+  </div>
+
+  <div class="divider"><span>// 03</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 03 · CUSTOM SHIP BUILDING     -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="ship-building">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <div>
+        <span class="sec-tag">Section 03</span>
+        <h2>Custom Ship Building</h2>
+      </div>
+    </div>
+
+    <p>The <strong>Starship Fabricator</strong> on the Space Anomaly lets you design and build a custom ship from scratch — choosing every visual component individually. This is the best way to get your dream ship with the exact stats, class, and look you want.</p>
+
+    <h3>The Fabrication Process</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b"><strong>Visit the Space Anomaly</strong> — find the Starship Fabricator terminal. It's in the main hall near the blueprint/upgrade vendors.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b"><strong>Choose ship type</strong> — Fighter, Explorer, Hauler, or Shuttle. This determines the base part catalogue available to you.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b"><strong>Unlock parts with Nanites</strong> — each component (cockpit, wing, thruster, body, etc.) must be purchased first. Parts cost 50–800 nanites each.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b"><strong>Assemble your ship</strong> — mix and match unlocked parts freely. Preview updates in real time. Parts from different manufacturers create unique visual hybrids.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-b"><strong>Paint and detail</strong> — choose primary, secondary, and accent colors, plus metallic finishes and decal options.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">6</div>
+        <div class="step-b"><strong>Fabricate and pay</strong> — the final cost is in Units, scaling with part count and complexity. Class is determined randomly — reroll (reload save) for S-class.</div>
+      </div>
+    </div>
+
+    <h3>Part Categories</h3>
+    <div class="upgrade-grid">
+      <div class="upg-card">
+        <span class="upg-icon">🧠</span>
+        <span class="upg-name">Cockpit</span>
+        <span class="upg-type">Visual · Core</span>
+        <p>Defines the front profile and pilot viewport style. One of the most recognizable visual elements.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🦅</span>
+        <span class="upg-name">Wings</span>
+        <span class="upg-type">Visual · Lift</span>
+        <p>Varies from swept-back fighter wings to heavy cargo brackets. Dramatically changes silhouette.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🔥</span>
+        <span class="upg-name">Thrusters</span>
+        <span class="upg-type">Visual · Propulsion</span>
+        <p>Engine pod design. Some glow with plasma effect. Some are bulky industrial, others are sleek racing units.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🛡</span>
+        <span class="upg-name">Body / Hull</span>
+        <span class="upg-type">Visual · Frame</span>
+        <p>The central fuselage. Determines overall mass and silhouette. Mixes with wings for thousands of combos.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🔫</span>
+        <span class="upg-name">Nose / Weapon</span>
+        <span class="upg-type">Visual · Front</span>
+        <p>Front-mounted cannons, sensors, or decorative prows. Fighters have the most aggressive options.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🎨</span>
+        <span class="upg-name">Paint Scheme</span>
+        <span class="upg-type">Visual · Color</span>
+        <p>Full color picker for primary, secondary, and accent zones. Metallic, matte, or pearlescent finishes.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="ct">S-Class Fabrication Strategy</span>
+      <p>Build your ideal ship visually, then <strong>save before fabricating</strong>. Check the resulting class — if it's not S, reload and fabricate again. The class is rolled at the moment of fabrication, not during design. Each reload gives a new roll. Average reloads for S-class: 3–8.</p>
+    </div>
+
+    <h3>Sentinel Ships (Interceptors)</h3>
+    <p>Sentinel Interceptors are a special ship type obtained only by defeating Sentinel capital ships in corrupted star systems. They have unique organic-mechanical hybrid visuals and can be upgraded using salvaged Sentinel components.</p>
+
+    <ul class="bl">
+      <li>Find a <strong>Dissonant planet</strong> (look for the Dissonance indicator in the system scan)</li>
+      <li>Destroy Sentinel Walkers on the surface to trigger a capital Sentinel ship encounter</li>
+      <li>Defeat the Hardframe Battle Mech and its escorts in orbit to claim the Interceptor wreck</li>
+      <li>Repair the Interceptor using Sentinel-specific salvage materials found on the planet</li>
+      <li>Stats and design are randomized — reload before landing to reroll for S-class</li>
+    </ul>
+
+    <div class="callout yellow">
+      <span class="ct">Interceptor Visual Parts</span>
+      <p>Sentinel Interceptors have their own modular part system — you can swap their wing, body, and thruster components using other salvaged Interceptor parts. The Anomaly's Fabricator also unlocks Interceptor-specific parts as you collect more Sentinel salvage.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>// 04</span></div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 04 · LIVING SHIPS         -->
+  <!-- ══════════════════════════ -->
+  <div class="section reveal" id="living-ships">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <div>
+        <span class="sec-tag">Section 04</span>
+        <h2>Living Ships</h2>
+      </div>
+    </div>
+
+    <p>Living Ships are <strong>biological starships</strong> — grown, not manufactured. They are fundamentally different from regular ships: no standard technology modules can be installed, and they use unique organic upgrade systems.</p>
+
+    <h3>Obtaining a Living Ship</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b"><strong>Start the Starbirth mission</strong> — Purchase a <strong>Void Egg</strong> from the Space Anomaly for 3,200 Quicksilver. This triggers the questline.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b"><strong>Feed the Void Egg</strong> — Use your pulse drive across multiple star systems while carrying the egg. It hatches through a series of encounters.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b"><strong>Complete the Starbirth chain</strong> — A multi-step mission involving organic materials and specific activities. Ends with your Living Ship emerging fully grown.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b"><strong>Upgrade with Tainted Metal</strong> — Organic upgrades (Grafted Eyes, Neural Assembly, etc.) are purchased using Tainted Metal, earned from Sentinel combat.</div>
+      </div>
+    </div>
+
+    <h3>Living Ship Upgrade Organs</h3>
+    <div class="upgrade-grid">
+      <div class="upg-card">
+        <span class="upg-icon">👁</span>
+        <span class="upg-name">Grafted Eyes</span>
+        <span class="upg-type">Scanner System</span>
+        <p>Replaces scanner module. Upgrades increase scan range and discovery bonuses.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🧠</span>
+        <span class="upg-name">Neural Assembly</span>
+        <span class="upg-type">Hyperdrive Analogue</span>
+        <p>Organic equivalent of a hyperdrive. Upgrades extend warp range and unlock colored star access.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🫀</span>
+        <span class="upg-name">Pulsing Heart</span>
+        <span class="upg-type">Engine System</span>
+        <p>Powers the ship's pulse drive equivalent. Upgrades improve boost and atmospheric performance.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🦠</span>
+        <span class="upg-name">Scream Suppressor</span>
+        <span class="upg-type">Shield Analogue</span>
+        <p>The living ship's shield system. Regenerates organically over time.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🌀</span>
+        <span class="upg-name">Singularity Cortex</span>
+        <span class="upg-type">Weapons System</span>
+        <p>Living Ship's primary weapon. Fires a singularity beam that pulls targets together.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🫁</span>
+        <span class="upg-name">Bio-Mechanical Fins</span>
+        <span class="upg-type">Maneuverability</span>
+        <p>Improves agility and atmospheric handling. Also reduces hazard drain in extreme environments.</p>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <span class="ct">Living Ship Advantage</span>
+      <p>Living Ships can use <strong>Void Catalysts</strong> to gain temporary combat boosts, and their shields <em>regenerate passively</em> without needing materials. They're among the most fun ships to use once fully upgraded, though the upgrade path is slower than standard ships.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>// 05</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 05 · SHIP UPGRADES           -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="ship-upgrades">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <div>
+        <span class="sec-tag">Section 05</span>
+        <h2>Ship Upgrades</h2>
+      </div>
+    </div>
+
+    <p>Ship upgrades are technology modules installed in the dedicated Technology grid. Stacking same-category modules with <strong>adjacency bonuses</strong> is the key to maximum ship performance.</p>
+
+    <h3>Core Upgrade Categories</h3>
+    <div class="upgrade-grid">
+      <div class="upg-card">
+        <span class="upg-icon">⚡</span>
+        <span class="upg-name">Pulse Engine</span>
+        <span class="upg-type">Propulsion</span>
+        <p>Boosts atmospheric speed, boost strength, and pulse drive efficiency. Stack 3 for max planetary travel speed.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🌌</span>
+        <span class="upg-name">Hyperdrive</span>
+        <span class="upg-type">Warp Range</span>
+        <p>Increases warp range per jump. Unlock Emeril, Cadmium, and Indium drives for colored star access.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🔫</span>
+        <span class="upg-name">Photon Cannon</span>
+        <span class="upg-type">Weapons</span>
+        <p>Primary space weapon. Upgrades increase damage, fire rate, and heat dissipation. Best general-purpose weapon.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">💥</span>
+        <span class="upg-name">Phase Beam</span>
+        <span class="upg-type">Weapons</span>
+        <p>Laser that drains enemy shields fast. Best for sustained fights. Synergizes well with shield upgrades.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🚀</span>
+        <span class="upg-name">Rocket Launcher</span>
+        <span class="upg-type">Weapons</span>
+        <p>High burst damage. Ideal for quickly destroying large targets. Limited ammo — use strategically.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🛡</span>
+        <span class="upg-name">Deflector Shield</span>
+        <span class="upg-type">Defense</span>
+        <p>Increases shield strength and regeneration rate. Stack 3 adjacent to each other for maximum protection.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">📡</span>
+        <span class="upg-name">Scanning Array</span>
+        <span class="upg-type">Survey</span>
+        <p>Increases planetary scan range and reveals resource deposits from orbit. Essential for Explorers.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🧲</span>
+        <span class="upg-name">Launch Thruster</span>
+        <span class="upg-type">Takeoff</span>
+        <p>Reduces Launch Thruster fuel cost per takeoff. Fully upgraded can reduce cost by up to 75%. Always worth installing.</p>
+      </div>
+    </div>
+
+    <h3>Adjacency Bonus Rules</h3>
+    <div class="callout">
+      <span class="ct">Critical Mechanic</span>
+      <p>Placing same-category upgrade modules <strong>directly adjacent</strong> to each other (horizontally or vertically, not diagonally) grants a bonus to all connected modules. A cluster of 3 adjacent S-class Hyperdrive modules massively outperforms 3 non-adjacent ones. Always plan your technology grid layout before installing.</p>
+    </div>
+
+    <ul class="bl">
+      <li>Up to <strong>3 upgrade modules</strong> of the same type can be installed per ship</li>
+      <li>The base technology (e.g. Hyperdrive) must be installed before upgrade modules</li>
+      <li>Upgrade modules should always be adjacent to the base technology AND each other</li>
+      <li>S-class upgrades give the highest per-module bonus — always worth the nanite investment</li>
+      <li>Use the Technology inventory grid's visual layout to plan adjacency clusters before purchasing</li>
+    </ul>
+
+    <h3>Where to Get Upgrades</h3>
+    <div class="dtable-wrap">
+      <table class="dtable">
+        <thead>
+          <tr><th>Source</th><th>Currency</th><th>Best For</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Space Station Tech Merchant</td><td>Units</td><td>Blueprints for crafting</td></tr>
+          <tr><td>Space Anomaly (Iteration: Selene)</td><td>Nanites</td><td>S-class pre-built modules</td></tr>
+          <tr><td>Salvaged Upgrade Modules</td><td>Found / Dismantled</td><td>Random class upgrades, free</td></tr>
+          <tr><td>Derelict Freighters</td><td>Time (run)</td><td>Rare upgrade drops</td></tr>
+          <tr><td>Mission Rewards</td><td>Completing quests</td><td>Specific upgrade types</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Recommended Priority Order</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b"><strong>Launch Thruster upgrades</strong> — Reduce the ongoing cost of takeoffs. The QoL payoff is immediate.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b"><strong>Hyperdrive + colored star drives</strong> — Open up the full galaxy. Cadmium, Emeril, and Indium drives unlock red, green, and blue stars.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b"><strong>Pulse Engine ×3</strong> — Dramatically improves how fast and fun planetary flight feels.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b"><strong>Weapons ×3 (your primary)</strong> — Choose your main weapon and max it out before adding secondary weapons.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-b"><strong>Shield ×3</strong> — Survival during combat becomes dramatically easier with a fully-upgraded Deflector Shield.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>// 06</span></div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 06 · MULTI-TOOLS          -->
+  <!-- ══════════════════════════ -->
+  <div class="section reveal" id="multi-tools">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <div>
+        <span class="sec-tag">Section 06</span>
+        <h2>Multi-Tools</h2>
+      </div>
+    </div>
+
+    <p>The Multi-Tool is your handheld device for mining, scanning, and combat. Like ships, they come in multiple types and classes with significant stat differences.</p>
+
+    <h3>Multi-Tool Types</h3>
+    <div class="ship-grid">
+      <div class="ship-card">
+        <span class="sc-icon">🔫</span>
+        <span class="sc-name">Pistol</span>
+        <span class="sc-role">Balanced</span>
+        <p>Compact and portable. Good mining and decent combat. Best starter type. Widely available.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">🪖</span>
+        <span class="sc-name">Rifle</span>
+        <span class="sc-role">Combat Focus</span>
+        <p>High damage output. More tech slots than pistol. Best for sentinel fighting builds.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">⚗</span>
+        <span class="sc-name">Experimental</span>
+        <span class="sc-role">Scanner Specialist</span>
+        <p>Highest scan bonuses. Best for discovering flora and fauna for nanite income.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">🌿</span>
+        <span class="sc-name">Alien</span>
+        <span class="sc-role">Mining Specialist</span>
+        <p>Best mining bonuses. Top choice for efficient resource gathering. Harder to find.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">🔮</span>
+        <span class="sc-name">Royal</span>
+        <span class="sc-role">Premium</span>
+        <p>Rare, beautiful designs with excellent balanced stats. Found in specific system types.</p>
+      </div>
+    </div>
+
+    <h3>Finding Multi-Tools</h3>
+    <ul class="bl">
+      <li><strong>Space Station cabinets</strong> — interact with the display case behind the Exosuit upgrade NPC. Offers one tool per station.</li>
+      <li><strong>Alien NPCs</strong> on planets and stations sometimes offer their personal tool for purchase</li>
+      <li><strong>Minor Settlements</strong> and <strong>Observatories</strong> sometimes have a cabinet with a tool inside</li>
+      <li><strong>Space Anomaly</strong> — the Iteration: Cronus station has a rotating multi-tool for sale</li>
+      <li>Save-scumming works for tools too: reload before interacting with a cabinet to reroll class and stats</li>
+    </ul>
+
+    <h3>Key Multi-Tool Upgrades</h3>
+    <div class="upgrade-grid">
+      <div class="upg-card">
+        <span class="upg-icon">⛏</span>
+        <span class="upg-name">Mining Beam</span>
+        <span class="upg-type">Resource Gathering</span>
+        <p>Upgrade to increase mining speed and heat tolerance. Stack 3 for near-instant resource extraction.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">💥</span>
+        <span class="upg-name">Boltcaster</span>
+        <span class="upg-type">Combat</span>
+        <p>Primary combat weapon. Stack 3 upgrades for serious damage output against sentinels.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🌊</span>
+        <span class="upg-name">Scatter Blaster</span>
+        <span class="upg-type">Close Combat</span>
+        <p>Shotgun-style close-range weapon. Devastating against single targets at short range.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🔭</span>
+        <span class="upg-name">Analysis Visor</span>
+        <span class="upg-type">Scanner</span>
+        <p>Upgrades reveal more resource deposits and increase scan bonus per discovery. Key for nanite farming.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">💣</span>
+        <span class="upg-name">Plasma Launcher</span>
+        <span class="upg-type">Area Damage</span>
+        <p>Fires explosive rounds. Excellent for clearing groups of sentinels. Also useful for terrain manipulation.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🔬</span>
+        <span class="upg-name">Terrain Manipulator</span>
+        <span class="upg-type">Excavation</span>
+        <p>Digs and places terrain. Essential for cave mining and base building. Upgrade for faster excavation.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>// 07</span></div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 07 · EXOCRAFTS            -->
+  <!-- ══════════════════════════ -->
+  <div class="section reveal" id="exocrafts">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <div>
+        <span class="sec-tag">Section 07</span>
+        <h2>Exocrafts</h2>
+      </div>
+    </div>
+
+    <p>Exocrafts are ground and aquatic vehicles you can summon on planetary surfaces. Each fills a different role — from fast scouting to deep mining to underwater exploration. They're invaluable for efficient planet traversal and bulk resource gathering.</p>
+
+    <h3>Unlocking Exocrafts</h3>
+    <p>All Exocrafts are unlocked via the <strong>Exocraft Technician</strong> mission chain, available from the Construction Terminal at your base. Each vehicle requires its own blueprint, crafted from materials you gather. Blueprints are awarded sequentially as you progress through the technician missions.</p>
+
+    <div class="callout blue">
+      <span class="ct">Summoning</span>
+      <p>Once built, Exocrafts are summoned using the <strong>Exocraft Summoning Station</strong> built at your base, or a <strong>Geobay</strong> — the specific landing pad for each vehicle type. You can also summon them from anywhere if you have the <strong>Minotaur Orbital Exocraft Materialiser</strong> freighter upgrade installed.</p>
+    </div>
+
+    <h3>All Exocraft Types</h3>
+    <div class="exo-grid">
+      <div class="exo-card">
+        <div class="exo-header">
+          <span class="exo-icon">🏍</span>
+          <div>
+            <span class="exo-name">Roamer</span>
+            <span class="exo-role">All-Terrain Scout</span>
+          </div>
+        </div>
+        <div class="exo-body">
+          <p>First Exocraft unlocked. Fast, nimble, and practical. Can mine resources and scan deposits. The go-to vehicle for surface exploration on foot-unfriendly terrain.</p>
+          <div class="exo-stats">
+            <span class="exo-stat">Fast</span>
+            <span class="exo-stat">Light armor</span>
+            <span class="exo-stat">Mining capable</span>
+          </div>
+        </div>
+      </div>
+      <div class="exo-card">
+        <div class="exo-header">
+          <span class="exo-icon">🚜</span>
+          <div>
+            <span class="exo-name">Colossus</span>
+            <span class="exo-role">Heavy Hauler</span>
+          </div>
+        </div>
+        <div class="exo-body">
+          <p>Massive, slow, and carries an enormous cargo hold. Best Exocraft for bulk resource runs — the inventory dwarfs everything else. Essential for serious mining operations.</p>
+          <div class="exo-stats">
+            <span class="exo-stat">Huge inventory</span>
+            <span class="exo-stat">Slow</span>
+            <span class="exo-stat">Best for bulk</span>
+          </div>
+        </div>
+      </div>
+      <div class="exo-card">
+        <div class="exo-header">
+          <span class="exo-icon">🤖</span>
+          <div>
+            <span class="exo-name">Minotaur</span>
+            <span class="exo-role">Combat Mech</span>
+          </div>
+        </div>
+        <div class="exo-body">
+          <p>Bipedal mech suit with heavy weapons and shields. Immune to planetary hazards — no suit power drain inside. Best for combat operations and hazardous world exploration.</p>
+          <div class="exo-stats">
+            <span class="exo-stat">Hazard immune</span>
+            <span class="exo-stat">Heavy weapons</span>
+            <span class="exo-stat">Combat focus</span>
+          </div>
+        </div>
+      </div>
+      <div class="exo-card">
+        <div class="exo-header">
+          <span class="exo-icon">🏎</span>
+          <div>
+            <span class="exo-name">Pilgrim</span>
+            <span class="exo-role">Speed Racer</span>
+          </div>
+        </div>
+        <div class="exo-body">
+          <p>Single-seat open-top vehicle with the highest raw speed of all Exocrafts. Not much for mining or combat — pure land traversal at maximum velocity.</p>
+          <div class="exo-stats">
+            <span class="exo-stat">Fastest</span>
+            <span class="exo-stat">Minimal cargo</span>
+            <span class="exo-stat">Travel only</span>
+          </div>
+        </div>
+      </div>
+      <div class="exo-card">
+        <div class="exo-header">
+          <span class="exo-icon">🌊</span>
+          <div>
+            <span class="exo-name">Nautilon</span>
+            <span class="exo-role">Submarine</span>
+          </div>
+        </div>
+        <div class="exo-body">
+          <p>Deep ocean submarine with mining capabilities and weapons. The only vehicle designed for underwater exploration. Essential for ocean planet resource extraction.</p>
+          <div class="exo-stats">
+            <span class="exo-stat">Underwater only</span>
+            <span class="exo-stat">Mining capable</span>
+            <span class="exo-stat">Ocean depths</span>
+          </div>
+        </div>
+      </div>
+      <div class="exo-card">
+        <div class="exo-header">
+          <span class="exo-icon">🛸</span>
+          <div>
+            <span class="exo-name">Nomad</span>
+            <span class="exo-role">Hover Scout</span>
+          </div>
+        </div>
+        <div class="exo-body">
+          <p>Hovers over water and rough terrain. Medium speed with decent cargo. Best for mixed terrain where the Roamer would struggle and the Colossus would be too slow.</p>
+          <div class="exo-stats">
+            <span class="exo-stat">Hover capable</span>
+            <span class="exo-stat">Water crossing</span>
+            <span class="exo-stat">Medium speed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>// 08</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 08 · EXOCRAFT UPGRADES       -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="exo-upgrades">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <div>
+        <span class="sec-tag">Section 08</span>
+        <h2>Exocraft Upgrades</h2>
+      </div>
+    </div>
+
+    <p>Each Exocraft has its own technology grid for upgrades. Modules are specific to each vehicle — a Colossus upgrade won't fit a Roamer. Buy or craft them and install using the same adjacency bonus rules as ships.</p>
+
+    <h3>Universal Upgrade Priorities</h3>
+    <div class="upgrade-grid">
+      <div class="upg-card">
+        <span class="upg-icon">⛏</span>
+        <span class="upg-name">Mining Laser</span>
+        <span class="upg-type">All Exocrafts</span>
+        <p>Install and upgrade on any mining-capable Exocraft. Dramatically faster than the Multi-Tool for large deposits.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🔋</span>
+        <span class="upg-name">Exocraft Acceleration</span>
+        <span class="upg-type">Engine Upgrade</span>
+        <p>Boosts top speed and boost duration. Priority on Roamer and Pilgrim for traversal efficiency.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">📡</span>
+        <span class="upg-name">Survey Device</span>
+        <span class="upg-type">Scanner</span>
+        <p>Reveals buried resource deposits in a radius around the Exocraft. Essential for efficient mining runs.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🛡</span>
+        <span class="upg-name">Exocraft Shield</span>
+        <span class="upg-type">Defense</span>
+        <p>Adds shield capacity. Priority for Minotaur to make it a proper combat platform.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🔫</span>
+        <span class="upg-name">Mounted Cannon</span>
+        <span class="upg-type">Weapons</span>
+        <p>Vehicle-mounted weapons for Exocrafts. Upgrade for Minotaur to turn it into a sentinel-killing machine.</p>
+      </div>
+      <div class="upg-card">
+        <span class="upg-icon">🧲</span>
+        <span class="upg-name">Cargo Expansion</span>
+        <span class="upg-type">Colossus Only</span>
+        <p>Increases Colossus inventory capacity. Stack these — the Colossus's purpose is cargo, so maximize it.</p>
+      </div>
+    </div>
+
+    <h3>Exocraft-Specific Recommendations</h3>
+    <div class="dtable-wrap">
+      <table class="dtable">
+        <thead>
+          <tr><th>Exocraft</th><th>Priority Upgrades</th><th>Avoid</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Roamer</strong></td>
+            <td>Acceleration ×3, Mining Laser, Survey Device</td>
+            <td>Heavy weapons — not its role</td>
+          </tr>
+          <tr>
+            <td><strong>Colossus</strong></td>
+            <td>Cargo Expansion ×3, Mining Laser ×3, Survey Device</td>
+            <td>Speed upgrades — it's always slow</td>
+          </tr>
+          <tr>
+            <td><strong>Minotaur</strong></td>
+            <td>Shield ×3, Cannon ×3, Hazard Protection</td>
+            <td>Mining focus — use Colossus instead</td>
+          </tr>
+          <tr>
+            <td><strong>Pilgrim</strong></td>
+            <td>Acceleration ×3, Boost, Fuel Efficiency</td>
+            <td>Mining or combat — wrong vehicle</td>
+          </tr>
+          <tr>
+            <td><strong>Nautilon</strong></td>
+            <td>Mining Laser, Depth Module, Cannon</td>
+            <td>Speed — not needed underwater</td>
+          </tr>
+          <tr>
+            <td><strong>Nomad</strong></td>
+            <td>Acceleration, Survey Device, Cargo</td>
+            <td>Heavy weapons — versatility is its value</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout green">
+      <span class="ct">Minotaur Orbital Materialiser</span>
+      <p>Once you install the <strong>Minotaur Orbital Exocraft Materialiser</strong> on your freighter, you can summon any Exocraft anywhere on any planet — no Geobay required. This is one of the best quality-of-life upgrades in the game for players who use Exocrafts regularly.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>// 09</span></div>
+
+  <!-- ══════════════════════════ -->
+  <!-- 09 · PRO TIPS             -->
+  <!-- ══════════════════════════ -->
+  <div class="section reveal" id="tips">
+    <div class="sec-head">
+      <div class="sec-bar"></div>
+      <div>
+        <span class="sec-tag">Section 09</span>
+        <h2>Pro Tips &amp; Secrets</h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Own Multiple Ships</span>
+      <p>You can own up to <strong>12 ships simultaneously</strong>. Keep a dedicated Fighter for combat, an Explorer for long warps, a Hauler for trading runs, and your favorite for daily use. Swap between them via the Quick Menu anywhere.</p>
+    </div>
+
+    <div class="callout yellow">
+      <span class="ct">💡 Exotic Ships — Always S-Class</span>
+      <p>Exotic ships are always S-class with no exceptions, and always have a unique visual design that appears nowhere else. They're smaller than standard ships but their stats punch above their size. If you see an Exotic land, buy it immediately — it may never return.</p>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Coordinate Communities</span>
+      <p>Websites like <strong>nmssaves.com</strong> and subreddits like <strong>r/NMSCoordinateExchange</strong> list exact portal coordinates for rare ship spawns, including specific Exotic designs, rare Living Ship variants, and S-class Haulers at known Trade Posts. Use these to skip hundreds of hours of searching.</p>
+    </div>
+
+    <div class="callout yellow">
+      <span class="ct">💡 Dismantle for Nanites</span>
+      <p>When you upgrade a ship or tool module to a higher class, <strong>dismantle the old module</strong> — don't sell it. Dismantling gives you Nanite Clusters at a much better rate than selling, especially for A and S-class modules.</p>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Freighter Discount on Ships</span>
+      <p>After saving a freighter from pirates, the freighter captain sometimes lets you buy ships from their escort fleet at a discount. These can be A or S-class fighters. Always check when boarding a rescue freighter — don't just take the freighter and leave.</p>
+    </div>
+
+    <div class="callout yellow">
+      <span class="ct">💡 Hauler Shield Stacking</span>
+      <p>Haulers have a native +50% shield bonus on top of upgrade bonuses. A fully upgraded S-class Hauler with 3×S-class shield modules can absorb more damage than even a maxed Fighter — making it a surprisingly solid choice for players who want combat survivability without sacrificing cargo space.</p>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Sentinel Ship Reroll Trick</span>
+      <p>Before flying to claim a Sentinel Interceptor wreck, <strong>save manually in space</strong>. Land and check the stats. If it's not S-class or the design isn't what you want, reload and the wreck rerolls. The fight doesn't need to be repeated — only the reward at the landing site rerolls.</p>
+    </div>
+
+    <div class="callout yellow">
+      <span class="ct">💡 Colossus Mining Loop</span>
+      <p>For maximum resource yield: summon Colossus → install Survey Device → scan for buried deposits → mine with the Colossus Mining Laser → fill its massive cargo hold → fly your ship overhead and use Matter Beam to transfer directly to freighter storage. Repeat. Fastest bulk gathering loop in the game.</p>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer class="reveal">
+    <div class="footer-brand">⬡ Hangar Manifest</div>
+    <div class="footer-info">
+      <p>Ships, Exocrafts &amp; Upgrades · Manual IV</p>
+      <p>No Man's Sky · All Platforms · Worlds Update Era</p>
+    </div>
+  </footer>
+
+</div><!-- /page -->
+
+<script>
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  els.forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>
