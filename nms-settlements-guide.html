@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No Man's Sky — Settlement Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #050a0f;
+    --deep: #080f1a;
+    --panel: #0d1b2a;
+    --panel2: #0a1520;
+    --neon: #00e5ff;
+    --neon2: #00ff9d;
+    --amber: #ffab00;
+    --warn: #ff6b35;
+    --muted: #4a7a9b;
+    --text: #b8d4e8;
+    --bright: #e8f4ff;
+    --glow: 0 0 20px rgba(0,229,255,0.4);
+    --glow2: 0 0 20px rgba(0,255,157,0.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Starfield */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 60%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 10%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 90%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 50%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 50% 30%, rgba(0,229,255,0.3) 0%, transparent 100%),
+      radial-gradient(2px 2px at 25% 55%, rgba(0,255,157,0.2) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Nebula glow behind hero */
+  .nebula {
+    position: fixed;
+    width: 600px; height: 600px;
+    top: -200px; left: -100px;
+    background: radial-gradient(ellipse, rgba(0,229,255,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .nebula2 {
+    position: fixed;
+    width: 500px; height: 500px;
+    bottom: -100px; right: -100px;
+    background: radial-gradient(ellipse, rgba(0,255,157,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Scanlines overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 60px 0 40px;
+    text-align: center;
+    position: relative;
+  }
+
+  .atlas-logo {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    animation: flicker 4s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 94%, 100% { opacity: 1; }
+    95% { opacity: 0.4; }
+    97% { opacity: 1; }
+    98% { opacity: 0.3; }
+  }
+
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(28px, 6vw, 52px);
+    color: var(--bright);
+    text-shadow: 0 0 40px rgba(0,229,255,0.5), 0 0 80px rgba(0,229,255,0.2);
+    letter-spacing: 2px;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--neon);
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-shadow: var(--glow);
+    margin-bottom: 32px;
+  }
+
+  .header-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon), transparent);
+    opacity: 0.6;
+    margin: 20px 0;
+  }
+
+  /* ── NAV ── */
+  .nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+    margin: 32px 0;
+  }
+
+  .nav-btn {
+    background: var(--panel2);
+    border: 1px solid rgba(0,229,255,0.2);
+    color: var(--neon);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    display: block;
+  }
+
+  .nav-btn:hover {
+    background: rgba(0,229,255,0.1);
+    border-color: var(--neon);
+    box-shadow: var(--glow);
+    color: var(--bright);
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    margin: 48px 0;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0,229,255,0.15);
+  }
+
+  .section-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--neon);
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.3);
+    padding: 4px 8px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: clamp(16px, 3vw, 22px);
+    color: var(--bright);
+    letter-spacing: 1px;
+  }
+
+  h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--neon2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 20px 0 10px;
+  }
+
+  p { margin-bottom: 12px; font-size: 15px; }
+
+  /* ── PANELS ── */
+  .panel {
+    background: var(--panel);
+    border: 1px solid rgba(0,229,255,0.12);
+    border-left: 3px solid var(--neon);
+    padding: 18px 20px;
+    margin: 16px 0;
+    position: relative;
+  }
+
+  .panel-green {
+    border-left-color: var(--neon2);
+  }
+
+  .panel-amber {
+    border-left-color: var(--amber);
+  }
+
+  .panel-warn {
+    border-left-color: var(--warn);
+  }
+
+  .panel-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--neon);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  .panel-green .panel-label { color: var(--neon2); }
+  .panel-amber .panel-label { color: var(--amber); }
+  .panel-warn  .panel-label { color: var(--warn); }
+
+  /* ── GRID CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .card {
+    background: var(--panel2);
+    border: 1px solid rgba(0,229,255,0.15);
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(0,229,255,0.4);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--neon), var(--neon2));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    color: var(--neon);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .card p { font-size: 13px; color: var(--text); margin: 0; }
+
+  /* ── STAT BARS ── */
+  .stat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0;
+  }
+
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    width: 140px;
+    flex-shrink: 0;
+  }
+
+  .stat-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0,229,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon2), var(--neon));
+    position: relative;
+  }
+
+  .stat-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: white;
+    box-shadow: 0 0 8px var(--neon);
+  }
+
+  .stat-val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--neon);
+    width: 36px;
+    text-align: right;
+  }
+
+  /* ── TABLE ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 16px 0;
+  }
+
+  .data-table th {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--neon);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(0,229,255,0.3);
+    text-transform: uppercase;
+  }
+
+  .data-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(0,229,255,0.06);
+    color: var(--text);
+  }
+
+  .data-table tr:hover td {
+    background: rgba(0,229,255,0.04);
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .badge-green { background: rgba(0,255,157,0.15); color: var(--neon2); border: 1px solid rgba(0,255,157,0.3); }
+  .badge-blue  { background: rgba(0,229,255,0.15); color: var(--neon);  border: 1px solid rgba(0,229,255,0.3); }
+  .badge-amber { background: rgba(255,171,0,0.15);  color: var(--amber); border: 1px solid rgba(255,171,0,0.3); }
+  .badge-warn  { background: rgba(255,107,53,0.15);  color: var(--warn);  border: 1px solid rgba(255,107,53,0.3); }
+
+  /* ── STEPS ── */
+  .steps { margin: 16px 0; }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--void);
+    background: var(--neon);
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-content { flex: 1; }
+  .step-content strong { color: var(--bright); font-weight: 600; }
+
+  /* ── LIST ── */
+  .bullet-list {
+    list-style: none;
+    margin: 12px 0;
+  }
+
+  .bullet-list li {
+    padding: 6px 0 6px 20px;
+    position: relative;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(0,229,255,0.04);
+  }
+
+  .bullet-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--neon2);
+    font-size: 12px;
+  }
+
+  /* ── TIP BOX ── */
+  .tip {
+    background: rgba(0,255,157,0.05);
+    border: 1px solid rgba(0,255,157,0.2);
+    padding: 14px 18px;
+    margin: 14px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .tip-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 13px; color: var(--text); }
+  .tip-text strong { color: var(--neon2); }
+
+  .warn-box {
+    background: rgba(255,107,53,0.05);
+    border: 1px solid rgba(255,107,53,0.2);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 40px 0;
+    opacity: 0.4;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--neon);
+  }
+
+  .divider span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--neon);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px 0 60px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    border-top: 1px solid rgba(0,229,255,0.1);
+    margin-top: 60px;
+  }
+
+  /* ── PULSE ANIMATION ── */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .live-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--neon2);
+    border-radius: 50%;
+    margin-right: 8px;
+    box-shadow: 0 0 8px var(--neon2);
+    animation: pulse 2s infinite;
+    vertical-align: middle;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--void); }
+  ::-webkit-scrollbar-thumb { background: var(--muted); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--neon); }
+</style>
+</head>
+<body>
+
+<div class="nebula"></div>
+<div class="nebula2"></div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="atlas-logo">⬡ ATLAS INTERFACE v4.7 ⬡ SETTLEMENT SYSTEMS DATABASE</div>
+    <h1>SETTLEMENTS</h1>
+    <div class="subtitle">COMPLETE OVERSEER'S FIELD GUIDE</div>
+    <div class="header-line"></div>
+    <p style="font-size:13px; color:var(--muted); font-family:'Share Tech Mono',monospace; letter-spacing:1px;">
+      <span class="live-dot"></span>No Man's Sky · Frontiers Update & Beyond · All Platforms
+    </p>
+  </header>
+
+  <!-- NAV -->
+  <nav class="nav-grid">
+    <a class="nav-btn" href="#finding">Finding</a>
+    <a class="nav-btn" href="#claiming">Claiming</a>
+    <a class="nav-btn" href="#managing">Managing</a>
+    <a class="nav-btn" href="#buildings">Buildings</a>
+    <a class="nav-btn" href="#sentinels">Sentinels</a>
+    <a class="nav-btn" href="#production">Production</a>
+    <a class="nav-btn" href="#residents">Residents</a>
+    <a class="nav-btn" href="#tips">Pro Tips</a>
+  </nav>
+
+  <!-- INTRO -->
+  <div class="section">
+    <div class="panel">
+      <div class="panel-label">System Overview</div>
+      <p>Settlements are procedurally generated NPC villages found on planetary surfaces. As <strong style="color:var(--bright)">Overseer</strong>, you manage their growth, resolve disputes, and develop them from struggling outposts into thriving civilizations. A well-run settlement produces valuable resources, units, and rare rewards — and stands as a testament to your leadership across the galaxy.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>MODULE 01</span></div>
+
+  <!-- FINDING -->
+  <div class="section" id="finding">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <h2>FINDING A SETTLEMENT</h2>
+    </div>
+
+    <h3>Discovery Methods</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>Space Station Mission Board</strong> — Look for Settlement missions posted on the Mission Board. These will waypoint you directly to a claimable settlement.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>Planetary Cartographer</strong> — Purchase <strong>Settlement Charts</strong> from the Cartographer NPC on any Space Station for Navigation Data. These reveal settlement locations on the planet.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>Signal Scanner</strong> — Craft or find a Signal Scanner and scan for Colonial Outposts. Settlements appear as a distinct marker type.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content"><strong>Organic Flying Ships</strong> — Some settlement-finding missions are offered by NPCs in space. Keep an eye on Space Anomaly notice boards.</div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🛸</span>
+      <div class="tip-text"><strong>Tip:</strong> Each player can only be Overseer of one settlement at a time. If you claim a new one, you forfeit your current settlement. Choose wisely — or intentionally reset to find a better one.</div>
+    </div>
+
+    <h3>Choosing the Right Settlement</h3>
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">🌍</span>
+        <div class="card-title">Planet Type</div>
+        <p>Avoid extreme hazard worlds (scorched, frozen, toxic) early on. Lush or calm planets make visiting easier.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📊</span>
+        <div class="card-title">Starting Stats</div>
+        <p>Check the Productivity, Happiness, and Sentinel Activity meters. High happiness and low sentinel threat is ideal.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">👥</span>
+        <div class="card-title">Population</div>
+        <p>A larger starting population means faster project completion and more production output per cycle.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">⚡</span>
+        <div class="card-title">Debt Status</div>
+        <p>Settlements can start in debt. Lower initial debt means fewer resources spent digging out before growth begins.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>MODULE 02</span></div>
+
+  <!-- CLAIMING -->
+  <div class="section" id="claiming">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <h2>CLAIMING & FIRST STEPS</h2>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>Arrive at the Settlement</strong> — Land nearby and approach the Settlement Overseer's Office terminal (the main console).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>Interact with the Terminal</strong> — Select "Claim Settlement" to become Overseer. If another player owns it, you cannot claim it on a multiplayer server.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>Review the Dashboard</strong> — The Overseer terminal shows Happiness, Productivity, Sentinel Threat, Population, Debt, and daily production. Familiarize yourself with all metrics.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content"><strong>Resolve the First Issue</strong> — An immediate Issue (dispute or infrastructure problem) is usually presented. Your choices here begin shaping your settlement's character.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content"><strong>Start Your First Building Project</strong> — Approve a construction project to begin growing your settlement. Prioritize housing to attract more settlers.</div>
+      </div>
+    </div>
+
+    <div class="panel panel-amber">
+      <div class="panel-label">⚠ Important Note</div>
+      <p style="margin:0; font-size:14px;">You can abandon a settlement to search for a better one — but there's a <strong style="color:var(--amber)">cooldown timer</strong> before you can claim another. Use the time wisely by reviewing what stats you want to optimize before committing.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>MODULE 03</span></div>
+
+  <!-- MANAGING -->
+  <div class="section" id="managing">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <h2>MANAGING YOUR SETTLEMENT</h2>
+    </div>
+
+    <h3>Core Metrics Explained</h3>
+    <div style="margin: 16px 0;">
+      <div class="stat-row">
+        <div class="stat-label">😊 Happiness</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:80%"></div></div>
+        <div class="stat-val">HIGH</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">⚙ Productivity</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:65%"></div></div>
+        <div class="stat-val">MED</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">👾 Sentinel Threat</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:30%; background: linear-gradient(90deg, var(--warn), #ff4444)"></div></div>
+        <div class="stat-val">LOW</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">👥 Population</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:55%"></div></div>
+        <div class="stat-val">MED</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">📦 Productivity</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:70%"></div></div>
+        <div class="stat-val">GOOD</div>
+      </div>
+    </div>
+
+    <h3>The Issue System</h3>
+    <p>Every few in-game hours (real-time minutes), an Issue appears at your Overseer terminal. These are the primary way you shape your settlement. There are several types:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Issue Type</th>
+          <th>Description</th>
+          <th>Impact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-green">Settler Dispute</span></td>
+          <td>Two residents in conflict; you arbitrate</td>
+          <td>Happiness ±</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">Infrastructure</span></td>
+          <td>Building or system needs repair/resources</td>
+          <td>Productivity ±</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-amber">Sentinel Alert</span></td>
+          <td>Threat level rising; decide response</td>
+          <td>Sentinel Level ±</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-warn">Resource Crisis</span></td>
+          <td>Shortage of materials; contribute or ration</td>
+          <td>Productivity &amp; Happiness</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-green">New Arrival</span></td>
+          <td>Migrant wants to join; approve or reject</td>
+          <td>Population +</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">Trade Request</span></td>
+          <td>External trade deal proposed</td>
+          <td>Units or Resources</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <div class="tip-text"><strong>Issue Timer:</strong> Issues don't disappear; they wait for you. But the settlement won't advance without you resolving them. Visit regularly for fastest growth.</div>
+    </div>
+
+    <h3>Managing Debt</h3>
+    <p>Settlements start with debt that must be repaid. Daily income from production is automatically applied to debt reduction. You can also:</p>
+    <ul class="bullet-list">
+      <li>Personally contribute Units at the Overseer terminal to pay down debt faster</li>
+      <li>Approve high-productivity buildings to increase daily income</li>
+      <li>Avoid resource-heavy decisions until debt is cleared</li>
+      <li>Build Trade Terminals early to boost the unit income multiplier</li>
+    </ul>
+  </div>
+
+  <div class="divider"><span>MODULE 04</span></div>
+
+  <!-- BUILDINGS -->
+  <div class="section" id="buildings">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <h2>BUILDINGS & CONSTRUCTION</h2>
+    </div>
+
+    <p>Construction projects are offered periodically via the Overseer terminal. You choose whether to approve or reject each one. Once approved, residents build it over time (sped up by population size).</p>
+
+    <h3>Building Categories</h3>
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">🏠</span>
+        <div class="card-title">Housing</div>
+        <p>Increases population cap. More residents = faster construction and higher productivity. Always prioritize early.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🏭</span>
+        <div class="card-title">Industry</div>
+        <p>Boosts daily resource production. Specific types yield different materials (metals, gases, organic). Key for income.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🛡</span>
+        <div class="card-title">Defense</div>
+        <p>Reduces Sentinel threat levels and protects against attacks. Essential if your planet has high sentinel activity.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🌿</span>
+        <div class="card-title">Amenities</div>
+        <p>Gardens, plazas, and community centers boost Happiness significantly. Happy settlers work harder and don't leave.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📡</span>
+        <div class="card-title">Commerce</div>
+        <p>Trade Depots and Markets increase the unit value of daily production — turning raw output into more credits.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔬</span>
+        <div class="card-title">Science</div>
+        <p>Research facilities unlock new building types and improve productivity efficiency. Unlocks late-game structures.</p>
+      </div>
+    </div>
+
+    <h3>Construction Requirements</h3>
+    <p>Each building requires materials that you must supply. Common requirements include:</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>Material</th><th>Source</th><th>Rarity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Metal Plating</td><td>Ferrite Dust × 50</td><td><span class="badge badge-green">Common</span></td></tr>
+        <tr><td>Wiring Loom</td><td>Purchased / Crafted</td><td><span class="badge badge-amber">Uncommon</span></td></tr>
+        <tr><td>Di-hydrogen Jelly</td><td>Di-hydrogen × 40</td><td><span class="badge badge-green">Common</span></td></tr>
+        <tr><td>Hermetic Seal</td><td>Purchased / Missions</td><td><span class="badge badge-amber">Uncommon</span></td></tr>
+        <tr><td>Nanite Clusters</td><td>Missions / Trading</td><td><span class="badge badge-blue">Moderate</span></td></tr>
+        <tr><td>Suspension Fluid</td><td>Purchased at Stations</td><td><span class="badge badge-amber">Uncommon</span></td></tr>
+        <tr><td>Ion Batteries</td><td>Crafted / Found</td><td><span class="badge badge-green">Common</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      <span class="tip-icon">🏗</span>
+      <div class="tip-text"><strong>Pre-stock materials:</strong> Before visiting your settlement, fill your inventory with Metal Plating, Wiring Looms, and Hermetic Seals. You'll almost always need them for construction approvals.</div>
+    </div>
+  </div>
+
+  <div class="divider"><span>MODULE 05</span></div>
+
+  <!-- SENTINEL MANAGEMENT -->
+  <div class="section" id="sentinels">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <h2>SENTINEL MANAGEMENT</h2>
+    </div>
+
+    <p>High sentinel threat is one of the most dangerous ongoing problems for a settlement. Unchecked, it leads to full-scale attacks that damage buildings, kill settlers, and crater happiness.</p>
+
+    <h3>Sentinel Threat Levels</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Level</th><th>Status</th><th>Effect</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">Low</span></td><td>Calm — no patrols near settlement</td><td>No negative effects</td></tr>
+        <tr><td><span class="badge badge-amber">Moderate</span></td><td>Patrols nearby — occasional alerts</td><td>Mild happiness reduction</td></tr>
+        <tr><td><span class="badge badge-warn">High</span></td><td>Active threat — attacks possible</td><td>Settler morale drops; buildings damaged</td></tr>
+        <tr><td><span class="badge badge-warn">Critical</span></td><td>Full assault — sentinels raid settlement</td><td>Severe damage; population may flee</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Reducing Sentinel Threat</h3>
+    <ul class="bullet-list">
+      <li>Build <strong style="color:var(--bright)">Defense Structures</strong> (turrets, shields) through the construction system</li>
+      <li>Choose diplomatic Issue options that don't escalate sentinel attention</li>
+      <li>Avoid mining illegally or harvesting protected resources near the settlement</li>
+      <li>Use <strong style="color:var(--bright)">Sentinel Bribe</strong> options in Issue decisions to temporarily lower threat</li>
+      <li>Install a <strong style="color:var(--bright)">Sentinel Jammer</strong> building once it's available</li>
+    </ul>
+
+    <div class="panel panel-warn">
+      <div class="panel-label">⚡ Attack Response</div>
+      <p style="margin:0; font-size:14px;">When your settlement is under attack, <strong style="color:var(--warn)">physically travel there and defend it</strong>. Fighting off sentinel waves yourself dramatically speeds up the end of the attack and prevents the worst building damage.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>MODULE 06</span></div>
+
+  <!-- PRODUCTION -->
+  <div class="section" id="production">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <h2>PRODUCTION & REWARDS</h2>
+    </div>
+
+    <p>Every real-time day (or when you visit), your settlement produces a batch of resources and units. These accumulate in the Overseer terminal for you to collect.</p>
+
+    <h3>Production Outputs</h3>
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">💰</span>
+        <div class="card-title">Units</div>
+        <p>Direct credit income. Scales with Productivity rating and Commerce buildings. Can reach millions/day when maxed.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔩</span>
+        <div class="card-title">Raw Materials</div>
+        <p>Ferrite, Carbon, Oxygen, metals, and more. Useful for construction or selling. Type depends on planet biome.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">⚗</span>
+        <div class="card-title">Processed Goods</div>
+        <p>Refined alloys, gases, and compounds. Higher value than raw materials. Requires Industry buildings to unlock.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🌟</span>
+        <div class="card-title">Rare Rewards</div>
+        <p>Settlement milestones yield Trophies, unique decoration items, Nanites, and occasionally Atlantid Multi-Tools.</p>
+      </div>
+    </div>
+
+    <h3>Maximizing Production</h3>
+    <ul class="bullet-list">
+      <li>Happiness directly multiplies productivity output — keep settlers happy above all else</li>
+      <li>Each Industry building adds a specific resource type and quantity per day</li>
+      <li>Trade buildings multiply the unit value of your resource output</li>
+      <li>The debt counter stops a portion of income — clear it fast for full production benefit</li>
+      <li>Larger population = faster project completion = more buildings = more production</li>
+    </ul>
+
+    <div class="tip">
+      <span class="tip-icon">📅</span>
+      <div class="tip-text"><strong>Collection:</strong> Production caps out after accumulating ~3 days of output. Visit every few days to collect and prevent waste. The timer resets on each visit.</div>
+    </div>
+  </div>
+
+  <div class="divider"><span>MODULE 07</span></div>
+
+  <!-- RESIDENTS -->
+  <div class="section" id="residents">
+    <div class="section-header">
+      <div class="section-num">07</div>
+      <h2>SETTLERS & RESIDENTS</h2>
+    </div>
+
+    <p>Each settler is a named NPC with a role, personality, and potential grievances. Residents with specific roles contribute to the settlement's specialization.</p>
+
+    <h3>Settler Roles</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Role</th><th>Benefit</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>🔨 Engineer</td><td>Speeds up construction project completion</td></tr>
+        <tr><td>⚒ Miner</td><td>Boosts raw material production output</td></tr>
+        <tr><td>🌾 Farmer</td><td>Increases organic and food production</td></tr>
+        <tr><td>📈 Merchant</td><td>Increases unit income and trade bonuses</td></tr>
+        <tr><td>🛡 Guard</td><td>Reduces sentinel threat growth rate</td></tr>
+        <tr><td>🔬 Scientist</td><td>Unlocks advanced research buildings faster</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Keeping Settlers Happy</h3>
+    <ul class="bullet-list">
+      <li>Build Amenity structures (gardens, plazas, entertainment)</li>
+      <li>Resolve disputes fairly — check what outcome benefits the most settlers</li>
+      <li>Maintain low sentinel threat — constant raids destroy morale</li>
+      <li>Keep debt low; settlers notice financial strain and become unhappy</li>
+      <li>Approve housing projects quickly to avoid overcrowding</li>
+    </ul>
+
+    <div class="panel panel-green">
+      <div class="panel-label">Special Settlers</div>
+      <p style="margin:0; font-size:14px;">Occasionally a notable NPC (a traveller, rogue scientist, or alien dignitary) will request to join your settlement. Always approve these — they often bring permanent productivity bonuses or unlock unique building types.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>MODULE 08</span></div>
+
+  <!-- PRO TIPS -->
+  <div class="section" id="tips">
+    <div class="section-header">
+      <div class="section-num">08</div>
+      <h2>PRO TIPS & STRATEGIES</h2>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🚀</span>
+      <div class="tip-text"><strong>Teleport Network:</strong> Build a Teleporter or Landing Pad in your settlement and save it as a teleport destination. You can then warp back instantly from any Space Station to collect production and resolve issues.</div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🏆</span>
+      <div class="tip-text"><strong>Settlement Milestones:</strong> There are hidden milestone rewards for growing your population and unlocking building tiers. These include trophy decorations and unique Multi-Tool blueprints. Push population to 10, 20, then 50.</div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">⚖</span>
+      <div class="tip-text"><strong>Issue Patterns:</strong> Some issues are repeated. Learn which options consistently improve happiness vs. productivity. Write down what works — the same NPC names and situations recur.</div>
+    </div>
+
+    <div class="tip warn-box">
+      <span class="tip-icon">⚠</span>
+      <div class="tip-text"><strong>Don't neglect it:</strong> Leaving your settlement alone for long periods (especially with high sentinel threat) can result in significant damage. Set a real-life reminder to check in every 2–3 days at minimum.</div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">💎</span>
+      <div class="tip-text"><strong>Hauler Landing Pad:</strong> Build a Hauler Landing Pad to attract large freighter-class ships to your settlement. These can be purchased at a significant discount versus buying from a space station.</div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🌱</span>
+      <div class="tip-text"><strong>Happiness First:</strong> In the early game, always prioritize Happiness over Productivity. A happy settlement is self-sustaining. An unhappy but productive one will collapse as settlers leave.</div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🗺</span>
+      <div class="tip-text"><strong>Planet Selection:</strong> If you haven't claimed a settlement yet — choose a planet with valuable resources (Activated Indium, Gold, etc.) so your production output has high sell value at the trade terminal.</div>
+    </div>
+
+    <h3>Recommended Build Order</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>Housing × 2–3</strong> — Expand population cap first. More settlers = everything else happens faster.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>Amenity × 1</strong> — Keep happiness high early so settlers don't abandon the settlement.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>Industry × 2</strong> — Start generating daily resources to pay off debt and begin accumulation.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content"><strong>Defense × 1</strong> — Protect early infrastructure from sentinel raids once threat starts building.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content"><strong>Commerce × 1</strong> — Trade Depot to increase the unit value of your daily output significantly.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content"><strong>Repeat</strong> — Cycle back through housing, industry, and amenities. Scale toward Science buildings for advanced options.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>⬡ ATLAS INTERFACE · SETTLEMENT OVERSEER DOCUMENTATION · NO MAN'S SKY ⬡</p>
+    <p style="margin-top:8px; opacity:0.5;">Guide covers base game mechanics through the Worlds Part II update. Some specifics may vary by version.</p>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No Man's Sky — Freighters & Frigates Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;600;700&family=VT323&family=Cousine:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --iron:    #0b0d0f;
+    --hull:    #10141a;
+    --plate:   #161c24;
+    --panel:   #1a2230;
+    --seam:    #242e3e;
+    --gold:    #f5a623;
+    --gold2:   #ffcc55;
+    --ember:   #e8622a;
+    --teal:    #2eb8b8;
+    --steel:   #8aa4be;
+    --fog:     #4a6480;
+    --bright:  #ddeeff;
+    --text:    #9ab5ce;
+    --dim:     #506070;
+    --glow-g:  0 0 24px rgba(245,166,35,0.45);
+    --glow-t:  0 0 20px rgba(46,184,184,0.4);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--iron);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ── RIVETED STEEL TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 60px,
+        rgba(255,255,255,0.012) 60px,
+        rgba(255,255,255,0.012) 61px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 80px,
+        rgba(255,255,255,0.008) 80px,
+        rgba(255,255,255,0.008) 81px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── ENGINE GLOW ── */
+  .engine-glow {
+    position: fixed;
+    bottom: -120px; right: -80px;
+    width: 500px; height: 500px;
+    background: radial-gradient(ellipse, rgba(245,166,35,0.06) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+    animation: enginePulse 5s ease-in-out infinite;
+  }
+
+  .engine-glow2 {
+    position: fixed;
+    top: -80px; left: -60px;
+    width: 400px; height: 400px;
+    background: radial-gradient(ellipse, rgba(46,184,184,0.05) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes enginePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 56px 0 36px;
+    position: relative;
+  }
+
+  .header-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: end;
+    margin-bottom: 24px;
+  }
+
+  .breadcrumb {
+    font-family: 'Cousine', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--fog);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: clamp(32px, 7vw, 64px);
+    color: var(--bright);
+    line-height: 0.95;
+    letter-spacing: -1px;
+  }
+
+  h1 span {
+    display: block;
+    color: var(--gold);
+    text-shadow: var(--glow-g);
+    font-size: 0.55em;
+    letter-spacing: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .header-badge {
+    text-align: right;
+  }
+
+  .class-indicator {
+    font-family: 'VT323', monospace;
+    font-size: 52px;
+    color: var(--gold);
+    text-shadow: var(--glow-g);
+    line-height: 1;
+    display: block;
+    animation: flicker 6s infinite;
+  }
+
+  .class-label {
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--fog);
+    text-transform: uppercase;
+    display: block;
+    margin-top: 2px;
+  }
+
+  @keyframes flicker {
+    0%, 90%, 100% { opacity: 1; }
+    92% { opacity: 0.3; }
+    94% { opacity: 1; }
+    96% { opacity: 0.5; }
+  }
+
+  .header-bar {
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--ember) 40%, transparent 100%);
+    margin-bottom: 6px;
+  }
+
+  .header-sub {
+    font-family: 'Cousine', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--steel);
+    text-transform: uppercase;
+  }
+
+  /* ── NAV ── */
+  .toc {
+    background: var(--plate);
+    border: 1px solid var(--seam);
+    border-top: 2px solid var(--gold);
+    padding: 20px 24px;
+    margin: 28px 0 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 24px;
+  }
+
+  .toc-title {
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    grid-column: 1 / -1;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--seam);
+  }
+
+  .toc a {
+    font-family: 'Cousine', monospace;
+    font-size: 11px;
+    color: var(--steel);
+    text-decoration: none;
+    letter-spacing: 1px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--seam);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.2s;
+  }
+
+  .toc a:hover { color: var(--gold2); }
+
+  .toc-num {
+    color: var(--gold);
+    opacity: 0.6;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin: 52px 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 22px;
+  }
+
+  .s-accent {
+    width: 4px;
+    background: linear-gradient(180deg, var(--gold), var(--ember));
+    flex-shrink: 0;
+    margin-right: 16px;
+  }
+
+  .s-accent.teal { background: linear-gradient(180deg, var(--teal), #1a7a7a); }
+
+  .s-title-group { flex: 1; }
+
+  .s-tag {
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .s-tag.teal { color: var(--teal); }
+
+  h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: clamp(18px, 3.5vw, 28px);
+    color: var(--bright);
+    letter-spacing: 0.5px;
+    line-height: 1;
+  }
+
+  h3 {
+    font-family: 'Cousine', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin: 22px 0 10px;
+  }
+
+  p { margin-bottom: 12px; font-size: 15px; }
+
+  strong { color: var(--bright); font-weight: 600; }
+
+  /* ── CALLOUT PANELS ── */
+  .callout {
+    background: var(--hull);
+    border: 1px solid var(--seam);
+    border-left: 3px solid var(--gold);
+    padding: 16px 20px;
+    margin: 14px 0;
+    position: relative;
+  }
+
+  .callout.teal   { border-left-color: var(--teal); }
+  .callout.ember  { border-left-color: var(--ember); }
+  .callout.dim    { border-left-color: var(--dim); border-left-width: 1px; }
+
+  .callout-tag {
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 7px;
+    display: block;
+  }
+
+  .callout.teal .callout-tag  { color: var(--teal); }
+  .callout.ember .callout-tag { color: var(--ember); }
+
+  .callout p { margin: 0; font-size: 14px; }
+
+  /* ── CARDS ── */
+  .card-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+    margin: 14px 0;
+  }
+
+  .card {
+    background: var(--hull);
+    border: 1px solid var(--seam);
+    padding: 16px 15px;
+    position: relative;
+    transition: border-color 0.25s, transform 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(245,166,35,0.5);
+    transform: translateY(-2px);
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--ember));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .card:hover::after { opacity: 1; }
+
+  .card-icon { font-size: 22px; margin-bottom: 8px; display: block; }
+
+  .card-title {
+    font-family: 'Cousine', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .card p { font-size: 13px; margin: 0; }
+
+  /* ── CLASS COMPARISON ── */
+  .class-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--seam);
+    margin: 14px 0;
+    border: 1px solid var(--seam);
+  }
+
+  .class-cell {
+    background: var(--hull);
+    padding: 14px 12px;
+    text-align: center;
+    position: relative;
+  }
+
+  .class-cell.header-cell {
+    background: var(--plate);
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--fog);
+    text-transform: uppercase;
+    padding: 10px 8px;
+  }
+
+  .class-letter {
+    font-family: 'VT323', monospace;
+    font-size: 36px;
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .cls-s .class-letter { color: #ffdd44; text-shadow: 0 0 14px rgba(255,220,68,0.6); }
+  .cls-a .class-letter { color: #44ddaa; text-shadow: 0 0 14px rgba(68,221,170,0.5); }
+  .cls-b .class-letter { color: #4499ff; text-shadow: 0 0 14px rgba(68,153,255,0.5); }
+  .cls-c .class-letter { color: #aaaaaa; }
+
+  .class-cell p { font-size: 12px; margin: 0; }
+
+  /* ── STAT TABLE ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 14px 0;
+  }
+
+  .data-table th {
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    background: var(--plate);
+    border-bottom: 2px solid var(--gold);
+    opacity: 0.9;
+  }
+
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--seam);
+    color: var(--text);
+    background: var(--hull);
+    vertical-align: top;
+  }
+
+  .data-table tr:hover td { background: rgba(245,166,35,0.04); }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    text-transform: uppercase;
+  }
+
+  .bg   { background: rgba(255,220,68,0.12); color:#ffdd44; border:1px solid rgba(255,220,68,0.35); }
+  .ba   { background: rgba(68,221,170,0.12); color:#44ddaa; border:1px solid rgba(68,221,170,0.35); }
+  .bb   { background: rgba(68,153,255,0.12); color:#6eb3ff; border:1px solid rgba(68,153,255,0.35); }
+  .bc   { background: rgba(150,150,150,0.1); color:#aaa;    border:1px solid rgba(150,150,150,0.25);}
+  .br   { background: rgba(232,98,42,0.12);  color:var(--ember); border:1px solid rgba(232,98,42,0.35); }
+
+  /* ── STEPS ── */
+  .steps { margin: 14px 0; }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    color: var(--iron);
+    background: var(--gold);
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .step-body { flex: 1; padding-top: 4px; font-size: 14px; }
+  .step-body strong { color: var(--gold2); }
+
+  /* ── BULLET LIST ── */
+  ul.blist {
+    list-style: none;
+    margin: 10px 0;
+  }
+
+  ul.blist li {
+    font-size: 14px;
+    padding: 7px 0 7px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    position: relative;
+    color: var(--text);
+  }
+
+  ul.blist li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 8px;
+    top: 11px;
+  }
+
+  /* ── PROGRESS BARS ── */
+  .pbar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 7px 0;
+  }
+
+  .pbar-label {
+    font-family: 'Cousine', monospace;
+    font-size: 10px;
+    color: var(--fog);
+    letter-spacing: 1px;
+    width: 150px;
+    flex-shrink: 0;
+  }
+
+  .pbar {
+    flex: 1;
+    height: 5px;
+    background: var(--seam);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pbar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--ember), var(--gold));
+    position: relative;
+  }
+
+  .pbar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--gold2);
+    box-shadow: 0 0 6px var(--gold);
+  }
+
+  .pbar-fill.teal { background: linear-gradient(90deg, #1a7a7a, var(--teal)); }
+  .pbar-fill.teal::after { background: #88eeff; box-shadow: 0 0 6px var(--teal); }
+
+  .pbar-val {
+    font-family: 'Cousine', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    width: 32px;
+    text-align: right;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 44px 0;
+    opacity: 0.35;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+
+  .divider::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+  .divider span {
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* ── FRIGATE TYPE CARDS ── */
+  .frigate-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 8px;
+    margin: 14px 0;
+  }
+
+  .frig-card {
+    background: var(--hull);
+    border: 1px solid var(--seam);
+    padding: 14px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .frig-card:hover { border-color: rgba(46,184,184,0.5); }
+
+  .frig-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+
+  .frig-name {
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--teal);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .frig-desc { font-size: 12px; }
+
+  /* ── WARNING BOX ── */
+  .warn-strip {
+    background: rgba(232,98,42,0.06);
+    border: 1px solid rgba(232,98,42,0.3);
+    border-left: 3px solid var(--ember);
+    padding: 14px 18px;
+    margin: 14px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .warn-icon { font-size: 18px; flex-shrink: 0; padding-top: 1px; }
+  .warn-text { font-size: 13px; }
+
+  /* ── EXPEDITION STATUS ── */
+  .exp-result-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 14px 0;
+  }
+
+  .exp-result {
+    background: var(--hull);
+    border: 1px solid var(--seam);
+    padding: 14px;
+    text-align: center;
+  }
+
+  .exp-result-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+
+  .exp-result-label {
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--steel);
+    display: block;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  .exp-result-val {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    color: var(--gold);
+    display: block;
+  }
+
+  /* ── INLINE HIGHLIGHT ── */
+  .hl { color: var(--gold2); font-weight: 600; }
+  .hl-t { color: var(--teal); font-weight: 600; }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 64px;
+    border-top: 1px solid var(--seam);
+    padding: 32px 0 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-brand {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    color: var(--gold);
+    text-shadow: var(--glow-g);
+  }
+
+  .footer-info {
+    font-family: 'Cousine', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    text-transform: uppercase;
+    text-align: right;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--iron); }
+  ::-webkit-scrollbar-thumb { background: var(--seam); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+  @media (max-width: 600px) {
+    .header-inner { grid-template-columns: 1fr; }
+    .header-badge { text-align: left; }
+    .class-grid { grid-template-columns: repeat(2, 1fr); }
+    .toc { grid-template-columns: 1fr; }
+    .exp-result-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="engine-glow"></div>
+<div class="engine-glow2"></div>
+
+<div class="container">
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="breadcrumb">◆ No Man's Sky · Fleet Command Documentation ◆</div>
+    <div class="header-inner">
+      <div>
+        <h1>
+          <span>Fleet Operations</span>
+          Freighters<br>&amp; Frigates
+        </h1>
+      </div>
+      <div class="header-badge">
+        <span class="class-indicator">S</span>
+        <span class="class-label">Max Class Rating</span>
+      </div>
+    </div>
+    <div class="header-bar"></div>
+    <div class="header-sub">Admiral's Complete Field Manual · All Platforms</div>
+  </header>
+
+  <!-- ── TABLE OF CONTENTS ── -->
+  <nav class="toc">
+    <div class="toc-title">◆ Contents</div>
+    <a href="#freighter-basics"><span class="toc-num">01</span> Freighter Basics</a>
+    <a href="#acquiring"><span class="toc-num">02</span> Acquiring a Freighter</a>
+    <a href="#classes"><span class="toc-num">03</span> Freighter Classes & Types</a>
+    <a href="#upgrades"><span class="toc-num">04</span> Upgrades & Technology</a>
+    <a href="#base-building"><span class="toc-num">05</span> Freighter Base Building</a>
+    <a href="#frigates"><span class="toc-num">06</span> Frigates — Overview</a>
+    <a href="#frigate-types"><span class="toc-num">07</span> Frigate Types & Stats</a>
+    <a href="#expeditions"><span class="toc-num">08</span> Expeditions</a>
+    <a href="#tips"><span class="toc-num">09</span> Pro Tips & Strategy</a>
+  </nav>
+
+  <!-- ── INTRO ── -->
+  <div class="section">
+    <div class="callout teal">
+      <span class="callout-tag">Command Briefing</span>
+      <p>Freighters are capital ships that serve as your mobile base, storage hub, and fleet command center. Frigates are the smaller vessels that form your fleet, sent on automated expeditions for resources and rewards. Together they form the backbone of a late-game economy — with a maxed-out fleet, you can generate millions of units and tonnes of rare materials on autopilot.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>Module 01</span></div>
+
+  <!-- ── FREIGHTER BASICS ── -->
+  <div class="section" id="freighter-basics">
+    <div class="section-header">
+      <div class="s-accent"></div>
+      <div class="s-title-group">
+        <span class="s-tag">Section 01</span>
+        <h2>Freighter Basics</h2>
+      </div>
+    </div>
+
+    <p>A freighter is a massive starship capable of warping between star systems independently, carrying enormous cargo, housing your frigates, and functioning as a fully-buildable base. You can only own <strong>one freighter at a time</strong>, but can upgrade and customize it extensively.</p>
+
+    <h3>Core Functions</h3>
+    <div class="card-row">
+      <div class="card">
+        <span class="card-icon">🏠</span>
+        <span class="card-title">Mobile Base</span>
+        <p>Build rooms, labs, storage, and facilities aboard your freighter — it travels with you across the galaxy.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📦</span>
+        <span class="card-title">Massive Storage</span>
+        <p>Up to 48 inventory slots (upgradeable) for bulk resources. Store overflow materials you can't carry.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">⚓</span>
+        <span class="card-title">Fleet Hangar</span>
+        <p>Houses all your frigates. Launch expeditions, review fleet status, and accept returning missions here.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔭</span>
+        <span class="card-title">Command Deck</span>
+        <p>The bridge lets you plot hyperspace routes, warp the entire fleet, and manage fleet expeditions.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🌌</span>
+        <span class="card-title">Jump Drive</span>
+        <p>Freighters can warp independently — no hyperdrive needed in your ship. Follow your freighter as a teleport anchor.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🛡</span>
+        <span class="card-title">Fleet Combat</span>
+        <p>Freighters can engage in space battles with Sentinel Dreadnoughts, rewarding rare tech and nanites.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>Module 02</span></div>
+
+  <!-- ── ACQUIRING ── -->
+  <div class="section" id="acquiring">
+    <div class="section-header">
+      <div class="s-accent"></div>
+      <div class="s-title-group">
+        <span class="s-tag">Section 02</span>
+        <h2>Acquiring a Freighter</h2>
+      </div>
+    </div>
+
+    <h3>The Free Freighter Method</h3>
+    <p>You can obtain your <strong>first freighter for free</strong> using this sequence:</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Warp into a new system</strong> — After a short time, you may encounter a distress call: a freighter under attack by pirates.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>Defend the freighter</strong> — Destroy all attacking pirate ships. This is typically 3–5 fighters.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Board the freighter</strong> — Land inside its hangar and speak to the <strong>Fleet Admiral</strong> on the bridge.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>Accept the offer</strong> — The captain will offer to give you the freighter for free as a reward. Accept it.</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">Free Freighter Trick</span>
+      <p>This freighter rescue event <strong>only grants a free ship for the first encounter</strong>. If you've already encountered it and rejected the offer, or already own a freighter, subsequent rescues will cost units. Reload your save before accepting to reroll the freighter type/class.</p>
+    </div>
+
+    <h3>Buying a Freighter</h3>
+    <p>After the free method, or if you want a better class, freighters can be purchased from any rescued or encountered capital ship. Prices range from <span class="hl">~5M Units</span> (C-class small) to <span class="hl">~178M Units</span> (S-class capital). Factors:</p>
+
+    <ul class="blist">
+      <li>Higher class (S &gt; A &gt; B &gt; C) means better base stats and more technology slots</li>
+      <li>Larger hull sizes have more inventory slots and more interior build space</li>
+      <li>Visual design (Sentinel, Venator, etc.) is cosmetic only — stats are class-driven</li>
+      <li>Save-scumming by reloading before a battle lets you reroll hull design and class</li>
+    </ul>
+
+    <div class="warn-strip">
+      <span class="warn-icon">⚠</span>
+      <div class="warn-text"><strong style="color:var(--ember)">Important:</strong> Buying a new freighter replaces your current one. All installed technology modules stay on your old freighter and are <strong>lost</strong>. Move portable items to your inventory first, and plan your upgrade progression before switching.</div>
+    </div>
+  </div>
+
+  <div class="divider"><span>Module 03</span></div>
+
+  <!-- ── CLASSES ── -->
+  <div class="section" id="classes">
+    <div class="section-header">
+      <div class="s-accent"></div>
+      <div class="s-title-group">
+        <span class="s-tag">Section 03</span>
+        <h2>Freighter Classes &amp; Types</h2>
+      </div>
+    </div>
+
+    <h3>Class Ratings</h3>
+    <div class="class-grid">
+      <div class="class-cell header-cell"></div>
+      <div class="class-cell header-cell">Inventory</div>
+      <div class="class-cell header-cell">Tech Slots</div>
+      <div class="class-cell header-cell">Base Bonus</div>
+
+      <div class="class-cell cls-s"><span class="class-letter">S</span><p>Best</p></div>
+      <div class="class-cell"><p>Up to 48</p></div>
+      <div class="class-cell"><p>Up to 21</p></div>
+      <div class="class-cell"><p>+3–4% hyperdrive / stats</p></div>
+
+      <div class="class-cell cls-a"><span class="class-letter">A</span><p>Great</p></div>
+      <div class="class-cell"><p>Up to 48</p></div>
+      <div class="class-cell"><p>Up to 18</p></div>
+      <div class="class-cell"><p>+2–3% bonuses</p></div>
+
+      <div class="class-cell cls-b"><span class="class-letter">B</span><p>Good</p></div>
+      <div class="class-cell"><p>Up to 34</p></div>
+      <div class="class-cell"><p>Up to 14</p></div>
+      <div class="class-cell"><p>+1–2% bonuses</p></div>
+
+      <div class="class-cell cls-c"><span class="class-letter">C</span><p>Basic</p></div>
+      <div class="class-cell"><p>Up to 26</p></div>
+      <div class="class-cell"><p>Up to 9</p></div>
+      <div class="class-cell"><p>Minimal</p></div>
+    </div>
+
+    <h3>Hull Archetypes</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Type</th><th>Description</th><th>Unique Trait</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Sentinel Freighter</strong></td><td>Military design — angular, heavily armored hull</td><td>Higher combat defense stats</td></tr>
+        <tr><td><strong>Venator-style</strong></td><td>Long prow, classic capital ship silhouette</td><td>Balanced stats, most common</td></tr>
+        <tr><td><strong>Cargo Hauler</strong></td><td>Bulky, wide body with prominent cargo modules</td><td>Higher base inventory capacity</td></tr>
+        <tr><td><strong>Expedition-class</strong></td><td>Sleek explorer hull with extended nacelles</td><td>Slightly better hyperdrive range</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout teal">
+      <span class="callout-tag">Visual Note</span>
+      <p>Freighter appearance (color scheme, markings, hull sections) is randomized. Finding a visually impressive design often takes many save-scummed rerolls. Communities like r/NMSCoordinateExchange share system coordinates for specific rare freighters.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>Module 04</span></div>
+
+  <!-- ── UPGRADES ── -->
+  <div class="section" id="upgrades">
+    <div class="section-header">
+      <div class="s-accent"></div>
+      <div class="s-title-group">
+        <span class="s-tag">Section 04</span>
+        <h2>Upgrades &amp; Technology</h2>
+      </div>
+    </div>
+
+    <p>Freighters have a dedicated technology grid. Installing upgrade modules here improves hyperdrive range, combat ability, shield strength, and more. Adjacency bonuses apply — place same-type modules next to each other.</p>
+
+    <h3>Key Technology Modules</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Module</th><th>Effect</th><th>Source</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Hyperdrive</strong></td>
+          <td>Increases warp range; unlock class-specific fuel types (Emeril, Indium, Cadmium drives)</td>
+          <td>Anomaly / Blueprint</td>
+        </tr>
+        <tr>
+          <td><strong>Freighter Warp Reactor</strong></td>
+          <td>Boosts base warp range. Stack up to 3 for maximum range</td>
+          <td>Salvaged Tech / Missions</td>
+        </tr>
+        <tr>
+          <td><strong>Matter Beam</strong></td>
+          <td>Instantly transfer items between your ship and freighter from anywhere on a planet</td>
+          <td>Blueprint / Anomaly</td>
+        </tr>
+        <tr>
+          <td><strong>Fleet Coordination Room</strong></td>
+          <td>Increases expedition success rate for all frigates. Build in the base section.</td>
+          <td>Build Menu (Freighter)</td>
+        </tr>
+        <tr>
+          <td><strong>Freighter Shield</strong></td>
+          <td>Increases shield durability during capital ship battles</td>
+          <td>Salvaged Tech</td>
+        </tr>
+        <tr>
+          <td><strong>Frigate Fuel Efficiency</strong></td>
+          <td>Reduces fuel consumption for all fleet expeditions</td>
+          <td>Salvaged Tech / Missions</td>
+        </tr>
+        <tr>
+          <td><strong>Stellar Extractor</strong></td>
+          <td>Passively collects resources while your freighter is parked in orbit</td>
+          <td>Build Menu (Freighter)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Upgrade Priority</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Matter Beam</strong> — Quality-of-life upgrade that pays dividends immediately. Transfer resources remotely.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>Hyperdrive + Warp Reactors ×3</strong> — Essential for reaching red/green/blue star systems with valuable resources.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Fleet Coordination Room</strong> — Build this to increase frigate expedition success rates before sending fleets.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>Fuel Efficiency upgrades</strong> — Reduce the cost of Frigate Fuel, especially important with large fleets.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body"><strong>Stellar Extractor</strong> — Passive resource income while you're away. Installs on the outer hull.</div>
+      </div>
+    </div>
+
+    <h3>Upgrade Stat Priorities</h3>
+    <div style="margin:14px 0;">
+      <div class="pbar-row">
+        <div class="pbar-label">Hyperdrive Range</div>
+        <div class="pbar"><div class="pbar-fill" style="width:90%"></div></div>
+        <div class="pbar-val" style="color:var(--gold)">TOP</div>
+      </div>
+      <div class="pbar-row">
+        <div class="pbar-label">Fleet Efficiency</div>
+        <div class="pbar"><div class="pbar-fill" style="width:80%"></div></div>
+        <div class="pbar-val" style="color:var(--gold)">HIGH</div>
+      </div>
+      <div class="pbar-row">
+        <div class="pbar-label">Matter Beam</div>
+        <div class="pbar"><div class="pbar-fill teal" style="width:75%"></div></div>
+        <div class="pbar-val" style="color:var(--teal)">HIGH</div>
+      </div>
+      <div class="pbar-row">
+        <div class="pbar-label">Shield / Combat</div>
+        <div class="pbar"><div class="pbar-fill" style="width:45%"></div></div>
+        <div class="pbar-val" style="color:var(--gold)">MED</div>
+      </div>
+      <div class="pbar-row">
+        <div class="pbar-label">Passive Extractors</div>
+        <div class="pbar"><div class="pbar-fill teal" style="width:35%"></div></div>
+        <div class="pbar-val" style="color:var(--teal)">LOW</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>Module 05</span></div>
+
+  <!-- ── BASE BUILDING ── -->
+  <div class="section" id="base-building">
+    <div class="section-header">
+      <div class="s-accent"></div>
+      <div class="s-title-group">
+        <span class="s-tag">Section 05</span>
+        <h2>Freighter Base Building</h2>
+      </div>
+    </div>
+
+    <p>Your freighter's interior can be built out using the same base-building system as planetary bases. You have dedicated room prefabs that only work aboard freighters, plus standard base parts.</p>
+
+    <h3>Essential Freighter Rooms</h3>
+    <div class="card-row">
+      <div class="card">
+        <span class="card-icon">🛰</span>
+        <span class="card-title">Fleet Operations</span>
+        <p>Central hub for managing frigates and sending expeditions. Mandatory first room to build.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">⚗</span>
+        <span class="card-title">Refiner Bay</span>
+        <p>Houses Large and Industrial refiners. Automate resource processing at massive scale.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🌱</span>
+        <span class="card-title">Hydroponics Bay</span>
+        <p>Grow crops aboard your ship. No planet needed — automate rare ingredient farming.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔬</span>
+        <span class="card-title">Science Lab</span>
+        <p>Houses the Blueprint Analyser and research stations. Good for nanite generation.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📡</span>
+        <span class="card-title">Comms Array</span>
+        <p>Boosts expedition efficiency. Stack multiple arrays to push success rate to near 100%.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🛏</span>
+        <span class="card-title">Crew Quarters</span>
+        <p>Required for hiring NPCs (cook, researcher, engineer) who provide passive bonuses and crafting options.</p>
+      </div>
+    </div>
+
+    <div class="callout teal">
+      <span class="callout-tag">Build Layout Tip</span>
+      <p>Freighter room prefabs connect via corridor pieces. Plan your layout before building — rooms must be accessible from the main corridor and cannot overlap with existing hull sections. The forward section offers the most open build space.</p>
+    </div>
+
+    <h3>Hiring NPC Crew</h3>
+    <p>Once you have Crew Quarters, you can hire NPCs from Space Stations. Each crew member provides a passive buff:</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>NPC Role</th><th>Bonus</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>⚙ Engineer</td><td>Increases freighter hyperdrive efficiency and warp fuel generation</td></tr>
+        <tr><td>🌾 Cook / Farmer</td><td>Produces food items and rare ingredients passively in hydroponics</td></tr>
+        <tr><td>🔬 Scientist</td><td>Generates nanite clusters and blueprint upgrades over time</td></tr>
+        <tr><td>🛡 Weapons Officer</td><td>Improves combat ability and turret damage during freighter battles</td></tr>
+        <tr><td>📊 Fleet Commander</td><td>Boosts all frigate expedition rewards and reduces failure chance</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="divider"><span>Module 06</span></div>
+
+  <!-- ── FRIGATES ── -->
+  <div class="section" id="frigates">
+    <div class="section-header">
+      <div class="s-accent teal"></div>
+      <div class="s-title-group">
+        <span class="s-tag teal">Section 06</span>
+        <h2>Frigates — Overview</h2>
+      </div>
+    </div>
+
+    <p>Frigates are medium-sized starships that dock in your freighter's hangar. You recruit them from systems you visit and deploy them on <strong>automated expeditions</strong>. They return with resources, units, and rare rewards without you having to fly anywhere.</p>
+
+    <h3>Recruiting Frigates</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Find frigates in space</strong> — Frigates float in orbit in most systems, usually near a planet or the star.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>Hail the frigate</strong> — Fly close and interact. Review its stats: class (S–C), type, and five stat ratings.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Purchase it</strong> — Cost ranges from ~500K (C-class) to ~25M+ (S-class). Higher class = better stats and more trait slots.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>It joins your fleet</strong> — The frigate flies to your freighter and docks. You can view it from the Fleet Management terminal.</div>
+      </div>
+    </div>
+
+    <h3>Frigate Stats Explained</h3>
+    <p>Each frigate has five stat categories rated from 1–10. These determine how well it performs on different expedition types:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Stat</th><th>Relevant Expedition Type</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>⚔ <strong>Combat</strong></td><td>Aggressive, Sentinel, and Conflict expeditions</td></tr>
+        <tr><td>🔭 <strong>Exploration</strong></td><td>Survey, Discovery, and long-range expeditions</td></tr>
+        <tr><td>⚒ <strong>Mining</strong></td><td>Resource extraction and industrial expeditions</td></tr>
+        <tr><td>⚙ <strong>Engineering</strong></td><td>Salvage, repair, and construction missions</td></tr>
+        <tr><td>🌱 <strong>Support</strong></td><td>Trade, resupply, and diplomatic missions</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <span class="callout-tag">Stat Matching</span>
+      <p>Each expedition requires a certain <strong>combined stat total</strong> in the relevant category across all deployed frigates. Higher totals increase success chance and reward quality. Always match frigate types to the expedition type.</p>
+    </div>
+
+    <h3>Fleet Fuel</h3>
+    <p>Expeditions consume <strong>Frigate Fuel</strong> (crafted from Di-hydrogen + Tritium). Stock up before sending fleets:</p>
+    <ul class="blist">
+      <li>1× Frigate Fuel = 50× Di-hydrogen + 50× Tritium</li>
+      <li>Most expeditions cost 1–4 Frigate Fuel depending on distance/tier</li>
+      <li>With a large fleet, you'll need hundreds — set up Di-hydrogen and Tritium farming</li>
+      <li>Fuel Efficiency upgrades in your freighter tech grid reduce this cost</li>
+    </ul>
+  </div>
+
+  <div class="divider"><span>Module 07</span></div>
+
+  <!-- ── FRIGATE TYPES ── -->
+  <div class="section" id="frigate-types">
+    <div class="section-header">
+      <div class="s-accent teal"></div>
+      <div class="s-title-group">
+        <span class="s-tag teal">Section 07</span>
+        <h2>Frigate Types &amp; Stats</h2>
+      </div>
+    </div>
+
+    <p>Each frigate is tagged with one primary type that indicates its role. Recruit a balanced fleet with multiple types to cover all expedition categories.</p>
+
+    <div class="frigate-grid">
+      <div class="frig-card">
+        <span class="frig-icon">⚔</span>
+        <span class="frig-name">Combat</span>
+        <p class="frig-desc">High combat stat. Send on conflict and pirate-hunting missions.</p>
+      </div>
+      <div class="frig-card">
+        <span class="frig-icon">🔭</span>
+        <span class="frig-name">Explorer</span>
+        <p class="frig-desc">High exploration stat. Essential for survey and long-range missions.</p>
+      </div>
+      <div class="frig-card">
+        <span class="frig-icon">⚒</span>
+        <span class="frig-name">Industrial</span>
+        <p class="frig-desc">High mining stat. Best for resource extraction missions.</p>
+      </div>
+      <div class="frig-card">
+        <span class="frig-icon">⚙</span>
+        <span class="frig-name">Support</span>
+        <p class="frig-desc">Balanced support stat. Trade and resupply expeditions.</p>
+      </div>
+      <div class="frig-card">
+        <span class="frig-icon">🌟</span>
+        <span class="frig-name">Freighter</span>
+        <p class="frig-desc">Rare type. High across all stats. Extremely valuable — buy on sight.</p>
+      </div>
+    </div>
+
+    <h3>Building an Ideal Fleet</h3>
+    <p>For a well-rounded fleet of 6–10 frigates, aim for this composition:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Type</th><th>Qty Recommended</th><th>Priority</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>⚔ Combat</td><td>2</td><td><span class="badge ba">High</span></td></tr>
+        <tr><td>🔭 Explorer</td><td>2</td><td><span class="badge ba">High</span></td></tr>
+        <tr><td>⚒ Industrial</td><td>2</td><td><span class="badge ba">High</span></td></tr>
+        <tr><td>⚙ Support</td><td>1–2</td><td><span class="badge bb">Medium</span></td></tr>
+        <tr><td>🌟 Freighter-type</td><td>1 if found</td><td><span class="badge bg">Priority Buy</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout teal">
+      <span class="callout-tag">S-Class Frigates</span>
+      <p>S-class frigates appear rarely in any system. When you spot one, <strong>always buy it regardless of type</strong> — their stat totals are far superior, and they have additional trait slots that provide unique bonuses to your fleet's performance.</p>
+    </div>
+
+    <h3>Frigate Traits</h3>
+    <p>Higher-class frigates have <strong>trait cards</strong> that provide permanent bonuses. These are fixed when you purchase the frigate. Examples include:</p>
+    <ul class="blist">
+      <li><strong>Veteran Crew</strong> — +2 to all stats permanently</li>
+      <li><strong>Lucky</strong> — Increased chance of bonus reward on expeditions</li>
+      <li><strong>Fast Engine</strong> — Reduces expedition duration by 15–25%</li>
+      <li><strong>Scavenger</strong> — Additional salvaged materials returned per expedition</li>
+      <li><strong>Disciplined</strong> — Reduced damage taken during conflict expeditions</li>
+    </ul>
+  </div>
+
+  <div class="divider"><span>Module 08</span></div>
+
+  <!-- ── EXPEDITIONS ── -->
+  <div class="section" id="expeditions">
+    <div class="section-header">
+      <div class="s-accent teal"></div>
+      <div class="s-title-group">
+        <span class="s-tag teal">Section 08</span>
+        <h2>Fleet Expeditions</h2>
+      </div>
+    </div>
+
+    <p>Expeditions are automated missions sent from your Fleet Operations terminal. Select the expedition, assign frigates, and wait real-time hours for them to return. They are the primary passive income engine of the game.</p>
+
+    <h3>Sending an Expedition</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Open Fleet Operations</strong> — Accessible from the terminal in your freighter's hangar bay or bridge.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>Select an expedition</strong> — Each expedition shows type, required stat total, duration, fuel cost, and potential rewards.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Assign frigates</strong> — The system shows a success percentage. Aim for <span class="hl">90%+</span> to minimize damage and failures.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>Confirm and launch</strong> — Frigates depart from the hangar. Duration is real-time (1–20+ hours depending on tier).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body"><strong>Collect rewards</strong> — When frigates return, access the Fleet Operations terminal to claim the haul and repair any damage.</div>
+      </div>
+    </div>
+
+    <h3>Expedition Tiers</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>Tier</th><th>Duration</th><th>Fuel Cost</th><th>Reward Scale</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge bb">Tier 1</span></td><td>1–3 hrs</td><td>1 fuel</td><td>Basic resources, small units</td></tr>
+        <tr><td><span class="badge ba">Tier 2</span></td><td>3–8 hrs</td><td>2 fuel</td><td>Rare resources, moderate units</td></tr>
+        <tr><td><span class="badge bg">Tier 3</span></td><td>8–16 hrs</td><td>3–4 fuel</td><td>High-value materials, large units</td></tr>
+        <tr><td><span class="badge br">Tier 4</span></td><td>16–24+ hrs</td><td>4–6 fuel</td><td>Unique items, massive rewards</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Expedition Outcomes</h3>
+    <div class="exp-result-grid">
+      <div class="exp-result">
+        <span class="exp-result-icon">✅</span>
+        <span class="exp-result-label">Success</span>
+        <span class="exp-result-val" style="color:var(--teal)">Full</span>
+      </div>
+      <div class="exp-result">
+        <span class="exp-result-icon">⚠</span>
+        <span class="exp-result-label">Partial</span>
+        <span class="exp-result-val" style="color:var(--gold)">~60%</span>
+      </div>
+      <div class="exp-result">
+        <span class="exp-result-icon">💥</span>
+        <span class="exp-result-label">Failure</span>
+        <span class="exp-result-val" style="color:var(--ember)">Loss</span>
+      </div>
+    </div>
+    <p style="font-size:13px; margin-top:8px; color:var(--fog)">Partial success = reduced rewards + frigate damage. Failure = no rewards + heavy damage (frigates can be destroyed at very low success %). Always target 90%+ success.</p>
+
+    <h3>Repairing Frigates</h3>
+    <p>Damaged frigates show a health bar on the Fleet Operations screen. Repair them using <strong>Frigate Repair Kits</strong> (crafted from Oxygen + Carbon Nanotubes). Destroyed frigates are gone permanently — replace them by recruiting new ones.</p>
+
+    <ul class="blist">
+      <li>Check frigate health before every expedition — damaged frigates perform worse</li>
+      <li>Never send frigates with &lt;30% health on long expeditions</li>
+      <li>Frigate Repair Kits are cheap to craft; keep a stack of 20+ in your freighter storage</li>
+    </ul>
+  </div>
+
+  <div class="divider"><span>Module 09</span></div>
+
+  <!-- ── PRO TIPS ── -->
+  <div class="section" id="tips">
+    <div class="section-header">
+      <div class="s-accent"></div>
+      <div class="s-title-group">
+        <span class="s-tag">Section 09</span>
+        <h2>Pro Tips &amp; Strategy</h2>
+      </div>
+    </div>
+
+    <div class="callout teal">
+      <span class="callout-tag">💡 Capital Ship Battles</span>
+      <p>Sentinel Dreadnoughts occasionally appear in systems. Defeating them rewards <strong>Salvaged Frigate Modules</strong> — the currency used to purchase the best freighter technology upgrades. Fight one every time you encounter one.</p>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">💡 Save Scum Freighters</span>
+      <p>Before warping into a system that might have a rescue event, <strong>manual save</strong>. If the freighter class or design is poor, reload and warp again. Repeat until you find an S-class design you want.</p>
+    </div>
+
+    <div class="callout teal">
+      <span class="callout-tag">💡 Stack Coordination Rooms</span>
+      <p>Build multiple Fleet Coordination Rooms and Comms Arrays aboard your freighter. Each one adds to the expedition success bonus. A fully kitted freighter base can push success rates to near 100% even with B-class frigates.</p>
+    </div>
+
+    <div class="warn-strip">
+      <span class="warn-icon">⚡</span>
+      <div class="warn-text"><strong style="color:var(--ember)">Fuel Warning:</strong> If you send 5+ frigates on Tier 3–4 expeditions simultaneously, you'll burn through Frigate Fuel extremely fast. Always have 100+ units in storage. Farm Di-hydrogen and Tritium before going on long play sessions.</div>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">💡 Matter Beam is Crucial</span>
+      <p>Install the Matter Beam upgrade as early as possible. Being able to dump resources directly into your freighter's inventory while on a planet — without flying back — completely transforms resource gathering efficiency.</p>
+    </div>
+
+    <div class="callout teal">
+      <span class="callout-tag">💡 Teleport to Your Freighter</span>
+      <p>Your freighter appears as a teleport destination from any Space Station terminal. Use this to instantly warp back to collect expedition rewards without burning hyperdrive fuel. Combine with the freighter warping to new systems to build an efficient loop.</p>
+    </div>
+
+    <div class="callout">
+      <span class="callout-tag">💡 Parallel Expeditions</span>
+      <p>You can have multiple expeditions running simultaneously (one per frigate group). Once you have 8–10 frigates, split them into 2–3 groups and run different expedition types at once. This massively multiplies passive income.</p>
+    </div>
+
+    <div class="callout teal">
+      <span class="callout-tag">💡 Freighter Farming Loop</span>
+      <p>End-game loop: <strong>Land on freighter → collect expedition rewards → launch new expeditions → transfer resources via Matter Beam while planet farming → teleport back</strong>. A well-managed fleet generates 5–20M units per real-time day entirely passively.</p>
+    </div>
+
+    <h3>Recommended Frigate Fleet Progression</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>2–3 frigates (any type)</strong> — Get started with Tier 1–2 expeditions. Don't worry about class yet; learn the system.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>5 frigates (balanced types)</strong> — One of each: Combat, Explorer, Industrial, Support, and one wildcard. Run Tier 2 expeditions profitably.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>8 frigates (A-class minimum)</strong> — Start replacing C/B-class with A and S. Build Coordination Rooms. Run Tier 3 expeditions.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>10–12 frigates (S-class majority)</strong> — Endgame fleet. 90%+ success on Tier 4 expeditions. Split into multiple parallel expedition groups.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-brand">⬡ NMS FLEET COMMAND</div>
+    <div class="footer-info">
+      <p>Freighters & Frigates · Admiral's Field Manual</p>
+      <p style="margin-top:4px; opacity:0.5">No Man's Sky · All Platforms · Worlds Update Era</p>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
