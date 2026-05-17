@@ -758,7 +758,7 @@
     <span class="hub-back-arrow">←</span>
     <span>Traveller's Codex</span>
   </a>
-  <span class="hub-title">Manual IV · Vessels &amp; Craft</span>
+  <span class="hub-title">Manual IV · Vehicles &amp; Craft</span>
   <span class="hub-indicator"></span>
 </nav>
 
@@ -775,16 +775,16 @@
     <div class="header-meta">
       <div class="hm-pill active">Manual IV</div>
       <div class="hm-pill">All Platforms</div>
-      <div class="hm-pill">Worlds Update Era</div>
+      <div class="hm-pill">Voyagers/Beacon Era</div>
     </div>
   </header>
 
   <!-- ── TOC ── -->
   <nav class="toc reveal">
     <div class="toc-head">// Contents</div>
-    <a href="#ship-classes"><span class="toc-n">01</span> Ship Classes</a>
+    <a href="#ship-classes"><span class="toc-n">01</span> Ship Types (9 Classes)</a>
     <a href="#finding"><span class="toc-n">02</span> Finding Ships</a>
-    <a href="#ship-building"><span class="toc-n">03</span> Custom Ship Building</a>
+    <a href="#ship-building"><span class="toc-n">03</span> Fabricator & Corvettes</a>
     <a href="#living-ships"><span class="toc-n">04</span> Living Ships</a>
     <a href="#ship-upgrades"><span class="toc-n">05</span> Ship Upgrades</a>
     <a href="#multi-tools"><span class="toc-n">06</span> Multi-Tools</a>
@@ -805,7 +805,7 @@
       </div>
     </div>
 
-    <p>Every ship in No Man's Sky belongs to one of six classes, each with distinct stats, bonuses, and visual silhouettes. Choosing the right class for your playstyle is the most impactful equipment decision in the game.</p>
+    <p>Every ship in No Man's Sky belongs to one of nine types, each with distinct stats, bonuses, and visual silhouettes. Choosing the right type for your playstyle is the most impactful equipment decision in the game.</p>
 
     <div class="ship-grid">
       <div class="ship-card">
@@ -824,7 +824,7 @@
         <span class="sc-icon">📦</span>
         <span class="sc-name">Hauler</span>
         <span class="sc-role">Cargo King</span>
-        <p>Largest inventory capacity and best shields. Slow and wide — the trading workhorse for bulk runs.</p>
+        <p>Largest inventory capacity (up to 120 slots) and best shields. Slow and wide — the trading workhorse.</p>
       </div>
       <div class="ship-card">
         <span class="sc-icon">🛸</span>
@@ -839,15 +839,33 @@
         <p>Always S-class, always unique. Near-maxed stats in all categories. Extremely rare — buy on sight.</p>
       </div>
       <div class="ship-card">
+        <span class="sc-icon">☀</span>
+        <span class="sc-name">Solar Ship</span>
+        <span class="sc-role">Vesper Sail</span>
+        <p>Sleek ships with a distinctive Vesper Sail. Found mostly in Outlaw systems (85% spawn rate there). Balanced explorer-type stats.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">🌐</span>
+        <span class="sc-name">Interceptor</span>
+        <span class="sc-role">Salvaged Sentinel</span>
+        <p>Hijacked Sentinel ships. Hover in place, equipped with anti-grav. Recovered from crashed wrecks on Dissonant planets only.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">🛠</span>
+        <span class="sc-name">Corvette</span>
+        <span class="sc-role">Custom-Built</span>
+        <p>Large, fully customizable ships built piece-by-piece at Corvette Workshops on Space Stations. Voyagers update (2025).</p>
+      </div>
+      <div class="ship-card">
         <span class="sc-icon">🌿</span>
         <span class="sc-name">Living Ship</span>
         <span class="sc-role">Organic Vessel</span>
-        <p>A biological starship grown, not built. Uses unique upgrade organs instead of modules. Separate system entirely.</p>
+        <p>A biological starship grown, not built. Uses unique organic upgrade organs upgraded via Psychonic Eggs. Always S-class with 36 Cargo + 30 Tech slots.</p>
       </div>
     </div>
 
     <h3>Class Rating System</h3>
-    <p>Each ship type also has a quality class — C, B, A, or S — that determines its base stats, inventory size, and technology slot count. S-class is always best. Within each class, stats are identical regardless of visual design.</p>
+    <p>Each ship type also has a quality class — C, B, A, or S — that determines its base stats, inventory size, and technology slot count. S-class is always best. Max inventory varies by ship type (Haulers reach 120 cargo slots; Fighters top out around 100), but within each type, S-class gives the maximum.</p>
 
     <div class="class-compare">
       <div class="cc-cell hdr"></div>
@@ -856,24 +874,24 @@
       <div class="cc-cell hdr">Stat Bonus</div>
 
       <div class="cc-cell s-col"><span class="cc-letter">S</span><p>Best</p></div>
-      <div class="cc-cell"><p>Max (48–60)</p></div>
-      <div class="cc-cell"><p>Up to 21</p></div>
-      <div class="cc-cell"><p>+50–60%</p></div>
+      <div class="cc-cell"><p>Type max</p></div>
+      <div class="cc-cell"><p>Up to 60</p></div>
+      <div class="cc-cell"><p>Highest per type</p></div>
 
       <div class="cc-cell a-col"><span class="cc-letter">A</span><p>Great</p></div>
-      <div class="cc-cell"><p>High</p></div>
-      <div class="cc-cell"><p>Up to 18</p></div>
-      <div class="cc-cell"><p>+35–45%</p></div>
+      <div class="cc-cell"><p>Near max</p></div>
+      <div class="cc-cell"><p>Up to 60</p></div>
+      <div class="cc-cell"><p>35%+ class bonus</p></div>
 
       <div class="cc-cell b-col"><span class="cc-letter">B</span><p>Good</p></div>
       <div class="cc-cell"><p>Medium</p></div>
-      <div class="cc-cell"><p>Up to 14</p></div>
-      <div class="cc-cell"><p>+20–30%</p></div>
+      <div class="cc-cell"><p>Moderate</p></div>
+      <div class="cc-cell"><p>20%+ class bonus</p></div>
 
       <div class="cc-cell c-col"><span class="cc-letter">C</span><p>Basic</p></div>
       <div class="cc-cell"><p>Low</p></div>
-      <div class="cc-cell"><p>Up to 9</p></div>
-      <div class="cc-cell"><p>Minimal</p></div>
+      <div class="cc-cell"><p>Fewest slots</p></div>
+      <div class="cc-cell"><p>Minimal / none</p></div>
     </div>
 
     <h3>Ship Class Stat Comparison</h3>
@@ -1033,29 +1051,29 @@
       <div class="sec-bar"></div>
       <div>
         <span class="sec-tag">Section 03</span>
-        <h2>Custom Ship Building</h2>
+        <h2>Fabricator &amp; Corvettes</h2>
       </div>
     </div>
 
-    <p>The <strong>Starship Fabricator</strong> on the Space Anomaly lets you design and build a custom ship from scratch — choosing every visual component individually. This is the best way to get your dream ship with the exact stats, class, and look you want.</p>
+    <p>No Man's Sky offers two custom ship-building systems. The <strong>Starship Fabricator</strong> on Space Stations (Orbital update) lets you design and build Fighter, Explorer, Hauler, Shuttle, and Solar Ships from procedural parts. The <strong>Corvette Workshop</strong> (Voyagers update, 2025) lets you build large, fully-modular Corvette-class ships piece by piece.</p>
 
-    <h3>The Fabrication Process</h3>
+    <h3>The Starship Fabricator</h3>
     <div class="steps">
       <div class="step">
         <div class="step-n">1</div>
-        <div class="step-b"><strong>Visit the Space Anomaly</strong> — find the Starship Fabricator terminal. It's in the main hall near the blueprint/upgrade vendors.</div>
+        <div class="step-b"><strong>Visit any Space Station</strong> — the Starship Fabricator terminal is located near the technology vendors.</div>
       </div>
       <div class="step">
         <div class="step-n">2</div>
-        <div class="step-b"><strong>Choose ship type</strong> — Fighter, Explorer, Hauler, or Shuttle. This determines the base part catalogue available to you.</div>
+        <div class="step-b"><strong>Choose ship type</strong> — Fighter, Explorer, Hauler, Shuttle, or Solar. This determines the base part catalogue available.</div>
       </div>
       <div class="step">
         <div class="step-n">3</div>
-        <div class="step-b"><strong>Unlock parts with Nanites</strong> — each component (cockpit, wing, thruster, body, etc.) must be purchased first. Parts cost 50–800 nanites each.</div>
+        <div class="step-b"><strong>Unlock parts with Nanites</strong> — each component (cockpit, wing, thruster, body, etc.) must be purchased first. Parts cost ~50–800 nanites each.</div>
       </div>
       <div class="step">
         <div class="step-n">4</div>
-        <div class="step-b"><strong>Assemble your ship</strong> — mix and match unlocked parts freely. Preview updates in real time. Parts from different manufacturers create unique visual hybrids.</div>
+        <div class="step-b"><strong>Assemble your ship</strong> — mix and match unlocked parts freely. Preview updates in real time. Different manufacturer parts create unique visual hybrids.</div>
       </div>
       <div class="step">
         <div class="step-n">5</div>
@@ -1063,7 +1081,7 @@
       </div>
       <div class="step">
         <div class="step-n">6</div>
-        <div class="step-b"><strong>Fabricate and pay</strong> — the final cost is in Units, scaling with part count and complexity. Class is determined randomly — reroll (reload save) for S-class.</div>
+        <div class="step-b"><strong>Fabricate and pay</strong> — the final cost is in Units, scaling with part count and complexity. Class is rolled randomly on fabrication — save before pressing confirm and reload until you get S-class.</div>
       </div>
     </div>
 
@@ -1107,25 +1125,80 @@
       </div>
     </div>
 
-    <div class="callout">
-      <span class="ct">S-Class Fabrication Strategy</span>
-      <p>Build your ideal ship visually, then <strong>save before fabricating</strong>. Check the resulting class — if it's not S, reload and fabricate again. The class is rolled at the moment of fabrication, not during design. Each reload gives a new roll. Average reloads for S-class: 3–8.</p>
+    <h3>Corvette Workshop (Voyagers Update)</h3>
+    <p>The <strong>Corvette Workshop</strong> is a separate ship-building system on Space Stations, accessed via the warp points to the Corvette landing pads. Corvette-class ships are large, fully modular vessels with full furnished interiors that can carry passengers.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b"><strong>Find the Corvette Workshop</strong> — walk through the warp gates on the left side of any Space Station to reach the dedicated Corvette landing pads, then interact with the workshop console.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b"><strong>Build with snap-together modules</strong> — habitation modules, hulls, wings, engines, weapons, reactors, shield generators, and decorative pieces all snap to each other in a build editor.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b"><strong>Choose your hab style</strong> — three distinct aesthetics available: <strong>Titan</strong>, <strong>Thunderbird</strong>, and <strong>Ambassador</strong>, each with its own interior furniture style.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b"><strong>Furnish the interior</strong> — inside the parked Corvette, open the build menu to add beds, refiners, cargo containers, windows, and any base-building parts.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-b"><strong>Find more modules</strong> — basic modules are bought at the Corvette Workshop. The full catalogue is found in Salvage Containers on planets with Salvageable Scrap listed as a resource, or traded for at the Workshop.</div>
+      </div>
     </div>
 
-    <h3>Sentinel Ships (Interceptors)</h3>
-    <p>Sentinel Interceptors are a special ship type obtained only by defeating Sentinel capital ships in corrupted star systems. They have unique organic-mechanical hybrid visuals and can be upgraded using salvaged Sentinel components.</p>
+    <div class="callout">
+      <span class="ct">Corvette Combat Stats</span>
+      <p>Corvettes use standard ship technology modules in addition to whatever stat bonuses their built-in modules provide. Functionally they're a hybrid of standard ship and freighter mechanics — and they can hover, eject players to spacewalk, and ferry passengers between systems.</p>
+    </div>
 
-    <ul class="bl">
-      <li>Find a <strong>Dissonant planet</strong> (look for the Dissonance indicator in the system scan)</li>
-      <li>Destroy Sentinel Walkers on the surface to trigger a capital Sentinel ship encounter</li>
-      <li>Defeat the Hardframe Battle Mech and its escorts in orbit to claim the Interceptor wreck</li>
-      <li>Repair the Interceptor using Sentinel-specific salvage materials found on the planet</li>
-      <li>Stats and design are randomized — reload before landing to reroll for S-class</li>
-    </ul>
+    <div class="callout">
+      <span class="ct">S-Class Fabrication Strategy</span>
+      <p>For the Starship Fabricator: build your ideal ship visually, then <strong>save before fabricating</strong>. Check the resulting class — if it's not S, reload and fabricate again. The class is rolled at the moment of fabrication. Average reloads for S-class: 3–8.</p>
+    </div>
+
+    <h3>Sentinel Interceptors</h3>
+    <p>Sentinel Interceptors are <strong>salvaged Sentinel ships</strong> rebuilt for player use. They're found exclusively on <strong>Dissonant planets</strong> in Dissonant systems. They have unique tech (Anti-Gravity Well, Crimson Core) and can hover mid-air.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b"><strong>Find a Dissonant system</strong> — open the Galaxy Map and look for systems labelled "Dissonant" instead of an element name. Only one planet per system has Dissonance, marked with "Dissonance detected" in the scan.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b"><strong>Get an Echo Locator</strong> — destroy <strong>Dissonance Resonators</strong> (tall drilling Sentinels guarded by Corrupted Sentinels) on the planet. They drop Echo Locators (and sometimes Inverted Mirrors).</div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b"><strong>Use the Echo Locator</strong> from your inventory — it marks a nearby <strong>Harmonic Camp</strong>. Travel there and find the Harmonic Interface terminal.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b"><strong>Solve the glyph puzzle</strong> — the terminal shows three math problems. Calculate them, then input the answers as Override Glyphs. Choose "Locate Dissonance Spikes" to mark a crashed Interceptor.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-b"><strong>Travel to the crash site</strong> — interact with the wreck, gather the Hyaline Brain. Use "Probe Subconscious" to find an Ancient Site, then cleanse the brain at the Monolith → Harmonic Brain.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">6</div>
+        <div class="step-b"><strong>Repair the Pilot Interface</strong> — using Radiant Shards (from terrain), Inverted Mirrors, and the Harmonic Brain. The Interceptor becomes yours.</div>
+      </div>
+    </div>
 
     <div class="callout yellow">
-      <span class="ct">Interceptor Visual Parts</span>
-      <p>Sentinel Interceptors have their own modular part system — you can swap their wing, body, and thruster components using other salvaged Interceptor parts. The Anomaly's Fabricator also unlocks Interceptor-specific parts as you collect more Sentinel salvage.</p>
+      <span class="ct">Interceptor Stat Reroll</span>
+      <p>Each system has a single Interceptor <strong>design</strong> but class is rolled per crash site. Save manually <strong>before</strong> interacting with the wreck — if the stats are bad, reload and the class rerolls without forcing you to redo the puzzle. You can also farm multiple wrecks from the same Harmonic Camp by leaving and using the Spike Locator again.</p>
+    </div>
+
+    <div class="callout">
+      <span class="ct">Carrier AI Fragment Alternative</span>
+      <p>Destroy a <strong>Sentinel Capital Ship</strong> (spawns at max wanted level in space combat) to receive a <strong>Carrier AI Fragment</strong>. Activate it to be directed to a crashed Interceptor in any Dissonant system. Slower than the Echo Locator method but doesn't require puzzle-solving.</p>
     </div>
   </div>
 
@@ -1149,65 +1222,67 @@
     <div class="steps">
       <div class="step">
         <div class="step-n">1</div>
-        <div class="step-b"><strong>Start the Starbirth mission</strong> — Purchase a <strong>Void Egg</strong> from the Space Anomaly for 3,200 Quicksilver. This triggers the questline.</div>
+        <div class="step-b"><strong>Buy a Void Egg</strong> — Purchase from the <strong>Quicksilver Synthesis Companion</strong> on the Space Anomaly for <strong>3,200 Quicksilver</strong>. Earn Quicksilver from daily Nexus missions and weekend community events.</div>
       </div>
       <div class="step">
         <div class="step-n">2</div>
-        <div class="step-b"><strong>Feed the Void Egg</strong> — Use your pulse drive across multiple star systems while carrying the egg. It hatches through a series of encounters.</div>
+        <div class="step-b"><strong>Pulse Drive with the Egg</strong> — Keep the Void Egg in your <strong>active starship inventory</strong> and engage Pulse Drive in space (not warp). After a short while, you'll receive a strange transmission and an alien Living Ship will appear, kicking off the <strong>Starbirth quest</strong>.</div>
       </div>
       <div class="step">
         <div class="step-n">3</div>
-        <div class="step-b"><strong>Complete the Starbirth chain</strong> — A multi-step mission involving organic materials and specific activities. Ends with your Living Ship emerging fully grown.</div>
+        <div class="step-b"><strong>Complete the Starbirth chain</strong> — The egg gives you cryptic clues leading to planets in different star systems. You'll gather and craft organic items over several real-time days as the egg matures through timed stages.</div>
       </div>
       <div class="step">
         <div class="step-n">4</div>
-        <div class="step-b"><strong>Upgrade with Tainted Metal</strong> — Organic upgrades (Grafted Eyes, Neural Assembly, etc.) are purchased using Tainted Metal, earned from Sentinel combat.</div>
+        <div class="step-b"><strong>Claim your Living Ship</strong> — At the end of the chain, you'll be directed to a crash site. Living Ships are always S-class with 36 Cargo + 30 Tech slots. Subsequent Living Ships require another Void Egg + 10,000 Nanites.</div>
       </div>
     </div>
 
     <h3>Living Ship Upgrade Organs</h3>
+    <p>Living Ship "organs" are the equivalent of normal ship technology, but use unique organic components and recipes. They are obtained from Void Egg space encounters and from frigate expeditions with Organic Frigates.</p>
+
     <div class="upgrade-grid">
       <div class="upg-card">
         <span class="upg-icon">👁</span>
         <span class="upg-name">Grafted Eyes</span>
-        <span class="upg-type">Scanner System</span>
-        <p>Replaces scanner module. Upgrades increase scan range and discovery bonuses.</p>
+        <span class="upg-type">Weapon (Phase Beam)</span>
+        <p>The Living Ship's beam weapon. Drains shields efficiently. Recharged with rare organic materials.</p>
       </div>
       <div class="upg-card">
         <span class="upg-icon">🧠</span>
         <span class="upg-name">Neural Assembly</span>
         <span class="upg-type">Hyperdrive Analogue</span>
-        <p>Organic equivalent of a hyperdrive. Upgrades extend warp range and unlock colored star access.</p>
+        <p>The hyperdrive equivalent. Can warp to red, green, and blue stars without needing Cadmium/Emeril/Indium drives.</p>
       </div>
       <div class="upg-card">
         <span class="upg-icon">🫀</span>
         <span class="upg-name">Pulsing Heart</span>
-        <span class="upg-type">Engine System</span>
-        <p>Powers the ship's pulse drive equivalent. Upgrades improve boost and atmospheric performance.</p>
+        <span class="upg-type">Pulse Engine</span>
+        <p>Powers in-system travel. Faster pulse jumps than standard ships when fully upgraded.</p>
       </div>
       <div class="upg-card">
         <span class="upg-icon">🦠</span>
         <span class="upg-name">Scream Suppressor</span>
-        <span class="upg-type">Shield Analogue</span>
-        <p>The living ship's shield system. Regenerates organically over time.</p>
+        <span class="upg-type">Shield</span>
+        <p>The Living Ship's deflector shield. Regenerates organically without manual recharging.</p>
       </div>
       <div class="upg-card">
         <span class="upg-icon">🌀</span>
-        <span class="upg-name">Singularity Cortex</span>
-        <span class="upg-type">Weapons System</span>
-        <p>Living Ship's primary weapon. Fires a singularity beam that pulls targets together.</p>
+        <span class="upg-name">Spewing Vents</span>
+        <span class="upg-type">Weapon (Photon Cannon)</span>
+        <p>The primary weapon. Equivalent of a Photon Cannon. Living Ships only have these two weapon types.</p>
       </div>
       <div class="upg-card">
-        <span class="upg-icon">🫁</span>
-        <span class="upg-name">Bio-Mechanical Fins</span>
-        <span class="upg-type">Maneuverability</span>
-        <p>Improves agility and atmospheric handling. Also reduces hazard drain in extreme environments.</p>
+        <span class="upg-icon">🥚</span>
+        <span class="upg-name">Psychonic Eggs</span>
+        <span class="upg-type">Upgrade Modules</span>
+        <p>Used to upgrade organs to higher classes. Obtained from space encounters and Organic Frigate missions.</p>
       </div>
     </div>
 
     <div class="callout green">
-      <span class="ct">Living Ship Advantage</span>
-      <p>Living Ships can use <strong>Void Catalysts</strong> to gain temporary combat boosts, and their shields <em>regenerate passively</em> without needing materials. They're among the most fun ships to use once fully upgraded, though the upgrade path is slower than standard ships.</p>
+      <span class="ct">Living Ship Advantages</span>
+      <p>Living Ships warp to all colored star types without needing the corresponding fuel drives, regenerate shields passively over time, and have unique weapon visuals. The trade-off: only two built-in weapon types (Spewing Vents and Grafted Eyes), no other weapons available, and they cannot be scrapped — only traded for another ship.</p>
     </div>
   </div>
 
@@ -1300,11 +1375,13 @@
           <tr><th>Source</th><th>Currency</th><th>Best For</th></tr>
         </thead>
         <tbody>
-          <tr><td>Space Station Tech Merchant</td><td>Units</td><td>Blueprints for crafting</td></tr>
-          <tr><td>Space Anomaly (Iteration: Selene)</td><td>Nanites</td><td>S-class pre-built modules</td></tr>
-          <tr><td>Salvaged Upgrade Modules</td><td>Found / Dismantled</td><td>Random class upgrades, free</td></tr>
-          <tr><td>Derelict Freighters</td><td>Time (run)</td><td>Rare upgrade drops</td></tr>
-          <tr><td>Mission Rewards</td><td>Completing quests</td><td>Specific upgrade types</td></tr>
+          <tr><td>Space Station Tech Merchants</td><td>Nanites</td><td>S-class upgrade modules (3 specialists: ship/suit/tool)</td></tr>
+          <tr><td>Space Anomaly — Iteration: Hyperion</td><td>Nanites</td><td>Permanent ship technology blueprints (Synthesis Lab)</td></tr>
+          <tr><td>Space Anomaly — Iteration: Ares</td><td>Nanites</td><td>Random Upgrade Modules + sell scrapped modules here</td></tr>
+          <tr><td>Salvaged Upgrade Modules</td><td>Found / Dismantled</td><td>Random class upgrades from ship scrapping and Sentinel drops</td></tr>
+          <tr><td>Blueprint Traders (Minor Settlements)</td><td>Nanites</td><td>Permanent blueprints, race-specialised stock</td></tr>
+          <tr><td>Derelict Freighters</td><td>Time (per run)</td><td>Rare blueprints and Salvaged Frigate Modules</td></tr>
+          <tr><td>Mission Rewards</td><td>Completing quests</td><td>Specific upgrade types, occasional blueprints</td></tr>
         </tbody>
       </table>
     </div>
@@ -1380,16 +1457,29 @@
         <span class="sc-icon">🔮</span>
         <span class="sc-name">Royal</span>
         <span class="sc-role">Premium</span>
-        <p>Rare, beautiful designs with excellent balanced stats. Found in specific system types.</p>
+        <p>Rare, beautiful designs with excellent balanced stats. Found in specific systems by following bird-like creatures to Royal cabinets.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">🤖</span>
+        <span class="sc-name">Sentinel</span>
+        <span class="sc-role">Combat / Damage</span>
+        <p>Recovered from cabinets at Harmonic Camps on Dissonant planets after solving the override-glyph puzzle. High damage bonus, free but starts with damaged slots.</p>
+      </div>
+      <div class="ship-card">
+        <span class="sc-icon">💎</span>
+        <span class="sc-name">Atlantid</span>
+        <span class="sc-role">Crystalline Rare</span>
+        <p>Crystalline multi-tool style. Found via specific quest interactions and at certain settlements. Distinct glowing aesthetic.</p>
       </div>
     </div>
 
     <h3>Finding Multi-Tools</h3>
     <ul class="bl">
-      <li><strong>Space Station cabinets</strong> — interact with the display case behind the Exosuit upgrade NPC. Offers one tool per station.</li>
-      <li><strong>Alien NPCs</strong> on planets and stations sometimes offer their personal tool for purchase</li>
-      <li><strong>Minor Settlements</strong> and <strong>Observatories</strong> sometimes have a cabinet with a tool inside</li>
-      <li><strong>Space Anomaly</strong> — the Iteration: Cronus station has a rotating multi-tool for sale</li>
+      <li><strong>Space Station cabinets</strong> — the display case in the room past the Exosuit upgrade NPC. One tool per station.</li>
+      <li><strong>Alien NPCs</strong> at stations and Trade Posts sometimes offer their personal tool for purchase</li>
+      <li><strong>Minor Settlements</strong> have a Multi-Tool cabinet in the Trade Terminal building — often with rarer types</li>
+      <li><strong>Harmonic Camps</strong> on Dissonant planets contain Sentinel Multi-Tools after solving the Multi-Tool seal puzzle</li>
+      <li><strong>Space Anomaly</strong> — the <strong>Multi-Tool Decommissioning Terminal</strong> next to Iteration: Tethys lets you scrap old tools for nanites</li>
       <li>Save-scumming works for tools too: reload before interacting with a cabinet to reroll class and stats</li>
     </ul>
 
@@ -1451,29 +1541,29 @@
     <p>Exocrafts are ground and aquatic vehicles you can summon on planetary surfaces. Each fills a different role — from fast scouting to deep mining to underwater exploration. They're invaluable for efficient planet traversal and bulk resource gathering.</p>
 
     <h3>Unlocking Exocrafts</h3>
-    <p>All Exocrafts are unlocked via the <strong>Exocraft Technician</strong> mission chain, available from the Construction Terminal at your base. Each vehicle requires its own blueprint, crafted from materials you gather. Blueprints are awarded sequentially as you progress through the technician missions.</p>
+    <p>All Exocraft Geobay blueprints can be purchased at the <strong>Construction Research Station</strong> aboard the Space Anomaly for Salvaged Data (~4–10 each). Alternatively, hire an <strong>Exocraft Technician</strong> at your base from a Space Station and complete their mission line to unlock blueprints sequentially.</p>
 
     <div class="callout blue">
       <span class="ct">Summoning</span>
-      <p>Once built, Exocrafts are summoned using the <strong>Exocraft Summoning Station</strong> built at your base, or a <strong>Geobay</strong> — the specific landing pad for each vehicle type. You can also summon them from anywhere if you have the <strong>Minotaur Orbital Exocraft Materialiser</strong> freighter upgrade installed.</p>
+      <p>Built Exocrafts are summoned at their <strong>Geobay</strong> on a planet. To summon anywhere on a planet, build an <strong>Exocraft Summoning Station</strong> at a base in the same system. To summon any Exocraft anywhere on any planet without a Geobay at all, install the <strong>Orbital Exocraft Materialiser</strong> technology on your freighter.</p>
     </div>
 
     <h3>All Exocraft Types</h3>
     <div class="exo-grid">
       <div class="exo-card">
         <div class="exo-header">
-          <span class="exo-icon">🏍</span>
+          <span class="exo-icon">🚗</span>
           <div>
             <span class="exo-name">Roamer</span>
             <span class="exo-role">All-Terrain Scout</span>
           </div>
         </div>
         <div class="exo-body">
-          <p>First Exocraft unlocked. Fast, nimble, and practical. Can mine resources and scan deposits. The go-to vehicle for surface exploration on foot-unfriendly terrain.</p>
+          <p>4-wheeled balanced Exocraft. Decent speed, can mine resources, has a scanner. 28 inventory slots. The best all-rounder and usually the first one players unlock.</p>
           <div class="exo-stats">
-            <span class="exo-stat">Fast</span>
-            <span class="exo-stat">Light armor</span>
+            <span class="exo-stat">Balanced</span>
             <span class="exo-stat">Mining capable</span>
+            <span class="exo-stat">28 slots</span>
           </div>
         </div>
       </div>
@@ -1486,11 +1576,11 @@
           </div>
         </div>
         <div class="exo-body">
-          <p>Massive, slow, and carries an enormous cargo hold. Best Exocraft for bulk resource runs — the inventory dwarfs everything else. Essential for serious mining operations.</p>
+          <p>Massive 8-wheeled mining truck with the biggest cargo capacity of any Exocraft (40+ slots). Slow but excellent for bulk resource extraction. Comes with mining laser built in.</p>
           <div class="exo-stats">
-            <span class="exo-stat">Huge inventory</span>
-            <span class="exo-stat">Slow</span>
-            <span class="exo-stat">Best for bulk</span>
+            <span class="exo-stat">40+ inventory</span>
+            <span class="exo-stat">Slow but stable</span>
+            <span class="exo-stat">Built-in mining</span>
           </div>
         </div>
       </div>
@@ -1513,18 +1603,18 @@
       </div>
       <div class="exo-card">
         <div class="exo-header">
-          <span class="exo-icon">🏎</span>
+          <span class="exo-icon">🏍</span>
           <div>
             <span class="exo-name">Pilgrim</span>
-            <span class="exo-role">Speed Racer</span>
+            <span class="exo-role">Two-Wheel Climber</span>
           </div>
         </div>
         <div class="exo-body">
-          <p>Single-seat open-top vehicle with the highest raw speed of all Exocrafts. Not much for mining or combat — pure land traversal at maximum velocity.</p>
+          <p>Two-wheeled motorbike with the fastest top speed and longest boost when upgraded. Can climb steep hills and cliffs that other Exocraft can't. 16 inventory slots — pure travel, not cargo.</p>
           <div class="exo-stats">
-            <span class="exo-stat">Fastest</span>
-            <span class="exo-stat">Minimal cargo</span>
-            <span class="exo-stat">Travel only</span>
+            <span class="exo-stat">Fastest top speed</span>
+            <span class="exo-stat">Climbs cliffs</span>
+            <span class="exo-stat">16 slots</span>
           </div>
         </div>
       </div>
@@ -1537,11 +1627,11 @@
           </div>
         </div>
         <div class="exo-body">
-          <p>Deep ocean submarine with mining capabilities and weapons. The only vehicle designed for underwater exploration. Essential for ocean planet resource extraction.</p>
+          <p>Deep-water submarine with mining laser and cannon. The only Exocraft designed for underwater exploration. Uses the unique Humboldt Drive (fueled by Hydrothermal Fuel Cells). 28 slots.</p>
           <div class="exo-stats">
             <span class="exo-stat">Underwater only</span>
-            <span class="exo-stat">Mining capable</span>
-            <span class="exo-stat">Ocean depths</span>
+            <span class="exo-stat">Mining + combat</span>
+            <span class="exo-stat">Humboldt Drive</span>
           </div>
         </div>
       </div>
@@ -1554,11 +1644,11 @@
           </div>
         </div>
         <div class="exo-body">
-          <p>Hovers over water and rough terrain. Medium speed with decent cargo. Best for mixed terrain where the Roamer would struggle and the Colossus would be too slow.</p>
+          <p>Lightweight hovercraft that glides over water at speed. Most fuel-efficient Exocraft. Has the Acceleration Module pre-installed. 30 inventory slots. Recommended for Portal travel and water-heavy planets.</p>
           <div class="exo-stats">
-            <span class="exo-stat">Hover capable</span>
-            <span class="exo-stat">Water crossing</span>
-            <span class="exo-stat">Medium speed</span>
+            <span class="exo-stat">Hovers over water</span>
+            <span class="exo-stat">Fuel efficient</span>
+            <span class="exo-stat">30 slots</span>
           </div>
         </div>
       </div>
@@ -1663,8 +1753,8 @@
     </div>
 
     <div class="callout green">
-      <span class="ct">Minotaur Orbital Materialiser</span>
-      <p>Once you install the <strong>Minotaur Orbital Exocraft Materialiser</strong> on your freighter, you can summon any Exocraft anywhere on any planet — no Geobay required. This is one of the best quality-of-life upgrades in the game for players who use Exocrafts regularly.</p>
+      <span class="ct">Orbital Exocraft Materialiser</span>
+      <p>Install the <strong>Orbital Exocraft Materialiser</strong> technology on your freighter and you can summon any Exocraft anywhere on any planet — no Geobay or Summoning Station required. One of the best quality-of-life upgrades for players who use Exocrafts regularly. Purchase the blueprint from Iteration: Hyperion on the Anomaly.</p>
     </div>
   </div>
 
@@ -1703,23 +1793,23 @@
     </div>
 
     <div class="callout">
-      <span class="ct">💡 Freighter Discount on Ships</span>
-      <p>After saving a freighter from pirates, the freighter captain sometimes lets you buy ships from their escort fleet at a discount. These can be A or S-class fighters. Always check when boarding a rescue freighter — don't just take the freighter and leave.</p>
+      <span class="ct">💡 Buying Ships from Freighters</span>
+      <p>Freighters have their own landing pads where NPC ships periodically dock. Hang out on a friendly freighter's hangar deck and check arriving ships the same way you would at a Space Station — sometimes you'll find a class or design you can't get elsewhere, including rare S-class haulers.</p>
     </div>
 
     <div class="callout yellow">
-      <span class="ct">💡 Hauler Shield Stacking</span>
-      <p>Haulers have a native +50% shield bonus on top of upgrade bonuses. A fully upgraded S-class Hauler with 3×S-class shield modules can absorb more damage than even a maxed Fighter — making it a surprisingly solid choice for players who want combat survivability without sacrificing cargo space.</p>
+      <span class="ct">💡 Hauler Storage Stacking</span>
+      <p>Haulers have the highest base cargo (up to 120 slots at S-class) AND naturally high shield class bonuses. A fully upgraded S-class Hauler with 3 adjacent S-class shield modules is the most durable ship in the game while still carrying the most cargo — the best all-purpose endgame vessel for trading and survivability.</p>
     </div>
 
     <div class="callout">
-      <span class="ct">💡 Sentinel Ship Reroll Trick</span>
-      <p>Before flying to claim a Sentinel Interceptor wreck, <strong>save manually in space</strong>. Land and check the stats. If it's not S-class or the design isn't what you want, reload and the wreck rerolls. The fight doesn't need to be repeated — only the reward at the landing site rerolls.</p>
+      <span class="ct">💡 Sentinel Interceptor Reroll</span>
+      <p>Before approaching an Interceptor wreck, <strong>save manually</strong>. Interact with the wreck to check its class. Reload if not S-class, and the wreck rerolls. The Hyaline Brain quest and Monolith trip only need to be done <em>once per crash site</em> — subsequent reloads keep the same Brain, so you can pop in and check stats fast.</p>
     </div>
 
     <div class="callout yellow">
       <span class="ct">💡 Colossus Mining Loop</span>
-      <p>For maximum resource yield: summon Colossus → install Survey Device → scan for buried deposits → mine with the Colossus Mining Laser → fill its massive cargo hold → fly your ship overhead and use Matter Beam to transfer directly to freighter storage. Repeat. Fastest bulk gathering loop in the game.</p>
+      <p>For maximum bulk yield: summon Colossus → drive it onto an Activated Indium or other ore deposit → use the built-in Mining Laser to harvest at speed → its 40+ slot cargo holds an enormous stack → land your starship nearby, swap to it, and transfer the stack via Matter Beam straight to your freighter. Repeat. Fastest bulk gathering loop in the game.</p>
     </div>
   </div>
 
@@ -1727,8 +1817,8 @@
   <footer class="reveal">
     <div class="footer-brand">⬡ Hangar Manifest</div>
     <div class="footer-info">
-      <p>Ships, Exocrafts &amp; Upgrades · Manual IV</p>
-      <p>No Man's Sky · All Platforms · Worlds Update Era</p>
+      <p>Vehicles, Exocrafts &amp; Upgrades · Manual IV</p>
+      <p>No Man's Sky · All Platforms · Voyagers/Beacon Era (2025+)</p>
     </div>
   </footer>
 

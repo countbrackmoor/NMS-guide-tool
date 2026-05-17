@@ -661,13 +661,13 @@
       </div>
       <div class="step">
         <div class="step-num">4</div>
-        <div class="step-content"><strong>Organic Flying Ships</strong> — Some settlement-finding missions are offered by NPCs in space. Keep an eye on Space Anomaly notice boards.</div>
+        <div class="step-content"><strong>Distress Signal</strong> — While flying in space, you may receive an automatic transmission about a settlement under attack. Defend it from Sentinels and you'll have first claim on the Settlement Hub Interface.</div>
       </div>
     </div>
 
     <div class="tip">
       <span class="tip-icon">🛸</span>
-      <div class="tip-text"><strong>Tip:</strong> Each player can only be Overseer of one settlement at a time. If you claim a new one, you forfeit your current settlement. Choose wisely — or intentionally reset to find a better one.</div>
+      <div class="tip-text"><strong>Tip:</strong> As of the Beacon update (2025), you can be Overseer of up to <strong>four settlements</strong> simultaneously. Each has its own management mission in your log. You can also formally retire as Overseer of any settlement.</div>
     </div>
 
     <h3>Choosing the Right Settlement</h3>
@@ -680,7 +680,7 @@
       <div class="card">
         <span class="card-icon">📊</span>
         <div class="card-title">Starting Stats</div>
-        <p>Check the Productivity, Happiness, and Sentinel Activity meters. High happiness and low sentinel threat is ideal.</p>
+        <p>Check Productivity vs. Maintenance Cost, Happiness, and Sentinel Alert Level. Aim for low debt and a Sentinel Alert at "Low".</p>
       </div>
       <div class="card">
         <span class="card-icon">👥</span>
@@ -707,29 +707,29 @@
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
-        <div class="step-content"><strong>Arrive at the Settlement</strong> — Land nearby and approach the Settlement Overseer's Office terminal (the main console).</div>
+        <div class="step-content"><strong>Arrive at the Settlement</strong> — Land nearby and approach the <strong>Settlement Hub Interface</strong> — a statue-like console at the center of the settlement.</div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <div class="step-content"><strong>Interact with the Terminal</strong> — Select "Claim Settlement" to become Overseer. If another player owns it, you cannot claim it on a multiplayer server.</div>
+        <div class="step-content"><strong>Apply to be Overseer</strong> — Submit a faction-specific offering: <strong>3 Vy'keen Daggers</strong>, <strong>3 GekNip</strong>, or <strong>3 Convergence Cubes</strong> depending on the dominant species.</div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <div class="step-content"><strong>Review the Dashboard</strong> — The Overseer terminal shows Happiness, Productivity, Sentinel Threat, Population, Debt, and daily production. Familiarize yourself with all metrics.</div>
+        <div class="step-content"><strong>Build the Overseer's Office</strong> — A marker points to the construction site. Supply <strong>210 Silicate Powder or Ferrite Dust</strong>, then <strong>5 Metal Plating</strong>, then <strong>3 Microprocessors</strong>. Each stage has a wait timer.</div>
       </div>
       <div class="step">
         <div class="step-num">4</div>
-        <div class="step-content"><strong>Resolve the First Issue</strong> — An immediate Issue (dispute or infrastructure problem) is usually presented. Your choices here begin shaping your settlement's character.</div>
+        <div class="step-content"><strong>Use the Administration Terminal</strong> — Inside the completed office. Shows Happiness, Productivity, Maintenance Cost, Sentinel Alert Level, Population, and the debt status.</div>
       </div>
       <div class="step">
         <div class="step-num">5</div>
-        <div class="step-content"><strong>Start Your First Building Project</strong> — Approve a construction project to begin growing your settlement. Prioritize housing to attract more settlers.</div>
+        <div class="step-content"><strong>Resolve the First Decision</strong> — A construction opportunity, citizen request, or dispute will be ready. Your choices shape stats from the very start.</div>
       </div>
     </div>
 
     <div class="panel panel-amber">
       <div class="panel-label">⚠ Important Note</div>
-      <p style="margin:0; font-size:14px;">You can abandon a settlement to search for a better one — but there's a <strong style="color:var(--amber)">cooldown timer</strong> before you can claim another. Use the time wisely by reviewing what stats you want to optimize before committing.</p>
+      <p style="margin:0; font-size:14px;">You can now manage up to <strong style="color:var(--amber)">four settlements</strong> simultaneously (Beacon update). To drop one, formally <strong>retire</strong> as its Overseer via the Settlement Hub Interface — your progress at that settlement is lost, but you can then claim a new one. Make sure no construction project is in progress when claiming a second+ settlement, or the new Overseer's Office build may be bugged.</p>
     </div>
   </div>
 
@@ -755,7 +755,12 @@
         <div class="stat-val">MED</div>
       </div>
       <div class="stat-row">
-        <div class="stat-label">👾 Sentinel Threat</div>
+        <div class="stat-label">💸 Maintenance</div>
+        <div class="stat-bar"><div class="stat-fill" style="width:50%; background: linear-gradient(90deg, var(--amber), #ffd060)"></div></div>
+        <div class="stat-val">MED</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">👾 Sentinel Alert</div>
         <div class="stat-bar"><div class="stat-fill" style="width:30%; background: linear-gradient(90deg, var(--warn), #ff4444)"></div></div>
         <div class="stat-val">LOW</div>
       </div>
@@ -764,43 +769,40 @@
         <div class="stat-bar"><div class="stat-fill" style="width:55%"></div></div>
         <div class="stat-val">MED</div>
       </div>
-      <div class="stat-row">
-        <div class="stat-label">📦 Productivity</div>
-        <div class="stat-bar"><div class="stat-fill" style="width:70%"></div></div>
-        <div class="stat-val">GOOD</div>
-      </div>
     </div>
 
-    <h3>The Issue System</h3>
-    <p>Every few in-game hours (real-time minutes), an Issue appears at your Overseer terminal. These are the primary way you shape your settlement. There are several types:</p>
+    <p>Productivity must <strong style="color:var(--bright)">exceed</strong> Maintenance Cost for the settlement to produce goods. If Maintenance is higher, the settlement falls into debt and production halts until it's repaid.</p>
+
+    <h3>The Decision System</h3>
+    <p>Periodically, decisions appear at your Administration Terminal. These are the primary way you shape your settlement. Common types include:</p>
 
     <table class="data-table">
       <thead>
         <tr>
-          <th>Issue Type</th>
+          <th>Decision Type</th>
           <th>Description</th>
           <th>Impact</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><span class="badge badge-green">Settler Dispute</span></td>
+          <td><span class="badge badge-green">Citizen Dispute</span></td>
           <td>Two residents in conflict; you arbitrate</td>
           <td>Happiness ±</td>
         </tr>
         <tr>
-          <td><span class="badge badge-blue">Infrastructure</span></td>
-          <td>Building or system needs repair/resources</td>
-          <td>Productivity ±</td>
+          <td><span class="badge badge-blue">Construction Opportunity</span></td>
+          <td>Choose between two proposed buildings</td>
+          <td>Productivity / Happiness</td>
         </tr>
         <tr>
           <td><span class="badge badge-amber">Sentinel Alert</span></td>
           <td>Threat level rising; decide response</td>
-          <td>Sentinel Level ±</td>
+          <td>Sentinel Alert ±</td>
         </tr>
         <tr>
-          <td><span class="badge badge-warn">Resource Crisis</span></td>
-          <td>Shortage of materials; contribute or ration</td>
+          <td><span class="badge badge-warn">Policy Decision</span></td>
+          <td>Settlement-wide rule change proposal</td>
           <td>Productivity &amp; Happiness</td>
         </tr>
         <tr>
@@ -809,25 +811,25 @@
           <td>Population +</td>
         </tr>
         <tr>
-          <td><span class="badge badge-blue">Trade Request</span></td>
-          <td>External trade deal proposed</td>
-          <td>Units or Resources</td>
+          <td><span class="badge badge-blue">Citizen Request</span></td>
+          <td>Settler asks for a resource or favor</td>
+          <td>Happiness ±</td>
         </tr>
       </tbody>
     </table>
 
     <div class="tip">
       <span class="tip-icon">💡</span>
-      <div class="tip-text"><strong>Issue Timer:</strong> Issues don't disappear; they wait for you. But the settlement won't advance without you resolving them. Visit regularly for fastest growth.</div>
+      <div class="tip-text"><strong>Decision Timer:</strong> Decisions don't disappear — they wait for you at the terminal. Construction stages each take 1–2 hours of real time, so settlements grow steadily over days, not minutes.</div>
     </div>
 
     <h3>Managing Debt</h3>
-    <p>Settlements start with debt that must be repaid. Daily income from production is automatically applied to debt reduction. You can also:</p>
+    <p>Most settlements start with debt and growing maintenance costs. Production output is automatically applied to debt reduction before any tribute is generated for the Overseer. To recover faster:</p>
     <ul class="bullet-list">
-      <li>Personally contribute Units at the Overseer terminal to pay down debt faster</li>
-      <li>Approve high-productivity buildings to increase daily income</li>
-      <li>Avoid resource-heavy decisions until debt is cleared</li>
-      <li>Build Trade Terminals early to boost the unit income multiplier</li>
+      <li>Personally pay off debt by contributing Units at the Administration Terminal</li>
+      <li>Approve buildings that boost productivity faster than they add maintenance cost</li>
+      <li>Upgrade existing buildings — higher classes (toward S) give better productivity-to-cost ratios</li>
+      <li>Overpaying debt with units now adds to the settlement's reserves, producing bonus output equivalent to the excess (Beacon update)</li>
     </ul>
   </div>
 
@@ -840,7 +842,7 @@
       <h2>BUILDINGS & CONSTRUCTION</h2>
     </div>
 
-    <p>Construction projects are offered periodically via the Overseer terminal. You choose whether to approve or reject each one. Once approved, residents build it over time (sped up by population size).</p>
+    <p>Construction projects are offered periodically as decisions at the Administration Terminal. New buildings start at C-class and can be upgraded to higher classes (B, A, S) over time, improving their productivity and reducing their maintenance cost. Higher-class buildings unlock more lucrative production options as Overseer.</p>
 
     <h3>Building Categories</h3>
     <div class="card-grid">
@@ -908,9 +910,9 @@
       <h2>SENTINEL MANAGEMENT</h2>
     </div>
 
-    <p>High sentinel threat is one of the most dangerous ongoing problems for a settlement. Unchecked, it leads to full-scale attacks that damage buildings, kill settlers, and crater happiness.</p>
+    <p>A high Sentinel Alert Level is one of the most dangerous ongoing problems for a settlement. Unchecked, it leads to full-scale attacks that damage buildings and crater happiness.</p>
 
-    <h3>Sentinel Threat Levels</h3>
+    <h3>Sentinel Alert Levels</h3>
     <table class="data-table">
       <thead>
         <tr><th>Level</th><th>Status</th><th>Effect</th></tr>
@@ -923,13 +925,13 @@
       </tbody>
     </table>
 
-    <h3>Reducing Sentinel Threat</h3>
+    <h3>Reducing the Alert Level</h3>
     <ul class="bullet-list">
-      <li>Build <strong style="color:var(--bright)">Defense Structures</strong> (turrets, shields) through the construction system</li>
-      <li>Choose diplomatic Issue options that don't escalate sentinel attention</li>
-      <li>Avoid mining illegally or harvesting protected resources near the settlement</li>
-      <li>Use <strong style="color:var(--bright)">Sentinel Bribe</strong> options in Issue decisions to temporarily lower threat</li>
-      <li>Install a <strong style="color:var(--bright)">Sentinel Jammer</strong> building once it's available</li>
+      <li>Approve <strong style="color:var(--bright)">Defense-related buildings</strong> when offered as construction opportunities</li>
+      <li>Choose decision options that don't escalate sentinel attention</li>
+      <li>Avoid clearing wildlife or attacking Sentinels close to the settlement boundary</li>
+      <li>Some special features and policies reduce Sentinel alert over time once unlocked</li>
+      <li>Autophage settlements always start with a specialist feature that reduces Sentinel attention</li>
     </ul>
 
     <div class="panel panel-warn">
@@ -984,7 +986,7 @@
 
     <div class="tip">
       <span class="tip-icon">📅</span>
-      <div class="tip-text"><strong>Collection:</strong> Production caps out after accumulating ~3 days of output. Visit every few days to collect and prevent waste. The timer resets on each visit.</div>
+      <div class="tip-text"><strong>Collection Timing:</strong> Each output hopper shows a production timer for when the next batch is ready. Collecting goods <em>resets</em> the timer — so collecting early can waste the current partial cycle. Wait until the timer completes before collecting to maximize output. If the settlement falls into debt, any goods in the hoppers are cleared and production pauses until the debt is resolved.</div>
     </div>
   </div>
 
@@ -997,20 +999,19 @@
       <h2>SETTLERS & RESIDENTS</h2>
     </div>
 
-    <p>Each settler is a named NPC with a role, personality, and potential grievances. Residents with specific roles contribute to the settlement's specialization.</p>
+    <p>Settlements have a population of generic NPCs that grow over time as you approve New Arrival decisions. Citizens occasionally raise requests or get into disputes — these are the primary way they influence stats. Settlements also have special <strong>visitors</strong> with unique gifts and dialogue.</p>
 
-    <h3>Settler Roles</h3>
+    <h3>Citizen Decisions</h3>
     <table class="data-table">
       <thead>
-        <tr><th>Role</th><th>Benefit</th></tr>
+        <tr><th>Decision</th><th>Effect</th></tr>
       </thead>
       <tbody>
-        <tr><td>🔨 Engineer</td><td>Speeds up construction project completion</td></tr>
-        <tr><td>⚒ Miner</td><td>Boosts raw material production output</td></tr>
-        <tr><td>🌾 Farmer</td><td>Increases organic and food production</td></tr>
-        <tr><td>📈 Merchant</td><td>Increases unit income and trade bonuses</td></tr>
-        <tr><td>🛡 Guard</td><td>Reduces sentinel threat growth rate</td></tr>
-        <tr><td>🔬 Scientist</td><td>Unlocks advanced research buildings faster</td></tr>
+        <tr><td>📋 Citizen Request</td><td>Settler asks for resources or a favor — answering affects Happiness</td></tr>
+        <tr><td>⚖ Citizen Dispute</td><td>Two settlers in conflict — your verdict shifts Happiness for both</td></tr>
+        <tr><td>📜 Policy Decision</td><td>A proposed settlement-wide rule with productivity vs happiness trade-offs</td></tr>
+        <tr><td>🚪 New Arrival</td><td>Migrant wants to join — increases population if approved</td></tr>
+        <tr><td>🎁 Visitor Encounter</td><td>An outsider arrives with gifts or trades for specific resources</td></tr>
       </tbody>
     </table>
 
@@ -1055,12 +1056,17 @@
 
     <div class="tip warn-box">
       <span class="tip-icon">⚠</span>
-      <div class="tip-text"><strong>Don't neglect it:</strong> Leaving your settlement alone for long periods (especially with high sentinel threat) can result in significant damage. Set a real-life reminder to check in every 2–3 days at minimum.</div>
+      <div class="tip-text"><strong>Don't neglect it:</strong> Leaving your settlement alone for long periods (especially with a high Sentinel Alert) can result in significant damage. Construction stages take 1–2 hours each, so steady visits every day or two keep your queue moving.</div>
     </div>
 
     <div class="tip">
       <span class="tip-icon">💎</span>
-      <div class="tip-text"><strong>Hauler Landing Pad:</strong> Build a Hauler Landing Pad to attract large freighter-class ships to your settlement. These can be purchased at a significant discount versus buying from a space station.</div>
+      <div class="tip-text"><strong>Landing Pad Salvage:</strong> Landing Pad buildings at settlements (post-Beacon update) provide utility for locating crashed ships nearby and salvaging starships that land at the settlement.</div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">🤖</span>
+      <div class="tip-text"><strong>Autophage Settlements:</strong> Rare settlements run by Autophage robots can be found on inhabited planets. They start with a built-in feature that reduces Sentinel attention. Travellers who've completed "They Who Returned" may receive an invitation, or purchase Autophage Settlement Charts.</div>
     </div>
 
     <div class="tip">
@@ -1070,7 +1076,7 @@
 
     <div class="tip">
       <span class="tip-icon">🗺</span>
-      <div class="tip-text"><strong>Planet Selection:</strong> If you haven't claimed a settlement yet — choose a planet with valuable resources (Activated Indium, Gold, etc.) so your production output has high sell value at the trade terminal.</div>
+      <div class="tip-text"><strong>Planet Selection:</strong> If you haven't claimed a settlement yet — pick a calm, hospitable planet so visits aren't a slog. The settlement produces its own item types based on race and buildings rather than mining surrounding resources, so the planet's resource map matters less than its weather and terrain.</div>
     </div>
 
     <h3>Recommended Build Order</h3>
@@ -1104,7 +1110,7 @@
 
   <footer>
     <p>⬡ ATLAS INTERFACE · SETTLEMENT OVERSEER DOCUMENTATION · NO MAN'S SKY ⬡</p>
-    <p style="margin-top:8px; opacity:0.5;">Guide covers base game mechanics through the Worlds Part II update. Some specifics may vary by version.</p>
+    <p style="margin-top:8px; opacity:0.5;">Guide updated for the Beacon update (June 2025) and beyond. Some specifics may vary by version.</p>
   </footer>
 
 </div>
