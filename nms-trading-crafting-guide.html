@@ -652,36 +652,6 @@
     white-space: nowrap;
   }
 
-  /* ── TICKER ── */
-  .ticker-wrap {
-    background: var(--base);
-    border: 1px solid var(--border2);
-    border-top: 1px solid var(--green);
-    padding: 10px 16px;
-    margin: 20px 0;
-    overflow: hidden;
-  }
-
-  .ticker-inner {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--steel);
-    letter-spacing: 1px;
-    display: flex;
-    gap: 40px;
-    animation: ticker 20s linear infinite;
-    white-space: nowrap;
-  }
-
-  @keyframes ticker {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
-  .ticker-item { color: var(--green); }
-  .ticker-item.down { color: var(--red); }
-  .ticker-item.up   { color: var(--lime); }
-
   /* ── FOOTER ── */
   footer {
     margin-top: 64px;
@@ -812,32 +782,7 @@
     </div>
   </header>
 
-  <!-- ── TICKER ── -->
-  <div class="ticker-wrap" aria-hidden="true">
-    <div class="ticker-inner">
-      <span>ACTIVATED INDIUM <span class="ticker-item up">▲ 920/u</span></span>
-      <span>DI-HYDROGEN <span class="ticker-item">→ 62/u</span></span>
-      <span>NANITE CLUSTER <span class="ticker-item up">▲ 190/u</span></span>
-      <span>RUNAWAY MOULD <span class="ticker-item up">▲ HIGH DEMAND</span></span>
-      <span>OXYGEN <span class="ticker-item down">▼ 35/u</span></span>
-      <span>GOLD <span class="ticker-item up">▲ 253/u</span></span>
-      <span>CHLORINE <span class="ticker-item up">▲ 315/u</span></span>
-      <span>CHROMATIC METAL <span class="ticker-item">→ 248/u</span></span>
-      <span>LIVING SLIME <span class="ticker-item up">▲ CRAFT TARGET</span></span>
-      <span>WIRING LOOM <span class="ticker-item">→ 3,800/u</span></span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <span>ACTIVATED INDIUM <span class="ticker-item up">▲ 920/u</span></span>
-      <span>DI-HYDROGEN <span class="ticker-item">→ 62/u</span></span>
-      <span>NANITE CLUSTER <span class="ticker-item up">▲ 190/u</span></span>
-      <span>RUNAWAY MOULD <span class="ticker-item up">▲ HIGH DEMAND</span></span>
-      <span>OXYGEN <span class="ticker-item down">▼ 35/u</span></span>
-      <span>GOLD <span class="ticker-item up">▲ 253/u</span></span>
-      <span>CHLORINE <span class="ticker-item up">▲ 315/u</span></span>
-      <span>CHROMATIC METAL <span class="ticker-item">→ 248/u</span></span>
-      <span>LIVING SLIME <span class="ticker-item up">▲ CRAFT TARGET</span></span>
-      <span>WIRING LOOM <span class="ticker-item">→ 3,800/u</span></span>
-    </div>
-  </div>
+
 
   <!-- ── TOC ── -->
   <nav class="toc-wrap">
@@ -1033,7 +978,7 @@
         <tr class="sell-row">
           <td><span class="item-name">Chlorine</span></td>
           <td><span class="badge bsell">Sell</span></td>
-          <td><span class="reason">~315/u. Easy Oxygen+Salt refine. One of the best raw sellers.</span></td>
+          <td><span class="reason">High sell value. Easy Oxygen+Salt refine. One of the best raw sellers.</span></td>
         </tr>
         <tr class="keep-row">
           <td><span class="item-name">Metal Plating</span></td>
@@ -1043,7 +988,7 @@
         <tr class="keep-row">
           <td><span class="item-name">Wiring Loom</span></td>
           <td><span class="badge bkeep">Keep</span></td>
-          <td><span class="reason">~3,800/u but used constantly in construction and upgrades. Keep 20+.</span></td>
+          <td><span class="reason">High value per unit but used constantly in construction and upgrades. Keep 20+.</span></td>
         </tr>
         <tr class="sell-row">
           <td><span class="item-name">Microprocessors</span></td>
@@ -1077,12 +1022,12 @@
         <tr class="sell-row">
           <td><span class="item-name">Stasis Device</span></td>
           <td><span class="badge bsell">Sell</span></td>
-          <td><span class="reason">~15.6M units each. The #1 crafted item for unit generation.</span></td>
+          <td><span class="reason">Extremely high value. The #1 crafted item for unit generation.</span></td>
         </tr>
         <tr class="sell-row">
           <td><span class="item-name">Fusion Ignitor</span></td>
           <td><span class="badge bsell">Sell</span></td>
-          <td><span class="reason">~15.6M units each. Equal to Stasis Device — different recipe chain.</span></td>
+          <td><span class="reason">Extremely high value. Equal to Stasis Device — different recipe chain.</span></td>
         </tr>
         <tr class="keep-row">
           <td><span class="item-name">Nanite Clusters</span></td>
@@ -1207,7 +1152,7 @@
       <thead>
         <tr>
           <th>Item</th>
-          <th>Approx Value</th>
+          <th>Value Tier</th>
           <th>Method</th>
           <th>Tier</th>
         </tr>
@@ -1215,67 +1160,67 @@
       <tbody>
         <tr>
           <td><strong>Stasis Device</strong></td>
-          <td class="price-col high">~15,600,000</td>
+          <td class="price-col high">Extremely High</td>
           <td>Crafted (complex chain)</td>
           <td><span class="badge bhigh">Endgame</span></td>
         </tr>
         <tr>
           <td><strong>Fusion Ignitor</strong></td>
-          <td class="price-col high">~15,600,000</td>
+          <td class="price-col high">Extremely High</td>
           <td>Crafted (complex chain)</td>
           <td><span class="badge bhigh">Endgame</span></td>
         </tr>
         <tr>
           <td><strong>Iridesite</strong></td>
-          <td class="price-col high">~5,500,000</td>
+          <td class="price-col high">Very High</td>
           <td>Crafted (mid-tier chain)</td>
           <td><span class="badge bcraft">Mid-Late</span></td>
         </tr>
         <tr>
           <td><strong>Living Glass</strong></td>
-          <td class="price-col">~2,200,000</td>
+          <td class="price-col">High</td>
           <td>Crafted</td>
           <td><span class="badge bcraft">Mid</span></td>
         </tr>
         <tr>
           <td><strong>Cryogenic Chamber</strong></td>
-          <td class="price-col">~1,600,000</td>
+          <td class="price-col">High</td>
           <td>Crafted</td>
           <td><span class="badge bcraft">Mid</span></td>
         </tr>
         <tr>
           <td><strong>Quantum Processor</strong></td>
-          <td class="price-col">~1,400,000</td>
+          <td class="price-col">High</td>
           <td>Crafted</td>
           <td><span class="badge bcraft">Mid</span></td>
         </tr>
         <tr>
           <td><strong>Activated Indium</strong></td>
-          <td class="price-col">~165/unit</td>
-          <td>Blue star mining (best refined)</td>
+          <td class="price-col">Low–Medium (best refined)</td>
+          <td>Blue star mining → refine to Chromatic Metal</td>
           <td><span class="badge bhigh">Farm</span></td>
         </tr>
         <tr>
           <td><strong>Chlorine (refined)</strong></td>
-          <td class="price-col">~315/unit</td>
-          <td>Refine Salt + Oxygen (5× yield)</td>
+          <td class="price-col">Medium</td>
+          <td>Refine Salt + Oxygen (5× yield loop)</td>
           <td><span class="badge bcraft">Easy</span></td>
         </tr>
         <tr>
           <td><strong>Larval Core</strong></td>
-          <td class="price-col">~87,000</td>
+          <td class="price-col">High per unit</td>
           <td>Harvest from Whispering Eggs</td>
           <td><span class="badge bdim">Risky</span></td>
         </tr>
         <tr>
           <td><strong>Vortex Cube</strong></td>
-          <td class="price-col">~68,000</td>
+          <td class="price-col">Medium–High per unit</td>
           <td>Caves on specific planets</td>
           <td><span class="badge bdim">Explore</span></td>
         </tr>
         <tr>
           <td><strong>Trade Commodities</strong></td>
-          <td class="price-col">10K–500K</td>
+          <td class="price-col">Variable</td>
           <td>Crates, missions, abandoned sites</td>
           <td><span class="badge bdim">Variable</span></td>
         </tr>
@@ -1284,12 +1229,12 @@
 
     <div class="note amber">
       <span class="note-tag">⚠ Note on Activated Indium</span>
-      <p>Activated Indium's sale value was significantly nerfed in update 4.0 (Waypoint). It used to sell for ~949 units each but now sits around <strong>165/u</strong>. It's still useful — refine it into Chromatic Metal (1:4 ratio, or 1:8 with Pure Ferrite) for substantially better profit than selling raw.</p>
+      <p>Activated Indium's sale value was significantly nerfed in update 4.0 (Waypoint) — it now sells for much less than it once did. Don't sell it raw. Refine into Chromatic Metal (1:4 ratio, or 1:8 with Pure Ferrite) for substantially better returns.</p>
     </div>
 
     <div class="note lime">
       <span class="note-tag">Stasis Device vs Fusion Ignitor</span>
-      <p>Both sell for <strong>~15.6M units</strong>. The Stasis Device chain uses more biological/organic farming (Frost Crystal, Solanium, Star Bulb, Gamma Root); the Fusion Ignitor chain leans on Fungal Mould plus minerals/tech. Set up both production lines eventually — they share few inputs.</p>
+      <p>Both sell for <strong>extremely high value</strong> — among the best single-item payouts in the game. The Stasis Device chain uses more biological/organic farming (Frost Crystal, Solanium, Star Bulb, Gamma Root); the Fusion Ignitor chain leans on Fungal Mould plus minerals/tech. Set up both production lines eventually — they share few inputs.</p>
     </div>
   </div>
 
@@ -1344,14 +1289,14 @@
     <ul class="bl">
       <li><strong>Default recipes</strong> are available from the start in your inventory menu</li>
       <li><strong>Blueprint Analyser</strong> at your base reveals new crafting schematics for Units</li>
-      <li><strong>Iteration: Cronus</strong> on the Space Anomaly sells crafting blueprints for nanites</li>
+      <li><strong>Iteration: Hyperion</strong> (Synthesis Laboratory) on the Space Anomaly sells crafting blueprints for nanites</li>
       <li>Completing story missions and talking to aliens unlocks unique recipes</li>
       <li>Abandoned buildings and derelict freighters contain rare blueprints</li>
     </ul>
 
     <div class="note amber">
       <span class="note-tag">⚠ Missing a Recipe?</span>
-      <p>If you can't craft something you've seen listed, you likely haven't learned the blueprint yet. Visit <strong>Iteration: Cronus</strong> on the Space Anomaly and browse the full blueprint catalogue. Most key recipes cost 50–250 nanites.</p>
+      <p>If you can't craft something you've seen listed, you likely haven't learned the blueprint yet. Visit the <strong>Synthesis Laboratory</strong> (Iteration: Hyperion) on the Space Anomaly and browse the full blueprint catalogue.</p>
     </div>
   </div>
 
@@ -1376,7 +1321,7 @@
         <span class="recipe-ing">Oxygen ×2</span>
         <span class="recipe-ing">→ Chlorine ×5</span>
       </div>
-      <span class="recipe-value">~315/u × 5</span>
+      <span class="recipe-value">High sell value</span>
     </div>
 
     <div class="recipe">
@@ -1426,7 +1371,7 @@
         <span class="recipe-ing rare">Circuit Board ×1</span>
         <span class="recipe-ing rare">Superconductor ×1</span>
       </div>
-      <span class="recipe-value">~1.4M</span>
+      <span class="recipe-value">High value</span>
     </div>
 
     <div class="recipe">
@@ -1436,7 +1381,7 @@
         <span class="recipe-ing rare">Living Glass ×1</span>
         <span class="recipe-ing rare">Cryo-Pump ×1</span>
       </div>
-      <span class="recipe-value">~1.6M</span>
+      <span class="recipe-value">High value</span>
     </div>
 
     <div class="recipe">
@@ -1447,7 +1392,7 @@
         <span class="recipe-ing rare">Magno-Gold ×1</span>
         <span class="recipe-ing rare">Grantine ×1</span>
       </div>
-      <span class="recipe-value high">~5.5M</span>
+      <span class="recipe-value high">Very high value</span>
     </div>
 
     <div class="recipe">
@@ -1458,7 +1403,7 @@
         <span class="recipe-ing rare">Dirty Bronze ×1</span>
         <span class="recipe-ing rare">Herox ×1</span>
       </div>
-      <span class="recipe-value">~5.4M</span>
+      <span class="recipe-value high">Very high value</span>
     </div>
 
     <h3>Endgame Crafts (Maximum Value)</h3>
@@ -1471,7 +1416,7 @@
         <span class="recipe-ing rare">Cryogenic Chamber</span>
         <span class="recipe-ing rare">Iridesite</span>
       </div>
-      <span class="recipe-value high">~15.6M</span>
+      <span class="recipe-value high">Extremely high value</span>
     </div>
 
     <div class="recipe">
@@ -1482,7 +1427,7 @@
         <span class="recipe-ing rare">Quantum Processor</span>
         <span class="recipe-ing rare">Geodesite</span>
       </div>
-      <span class="recipe-value high">~15.6M</span>
+      <span class="recipe-value high">Extremely high value</span>
     </div>
 
     <div class="note lime">
@@ -1537,18 +1482,18 @@
       <tbody>
         <tr>
           <td><strong>Scrapping Starships</strong></td>
-          <td class="price-col high">Very High (~30K/hr)</td>
+          <td class="price-col high">Very High</td>
           <td>Buy ships from station hangars, scrap at the Scrap Dealer for modules. Top method overall.</td>
         </tr>
         <tr>
           <td><strong>Runaway Mould Refining</strong></td>
           <td class="price-col high">Very High</td>
-          <td>Mould refines 1:1 to Nanites. Find Curious Deposits of Mould (40,000+ nanites/hr possible).</td>
+          <td>Mould refines 1:1 to Nanites. Find Curious Deposits of Mould (top passive method when near a large deposit).</td>
         </tr>
         <tr>
           <td><strong>Salvaged Data Refining</strong></td>
           <td class="price-col high">Steady</td>
-          <td>Each Salvaged Data refines into 15 Nanites. Dig up Buried Technology with the Terrain Manipulator.</td>
+          <td>Salvaged Data refines 1:15 into Nanites. Dig up Buried Technology with the Terrain Manipulator.</td>
         </tr>
         <tr>
           <td><strong>Sentinel Combat (Salvaged Glass)</strong></td>
@@ -1558,7 +1503,7 @@
         <tr>
           <td><strong>Analyse Discoveries</strong></td>
           <td class="price-col">Medium</td>
-          <td>Scan undiscovered flora, fauna, and minerals. Up to ~4,750 nanites per fully-scanned planet.</td>
+          <td>Scan undiscovered flora, fauna, and minerals. Good per-planet yield — scan everything on undiscovered worlds for best returns.</td>
         </tr>
         <tr>
           <td><strong>Space Station Missions</strong></td>
@@ -1573,12 +1518,12 @@
         <tr>
           <td><strong>Derelict Freighters</strong></td>
           <td class="price-col">High (per run)</td>
-          <td>Loot Salvaged Frigate Modules, modules, and Hadal Cores (refine 1:50 to Nanites). 500–5,000+ per run.</td>
+          <td>Loot Salvaged Frigate Modules, modules, and Hadal Cores (refine 1:50 to Nanites). Solid yield per run with varied loot.</td>
         </tr>
         <tr>
           <td><strong>Tainted Metal Refining</strong></td>
           <td class="price-col">Medium</td>
-          <td>Each Tainted Metal refines to 2 Nanites. Drops from corrupted Sentinels.</td>
+          <td>Low individual yield but accumulates fast in active combat. Drops from corrupted Sentinels.</td>
         </tr>
         <tr>
           <td><strong>Frigate Expeditions</strong></td>
@@ -1604,7 +1549,7 @@
       </div>
       <div class="step">
         <div class="step-n">4</div>
-        <div class="step-b"><strong>Stack refiners</strong> — Multiple Basic Refiners running in parallel let you process Mould as fast as you can harvest. 40,000+ nanites/hr is achievable from a single deposit.</div>
+        <div class="step-b"><strong>Stack refiners</strong> — Multiple Basic Refiners running in parallel let you process Mould as fast as you can harvest. Very high nanite output is achievable from a single deposit when stacking refiners.</div>
       </div>
     </div>
 
@@ -1630,7 +1575,7 @@
     <h3>Early Game Loop — Chlorine Expansion</h3>
     <div class="note">
       <span class="note-tag">Requires: Medium Refiner + Oxygen Supply</span>
-      <p>Buy Chlorine and Oxygen at Space Stations → combine <strong>1 Chlorine + 2 Oxygen → 6 Chlorine</strong> in a Medium Refiner → sell most, recycle some → repeat. Build a base Oxygen Harvester or set up Gas Extractors on an Oxygen hotspot to scale. <strong>Income: 1–5M units/hour</strong> at full scale.</p>
+      <p>Buy Chlorine and Oxygen at Space Stations → combine <strong>1 Chlorine + 2 Oxygen → 6 Chlorine</strong> in a Medium Refiner → sell most, recycle some → repeat. Build a base Oxygen Harvester or set up Gas Extractors on an Oxygen hotspot to scale. <strong>Excellent unit income</strong> at full scale.</p>
     </div>
 
     <h3>Mid Game Loop — Activated Indium Farm</h3>
@@ -1645,7 +1590,7 @@
       </div>
       <div class="step">
         <div class="step-n">3</div>
-        <div class="step-b"><strong>Refine for value</strong> — Sale value is now ~165/u after the 4.0 nerf. Refine into Chromatic Metal (1:4, or 1:8 with Pure Ferrite) for far better value, or use the raw stack as inputs for advanced refining chains.</div>
+        <div class="step-b"><strong>Refine for value</strong> — Raw sell value was significantly reduced in update 4.0 (Waypoint). Refine into Chromatic Metal (1:4, or 1:8 with Pure Ferrite) for far better value, or use the raw stack as inputs for advanced refining chains.</div>
       </div>
       <div class="step">
         <div class="step-n">4</div>
@@ -1669,20 +1614,20 @@
       </div>
       <div class="step">
         <div class="step-n">4</div>
-        <div class="step-b"><strong>Sell batch at the Galactic Trade Terminal</strong> — 5–10 devices per visit ≈ 75–150M units. Cycle between systems to avoid saturating one market.</div>
+        <div class="step-b"><strong>Sell batch at the Galactic Trade Terminal</strong> — Each batch sold yields extremely high unit income. Cycle between systems to avoid saturating one market.</div>
       </div>
     </div>
 
     <h3>Passive Loops Summary</h3>
     <table class="ledger">
       <thead>
-        <tr><th>Loop</th><th>Stage</th><th>Income/Hour</th><th>Setup Difficulty</th></tr>
+        <tr><th>Loop</th><th>Stage</th><th>Income Level</th><th>Setup Difficulty</th></tr>
       </thead>
       <tbody>
         <tr>
           <td>Chlorine Doubling</td>
           <td><span class="badge bsell">Early</span></td>
-          <td class="price-col">1–5M</td>
+          <td class="price-col">Good</td>
           <td>Low — 1 refiner, 1 resource</td>
         </tr>
         <tr>
@@ -1694,25 +1639,25 @@
         <tr>
           <td>Activated Indium Farm</td>
           <td><span class="badge bcraft">Mid</span></td>
-          <td class="price-col">1–5M (refined)</td>
+          <td class="price-col">Good (refined)</td>
           <td>Medium — requires blue star base + extractors</td>
         </tr>
         <tr>
           <td>Frigate Expeditions</td>
           <td><span class="badge bcraft">Mid-Late</span></td>
-          <td class="price-col">Passive varied</td>
+          <td class="price-col">Passive / Varied</td>
           <td>Medium — fleet management</td>
         </tr>
         <tr>
           <td>Stasis Device Chain</td>
           <td><span class="badge bhigh">Late</span></td>
-          <td class="price-col high">50–150M</td>
-          <td>High — 12-step craft chain + large farm</td>
+          <td class="price-col high">Extremely High</td>
+          <td>High — multi-step craft chain + large farm</td>
         </tr>
         <tr>
           <td>Fusion Ignitor Chain</td>
           <td><span class="badge bhigh">Late</span></td>
-          <td class="price-col high">50–150M</td>
+          <td class="price-col high">Extremely High</td>
           <td>High — parallel to Stasis Device</td>
         </tr>
       </tbody>
@@ -1752,7 +1697,7 @@
 
     <div class="note lime">
       <span class="note-tag">💡 Ship Scrapping for Nanites</span>
-      <p>The <strong>Scrap Dealer</strong> on Space Stations dismantles starships in exchange for Upgrade Modules and Storage Augmentation Modules. Cheap ships traded for the Scrap Dealer yield modules that sell to Technology Merchants for nanites — one of the highest nanite/hour methods in the game (~30K/hr).</p>
+      <p>The <strong>Scrap Dealer</strong> on Space Stations dismantles starships in exchange for Upgrade Modules and Storage Augmentation Modules. Cheap ships traded for the Scrap Dealer yield modules that sell to Technology Merchants for nanites — one of the highest nanite-per-hour methods in the game.</p>
     </div>
 
     <div class="note lime">
