@@ -5,7 +5,6 @@
   <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
   <link rel="icon" type="image/png" href="/favicon.png" sizes="512x512">
   <link rel="apple-touch-icon" href="/favicon.png">
-<base href="/NMS-guide-tool/">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>No Man's Sky — Traveller's Codex · Fan Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Exo+2:wght@200;300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -634,7 +633,7 @@
   <!-- ══ STATS STRIP ══ -->
   <div class="stats-strip reveal" style="margin-top:64px;">
     <div class="stat-item">
-      <span class="stat-val" style="color:var(--s-col)">4</span>
+      <span class="stat-val" style="color:var(--s-col)">6</span>
       <span class="stat-label">Field Manuals</span>
     </div>
     <div class="stat-item">
@@ -668,7 +667,7 @@
             <div class="particle" style="width:2px;height:2px;left:35%;top:80%;--dur:3.5s;--delay:2s;"></div>
             <div class="particle" style="width:3px;height:3px;left:60%;top:65%;--dur:5.5s;--delay:1.5s;"></div>
           </div>
-          <div class="card-glyph">🏘</div>
+          <img src="settlements.png" alt="NMS Settlement" style="width:100%;height:100%;object-fit:cover;object-position:center 40%;position:relative;z-index:1;filter:drop-shadow(0 0 16px rgba(0,229,255,0.25));">
         </div>
         <div class="card-content">
           <div>
@@ -709,7 +708,7 @@
             <div class="particle" style="width:2px;height:2px;left:40%;top:78%;--dur:3.8s;--delay:2.2s;"></div>
             <div class="particle" style="width:3px;height:3px;left:80%;top:62%;--dur:5.2s;--delay:0.8s;"></div>
           </div>
-          <div class="card-glyph">🚀</div>
+          <img src="freighters.png" alt="NMS Freighter" style="width:80%;height:80%;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 0 16px rgba(245,166,35,0.3));">
         </div>
         <div class="card-content">
           <div>
@@ -750,7 +749,7 @@
             <div class="particle" style="width:2px;height:2px;left:42%;top:80%;--dur:4.2s;--delay:2.5s;"></div>
             <div class="particle" style="width:3px;height:3px;left:82%;top:64%;--dur:5.8s;--delay:1.1s;"></div>
           </div>
-          <div class="card-glyph">📈</div>
+          <img src="trading.png" alt="NMS Trading" style="width:75%;height:75%;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 0 16px rgba(46,204,113,0.3));">
         </div>
         <div class="card-content">
           <div>
@@ -779,8 +778,8 @@
       <div class="card-number">III</div>
     </a>
 
-    <!-- VEHICLES -->
-    <a class="guide-card vessels reveal" href="nms-ships-exocrafts-guide.html" style="transition-delay:0.3s;">
+    <!-- SHIPS -->
+    <a class="guide-card vessels reveal" href="nms-ships-guide.html" style="transition-delay:0.3s;">
       <div class="card-topbar"></div>
       <div class="card-inner">
         <div class="card-visual">
@@ -788,184 +787,20 @@
             <div class="particle" style="width:3px;height:3px;left:22%;top:63%;--dur:4.2s;--delay:0.4s;"></div>
             <div class="particle" style="width:2px;height:2px;left:52%;top:71%;--dur:5.3s;--delay:1.1s;"></div>
             <div class="particle" style="width:4px;height:4px;left:68%;top:57%;--dur:6.8s;--delay:0.2s;"></div>
-            <div class="particle" style="width:2px;height:2px;left:38%;top:79%;--dur:4s;--delay:2.3s;"></div>
-            <div class="particle" style="width:3px;height:3px;left:78%;top:66%;--dur:5.6s;--delay:0.9s;"></div>
           </div>
-          <!-- Fleet SVG scene -->
-          <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" style="width:92%;height:92%;position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(232,37,26,0.35));">
-            <defs>
-              <radialGradient id="vgrd" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="rgba(232,37,26,0.12)"/>
-                <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-              </radialGradient>
-              <filter id="vglow">
-                <feGaussianBlur stdDeviation="1.5" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-
-            <!-- Background glow -->
-            <ellipse cx="140" cy="110" rx="130" ry="100" fill="url(#vgrd)"/>
-
-            <!-- Ground line -->
-            <line x1="20" y1="172" x2="260" y2="172" stroke="rgba(232,37,26,0.2)" stroke-width="1"/>
-
-            <!-- ── FIGHTER SHIP (top-left, flying) ── -->
-            <g transform="translate(28,30) rotate(-8)" filter="url(#vglow)" style="animation:floatA 4s ease-in-out infinite alternate;">
-              <!-- Body -->
-              <ellipse cx="38" cy="14" rx="32" ry="9" fill="#1a0a08" stroke="#e8251a" stroke-width="1"/>
-              <!-- Cockpit dome -->
-              <ellipse cx="52" cy="11" rx="10" ry="7" fill="#2a1210" stroke="#ff4433" stroke-width="0.8"/>
-              <ellipse cx="53" cy="10" rx="5" ry="3.5" fill="rgba(255,100,80,0.3)"/>
-              <!-- Wings -->
-              <polygon points="30,14 8,28 20,14" fill="#1a0a08" stroke="#e8251a" stroke-width="0.8"/>
-              <polygon points="30,14 8,2 20,14" fill="#1a0a08" stroke="#e8251a" stroke-width="0.8"/>
-              <!-- Engine glow -->
-              <ellipse cx="8" cy="14" rx="4" ry="3" fill="rgba(232,37,26,0.6)"/>
-              <ellipse cx="4" cy="14" rx="2" ry="1.5" fill="rgba(255,150,100,0.8)"/>
-              <!-- Gun barrel -->
-              <line x1="68" y1="13" x2="76" y2="13" stroke="#ff6644" stroke-width="1.5"/>
-              <!-- Wing stripes -->
-              <line x1="20" y1="14" x2="14" y2="20" stroke="rgba(232,37,26,0.5)" stroke-width="0.6"/>
-            </g>
-
-            <!-- ── HAULER / EXOTIC SHIP (top-right, flying) ── -->
-            <g transform="translate(168,18) rotate(5)" filter="url(#vglow)">
-              <!-- Wide body -->
-              <ellipse cx="44" cy="16" rx="38" ry="11" fill="#0d1018" stroke="#e8251a" stroke-width="1"/>
-              <!-- Cockpit bubble -->
-              <ellipse cx="66" cy="12" rx="13" ry="9" fill="#141820" stroke="#ff4433" stroke-width="0.8"/>
-              <ellipse cx="68" cy="11" rx="7" ry="5" fill="rgba(255,80,60,0.2)"/>
-              <!-- Large swept wings -->
-              <polygon points="35,16 4,36 22,18" fill="#0d1018" stroke="#e8251a" stroke-width="0.8"/>
-              <polygon points="35,16 4,0 22,14" fill="#0d1018" stroke="#e8251a" stroke-width="0.8"/>
-              <!-- Cargo pods under wings -->
-              <ellipse cx="18" cy="22" rx="8" ry="4" fill="#0a0c10" stroke="rgba(232,37,26,0.4)" stroke-width="0.6"/>
-              <ellipse cx="18" cy="10" rx="8" ry="4" fill="#0a0c10" stroke="rgba(232,37,26,0.4)" stroke-width="0.6"/>
-              <!-- Engine cluster -->
-              <ellipse cx="6" cy="16" rx="5" ry="4" fill="rgba(232,37,26,0.5)"/>
-              <ellipse cx="2" cy="16" rx="2.5" ry="2" fill="rgba(255,140,80,0.9)"/>
-              <ellipse cx="2" cy="12" rx="1.5" ry="1.2" fill="rgba(255,120,60,0.7)"/>
-              <ellipse cx="2" cy="20" rx="1.5" ry="1.2" fill="rgba(255,120,60,0.7)"/>
-            </g>
-
-            <!-- ── MINOTAUR MECH (center, standing on ground) ── -->
-            <g transform="translate(116,90)" filter="url(#vglow)">
-              <!-- Legs -->
-              <rect x="14" y="60" width="10" height="22" rx="2" fill="#1a1010" stroke="#e8251a" stroke-width="0.8"/>
-              <rect x="28" y="60" width="10" height="22" rx="2" fill="#1a1010" stroke="#e8251a" stroke-width="0.8"/>
-              <!-- Feet -->
-              <rect x="11" y="80" width="16" height="6" rx="2" fill="#120c0c" stroke="rgba(232,37,26,0.5)" stroke-width="0.6"/>
-              <rect x="25" y="80" width="16" height="6" rx="2" fill="#120c0c" stroke="rgba(232,37,26,0.5)" stroke-width="0.6"/>
-              <!-- Torso -->
-              <rect x="8" y="28" width="36" height="34" rx="4" fill="#1a1010" stroke="#e8251a" stroke-width="1"/>
-              <!-- Chest glow panel -->
-              <rect x="14" y="34" width="24" height="14" rx="2" fill="rgba(232,37,26,0.15)" stroke="rgba(232,37,26,0.5)" stroke-width="0.6"/>
-              <ellipse cx="26" cy="41" rx="5" ry="5" fill="rgba(232,37,26,0.3)"/>
-              <ellipse cx="26" cy="41" rx="2" ry="2" fill="rgba(255,80,60,0.8)"/>
-              <!-- Arms -->
-              <rect x="-4" y="30" width="12" height="26" rx="3" fill="#1a1010" stroke="#e8251a" stroke-width="0.8"/>
-              <rect x="44" y="30" width="12" height="26" rx="3" fill="#1a1010" stroke="#e8251a" stroke-width="0.8"/>
-              <!-- Cannon on right arm -->
-              <rect x="54" y="38" width="16" height="8" rx="2" fill="#100808" stroke="#e8251a" stroke-width="0.8"/>
-              <line x1="70" y1="42" x2="78" y2="42" stroke="#ff4433" stroke-width="1.5"/>
-              <!-- Head -->
-              <rect x="12" y="10" width="28" height="20" rx="3" fill="#1a1010" stroke="#e8251a" stroke-width="1"/>
-              <!-- Visor -->
-              <rect x="16" y="15" width="20" height="8" rx="1" fill="rgba(232,37,26,0.4)" stroke="#ff4433" stroke-width="0.6"/>
-              <!-- Shoulder pads -->
-              <rect x="2" y="24" width="14" height="8" rx="2" fill="#120c0c" stroke="rgba(232,37,26,0.6)" stroke-width="0.7"/>
-              <rect x="36" y="24" width="14" height="8" rx="2" fill="#120c0c" stroke="rgba(232,37,26,0.6)" stroke-width="0.7"/>
-            </g>
-
-            <!-- ── ROAMER ROVER (left ground) ── -->
-            <g transform="translate(22,142)" filter="url(#vglow)">
-              <!-- Body -->
-              <rect x="8" y="6" width="52" height="20" rx="4" fill="#160a0a" stroke="#e8251a" stroke-width="0.9"/>
-              <!-- Cockpit canopy -->
-              <path d="M 34 6 Q 42 -2 54 4 L 60 6 Z" fill="#1a0c0c" stroke="#e8251a" stroke-width="0.7"/>
-              <path d="M 36 5 Q 43 0 52 3 L 55 5 Z" fill="rgba(232,37,26,0.2)"/>
-              <!-- Wheels -->
-              <circle cx="16" cy="28" r="8" fill="#0f0808" stroke="#e8251a" stroke-width="1"/>
-              <circle cx="16" cy="28" r="4" fill="rgba(232,37,26,0.2)" stroke="rgba(232,37,26,0.5)" stroke-width="0.6"/>
-              <circle cx="52" cy="28" r="8" fill="#0f0808" stroke="#e8251a" stroke-width="1"/>
-              <circle cx="52" cy="28" r="4" fill="rgba(232,37,26,0.2)" stroke="rgba(232,37,26,0.5)" stroke-width="0.6"/>
-              <!-- Antenna -->
-              <line x1="20" y1="6" x2="16" y2="-4" stroke="rgba(232,37,26,0.6)" stroke-width="0.8"/>
-              <circle cx="16" cy="-4" r="1.5" fill="#e8251a"/>
-              <!-- Mining arm -->
-              <line x1="60" y1="14" x2="72" y2="10" stroke="#e8251a" stroke-width="1"/>
-              <rect x="70" y="7" width="6" height="6" rx="1" fill="#1a1010" stroke="#ff4433" stroke-width="0.6"/>
-            </g>
-
-            <!-- ── PILGRIM SPEEDER (right ground) ── -->
-            <g transform="translate(192,148)" filter="url(#vglow)">
-              <!-- Sleek low body -->
-              <path d="M 0 16 Q 10 4 30 4 L 64 4 Q 74 4 76 16 Z" fill="#160a0a" stroke="#e8251a" stroke-width="0.9"/>
-              <!-- Windshield -->
-              <path d="M 40 4 Q 50 -3 64 2 L 66 4 Z" fill="rgba(232,37,26,0.2)" stroke="#ff4433" stroke-width="0.5"/>
-              <!-- Wheels - front -->
-              <circle cx="62" cy="20" r="7" fill="#0f0808" stroke="#e8251a" stroke-width="0.9"/>
-              <circle cx="62" cy="20" r="3.5" fill="rgba(232,37,26,0.15)" stroke="rgba(232,37,26,0.4)" stroke-width="0.5"/>
-              <!-- Wheels - back -->
-              <circle cx="14" cy="20" r="7" fill="#0f0808" stroke="#e8251a" stroke-width="0.9"/>
-              <circle cx="14" cy="20" r="3.5" fill="rgba(232,37,26,0.15)" stroke="rgba(232,37,26,0.4)" stroke-width="0.5"/>
-              <!-- Speed stripe -->
-              <line x1="6" y1="10" x2="46" y2="6" stroke="rgba(232,37,26,0.4)" stroke-width="0.7"/>
-              <!-- Thruster glow rear -->
-              <ellipse cx="2" cy="12" rx="4" ry="3" fill="rgba(232,37,26,0.5)"/>
-              <ellipse cx="-1" cy="12" rx="2" ry="1.5" fill="rgba(255,140,80,0.8)"/>
-            </g>
-
-            <!-- ── NAUTILON SUBMARINE (bottom center, partially submerged) ── -->
-            <g transform="translate(88,162)" filter="url(#vglow)">
-              <!-- Water surface shimmer -->
-              <rect x="-4" y="10" width="104" height="22" rx="0" fill="rgba(30,60,100,0.35)"/>
-              <line x1="-4" y1="10" x2="100" y2="10" stroke="rgba(60,140,220,0.4)" stroke-width="1"/>
-              <!-- Sub body (mostly submerged) -->
-              <ellipse cx="48" cy="14" rx="44" ry="12" fill="#08101a" stroke="#4a90d9" stroke-width="1"/>
-              <!-- Conning tower above water -->
-              <rect x="36" y="-4" width="22" height="16" rx="3" fill="#0a1420" stroke="#4a90d9" stroke-width="0.9"/>
-              <!-- Periscope -->
-              <line x1="44" y1="-4" x2="44" y2="-14" stroke="#4a90d9" stroke-width="1.2"/>
-              <rect x="42" y="-16" width="8" height="4" rx="1" fill="#0a1420" stroke="#4a90d9" stroke-width="0.7"/>
-              <!-- Viewport -->
-              <circle cx="47" cy="4" r="4" fill="rgba(74,144,217,0.25)" stroke="#4a90d9" stroke-width="0.7"/>
-              <circle cx="47" cy="4" r="2" fill="rgba(74,144,217,0.4)"/>
-              <!-- Propeller hint -->
-              <ellipse cx="6" cy="14" rx="4" ry="6" fill="rgba(74,144,217,0.15)" stroke="rgba(74,144,217,0.4)" stroke-width="0.6"/>
-              <!-- Hull stripe -->
-              <line x1="15" y1="10" x2="80" y2="10" stroke="rgba(74,144,217,0.3)" stroke-width="0.7"/>
-            </g>
-
-            <!-- Labels -->
-            <text x="44" y="26" font-family="monospace" font-size="5" fill="rgba(232,37,26,0.55)" letter-spacing="0.5">FIGHTER</text>
-            <text x="190" y="16" font-family="monospace" font-size="5" fill="rgba(232,37,26,0.55)" letter-spacing="0.5">HAULER</text>
-            <text x="130" y="88" font-family="monospace" font-size="5" fill="rgba(232,37,26,0.55)" letter-spacing="0.5">MINOTAUR</text>
-            <text x="28" y="140" font-family="monospace" font-size="5" fill="rgba(232,37,26,0.55)" letter-spacing="0.5">ROAMER</text>
-            <text x="200" y="146" font-family="monospace" font-size="5" fill="rgba(232,37,26,0.55)" letter-spacing="0.5">PILGRIM</text>
-            <text x="108" y="160" font-family="monospace" font-size="5" fill="rgba(74,144,217,0.7)" letter-spacing="0.5">NAUTILON</text>
-
-            <style>
-              @keyframes floatA { from { transform: translate(28px,30px) rotate(-8deg); } to { transform: translate(28px,26px) rotate(-6deg); } }
-            </style>
-          </svg>
+          <img src="ships.png" alt="NMS Fighter Ship" style="width:100%;height:100%;object-fit:cover;object-position:center 45%;position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(232,37,26,0.4));">
         </div>
         <div class="card-content">
           <div>
-            <div class="card-tag">Manual IV · Vehicles &amp; Craft</div>
-            <div class="card-title">Vehicle<br>Command Manual</div>
-            <p class="card-desc">
-              Every vehicle in No Man's Sky — from starfighters and Corvette-class custom ships to ground rovers, mechs, and the deep-sea Nautilon. Covers all nine ship types including Solar Ships and the new buildable Corvette, the Starship Fabricator, Living Ships, Sentinel Interceptors, all six Exocrafts, multi-tools, and how to stack upgrades for peak performance.
-            </p>
+            <div class="card-tag">Manual IV · Ships</div>
+            <div class="card-title">Ships &amp;<br>Starship Systems</div>
+            <p class="card-desc">All nine ship types, the Starship Fabricator, Corvette Workshop, Living Ships, and Sentinel Interceptors. Covers finding, building, upgrading, and class strategy.</p>
             <div class="card-topics">
               <span class="topic">9 Ship Types</span>
               <span class="topic">Corvettes</span>
               <span class="topic">Living Ships</span>
               <span class="topic">Interceptors</span>
-              <span class="topic">All Exocrafts</span>
               <span class="topic">Upgrades</span>
-              <span class="topic">Multi-Tools</span>
             </div>
           </div>
           <div class="card-cta">
@@ -975,6 +810,71 @@
         </div>
       </div>
       <div class="card-number">IV</div>
+    </a>
+
+    <!-- MULTI-TOOLS -->
+    <a class="guide-card vessels reveal" href="nms-multi-tools-guide.html" style="transition-delay:0.4s;">
+      <div class="card-topbar"></div>
+      <div class="card-inner">
+        <div class="card-visual">
+          <div class="card-particles">
+            <div class="particle" style="width:2px;height:2px;left:30%;top:40%;--dur:5s;--delay:0.6s;"></div>
+            <div class="particle" style="width:3px;height:3px;left:65%;top:60%;--dur:4.5s;--delay:1.4s;"></div>
+          </div>
+          <img src="multitools.png" alt="NMS Multi-Tools" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;position:relative;z-index:1;filter:drop-shadow(0 0 16px rgba(139,92,246,0.3));">
+        </div>
+        <div class="card-content">
+          <div>
+            <div class="card-tag">Manual V · Multi-Tools</div>
+            <div class="card-title">Multi-Tool<br>Field Manual</div>
+            <p class="card-desc">Every multi-tool type — Rifle, Pistol, Alien, Royal, Sentinel, and Atlantid. How to find, upgrade, and swap tools, plus the Decommissioning Terminal.</p>
+            <div class="card-topics">
+              <span class="topic">6 Types</span>
+              <span class="topic">Sentinel Tools</span>
+              <span class="topic">Atlantid</span>
+              <span class="topic">Upgrades</span>
+            </div>
+          </div>
+          <div class="card-cta">
+            <span class="cta-text">Open Manual</span>
+            <span class="cta-arrow">→</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-number">V</div>
+    </a>
+
+    <!-- EXOCRAFTS -->
+    <a class="guide-card vessels reveal" href="nms-exocrafts-guide.html" style="transition-delay:0.5s;">
+      <div class="card-topbar"></div>
+      <div class="card-inner">
+        <div class="card-visual">
+          <div class="card-particles">
+            <div class="particle" style="width:3px;height:3px;left:40%;top:55%;--dur:6s;--delay:0.8s;"></div>
+            <div class="particle" style="width:2px;height:2px;left:70%;top:35%;--dur:4.8s;--delay:0.3s;"></div>
+          </div>
+          <img src="exocrafts.png" alt="NMS Exocrafts" style="width:100%;height:100%;object-fit:cover;object-position:center 30%;position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(245,158,11,0.3));">
+        </div>
+        <div class="card-content">
+          <div>
+            <div class="card-tag">Manual VI · Exocrafts</div>
+            <div class="card-title">Exocraft<br>Operations</div>
+            <p class="card-desc">All six Exocrafts — Roamer, Nomad, Colossus, Pilgrim, Minotaur, and Nautilon. Unlocking, summoning via the Orbital Materialiser, and upgrade stacking.</p>
+            <div class="card-topics">
+              <span class="topic">6 Exocrafts</span>
+              <span class="topic">Colossus</span>
+              <span class="topic">Minotaur</span>
+              <span class="topic">Nautilon</span>
+              <span class="topic">Upgrades</span>
+            </div>
+          </div>
+          <div class="card-cta">
+            <span class="cta-text">Open Manual</span>
+            <span class="cta-arrow">→</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-number">VI</div>
     </a>
 
   </div><!-- /guides -->
