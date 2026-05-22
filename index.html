@@ -29,6 +29,14 @@
     --v-col:   #e8251a;
     --v-dim:   rgba(232,37,26,0.15);
     --v-glow:  0 0 40px rgba(232,37,26,0.4);
+    /* Multi-Tools — violet */
+    --m-col:   #8b5cf6;
+    --m-dim:   rgba(139,92,246,0.15);
+    --m-glow:  0 0 40px rgba(139,92,246,0.4);
+    /* Exocrafts — dark blue */
+    --e-col:   #3b82f6;
+    --e-dim:   rgba(59,130,246,0.15);
+    --e-glow:  0 0 40px rgba(59,130,246,0.4);
 
     --white:   #f0f8ff;
     --muted:   #4a6a8a;
@@ -38,18 +46,7 @@
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
 
-  .back-link {
-    display: inline-block;
-    padding: 14px 0 0;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: rgba(255,255,255,0.25);
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: color 0.2s ease;
-  }
-  .back-link:hover { color: rgba(0,229,255,0.7); }
+
 
   body {
     background: var(--void);
@@ -305,6 +302,8 @@
   .guide-card.freighters  { --c: var(--f-col); --cd: var(--f-dim); --cg: var(--f-glow); }
   .guide-card.trading     { --c: var(--t-col); --cd: var(--t-dim); --cg: var(--t-glow); }
   .guide-card.vessels     { --c: var(--v-col); --cd: var(--v-dim); --cg: var(--v-glow); }
+  .guide-card.multitools  { --c: var(--m-col); --cd: var(--m-dim); --cg: var(--m-glow); }
+  .guide-card.exocrafts   { --c: var(--e-col); --cd: var(--e-dim); --cg: var(--e-glow); }
 
   .guide-card:hover { border-color: var(--c); box-shadow: var(--cg); }
 
@@ -813,7 +812,7 @@
     </a>
 
     <!-- MULTI-TOOLS -->
-    <a class="guide-card vessels reveal" href="nms-multi-tools-guide.html" style="transition-delay:0.4s;">
+    <a class="guide-card multitools reveal" href="nms-multi-tools-guide.html" style="transition-delay:0.4s;">
       <div class="card-topbar"></div>
       <div class="card-inner">
         <div class="card-visual">
@@ -845,7 +844,7 @@
     </a>
 
     <!-- EXOCRAFTS -->
-    <a class="guide-card vessels reveal" href="nms-exocrafts-guide.html" style="transition-delay:0.5s;">
+    <a class="guide-card exocrafts reveal" href="nms-exocrafts-guide.html" style="transition-delay:0.5s;">
       <div class="card-topbar"></div>
       <div class="card-inner">
         <div class="card-visual">
@@ -853,7 +852,7 @@
             <div class="particle" style="width:3px;height:3px;left:40%;top:55%;--dur:6s;--delay:0.8s;"></div>
             <div class="particle" style="width:2px;height:2px;left:70%;top:35%;--dur:4.8s;--delay:0.3s;"></div>
           </div>
-          <img src="exocrafts.png" alt="NMS Exocrafts" style="width:90%;height:90%;object-fit:contain;position:relative;z-index:1;mix-blend-mode:lighten;filter:drop-shadow(0 0 16px rgba(245,158,11,0.25));">
+          <img src="exocrafts.png" alt="NMS Exocrafts" style="width:90%;height:90%;object-fit:contain;position:relative;z-index:1;mix-blend-mode:lighten;filter:drop-shadow(0 0 16px rgba(59,130,246,0.3));">
         </div>
         <div class="card-content">
           <div>
