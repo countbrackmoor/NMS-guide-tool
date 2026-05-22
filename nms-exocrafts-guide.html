@@ -10,27 +10,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --black:   #080704;
-    --dark:    #0e0c08;
-    --base:    #141208;
-    --surface: #1c1910;
-    --raised:  #222018;
-    --border:  #302c18;
-    --border2: #3e3a22;
-    --amber:   #f59e0b;
-    --amber2:  #fcd34d;
-    --a-dim:   rgba(245,158,11,0.1);
-    --a-glow:  0 0 24px rgba(245,158,11,0.35);
-    --orange:  #f97316;
-    --rust:    #c2410c;
-    --sage:    #84cc16;
-    --blue:    #38bdf8;
-    --white:   #faf8f0;
-    --offwhite:#d8d0b8;
-    --muted:   #6b6040;
-    --text:    #9a9070;
-    --dim:     #3a3520;
-    --hatching:rgba(245,158,11,0.04);
+    --black:   #04060a;
+    --dark:    #070d14;
+    --base:    #0a1020;
+    --surface: #0f1830;
+    --raised:  #141e38;
+    --border:  #1a2848;
+    --border2: #223260;
+    --blue1:   #3b82f6;
+    --blue2:   #93c5fd;
+    --a-dim:   rgba(59,130,246,0.1);
+    --a-glow:  0 0 24px rgba(59,130,246,0.4);
+    --cyan:    #22d3ee;
+    --indigo:  #6366f1;
+    --teal:    #14b8a6;
+    --sky:     #38bdf8;
+    --white:   #f0f6ff;
+    --offwhite:#c8d8f0;
+    --muted:   #3a5070;
+    --text:    #7090b0;
+    --dim:     #1a2840;
+    --grid:    rgba(59,130,246,0.05);
   }
 
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -45,35 +45,30 @@
     overflow-x: hidden;
   }
 
-  /* ── TERRAIN HATCHING TEXTURE ── */
+  /* ── CIRCUIT GRID TEXTURE ── */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     background-image:
-      repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 14px,
-        var(--hatching) 14px,
-        var(--hatching) 15px
-      );
+      repeating-linear-gradient(0deg, transparent, transparent 39px, var(--grid) 39px, var(--grid) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, var(--grid) 39px, var(--grid) 40px);
     pointer-events: none;
     z-index: 0;
   }
 
   /* ── HEAT GLOW ── */
-  .heat-glow {
+  .depth-glow {
     position: fixed;
     width: 500px; height: 400px;
     bottom: -150px; right: -100px;
-    background: radial-gradient(ellipse, rgba(245,158,11,0.05) 0%, transparent 70%);
+    background: radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
-    animation: heatPulse 10s ease-in-out infinite alternate;
+    animation: depthPulse 10s ease-in-out infinite alternate;
   }
 
-  @keyframes heatPulse {
+  @keyframes depthPulse {
     from { opacity: 0.5; transform: scale(1); }
     to   { opacity: 1;   transform: scale(1.15); }
   }
@@ -91,7 +86,7 @@
     background: rgba(8,7,4,0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(245,158,11,0.2);
+    border-bottom: 1px solid rgba(59,130,246,0.2);
   }
 
   .hub-back {
@@ -106,7 +101,7 @@
     text-transform: uppercase;
     transition: color 0.2s;
   }
-  .hub-back:hover { color: var(--amber2); }
+  .hub-back:hover { color: var(--blue2); }
   .hub-back-arrow { font-size: 14px; transition: transform 0.2s; }
   .hub-back:hover .hub-back-arrow { transform: translateX(-3px); }
 
@@ -114,14 +109,14 @@
     font-family: 'Roboto Mono', monospace;
     font-size: 9px;
     letter-spacing: 4px;
-    color: rgba(245,158,11,0.35);
+    color: rgba(59,130,246,0.35);
     text-transform: uppercase;
   }
 
   .hub-indicator {
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: var(--amber);
+    background: var(--blue1);
     box-shadow: var(--a-glow);
     animation: blink 3s ease-in-out infinite;
   }
@@ -156,8 +151,8 @@
     font-family: 'Teko', sans-serif;
     font-size: 120px;
     font-weight: 700;
-    color: var(--amber);
-    opacity: 0.04;
+    color: var(--blue1);
+    opacity: 0.03;
     letter-spacing: 6px;
     line-height: 1;
     pointer-events: none;
@@ -171,8 +166,8 @@
     position: absolute;
     top: 44px; left: 0;
     width: 40px; height: 40px;
-    border-top: 2px solid var(--amber);
-    border-left: 2px solid var(--amber);
+    border-top: 2px solid var(--blue1);
+    border-left: 2px solid var(--blue1);
     opacity: 0.6;
   }
 
@@ -180,7 +175,7 @@
     font-family: 'Roboto Mono', monospace;
     font-size: 9px;
     letter-spacing: 6px;
-    color: var(--amber);
+    color: var(--blue1);
     text-transform: uppercase;
     margin-bottom: 18px;
     padding-left: 52px;
@@ -203,7 +198,7 @@
     display: block;
     font-family: 'Roboto Mono', monospace;
     font-size: 0.14em;
-    color: var(--amber);
+    color: var(--blue1);
     letter-spacing: 8px;
     font-weight: 400;
     margin-bottom: 6px;
@@ -211,7 +206,7 @@
     text-transform: uppercase;
   }
 
-  h1 .accent { color: var(--amber); text-shadow: var(--a-glow); }
+  h1 .accent { color: var(--blue1); text-shadow: var(--a-glow); }
 
   .header-meta {
     display: flex;
@@ -231,8 +226,8 @@
     border-radius: 2px;
   }
   .hm-pill.active {
-    border-color: var(--amber);
-    color: var(--amber);
+    border-color: var(--blue1);
+    color: var(--blue1);
     background: var(--a-dim);
   }
 
@@ -251,9 +246,9 @@
     font-family: 'Roboto Mono', monospace;
     font-size: 9px;
     letter-spacing: 4px;
-    color: var(--amber);
+    color: var(--blue1);
     text-transform: uppercase;
-    border-bottom: 2px solid var(--amber);
+    border-bottom: 2px solid var(--blue1);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -286,8 +281,8 @@
   }
 
   .toc a:nth-child(even) { border-right: none; }
-  .toc a:hover { color: var(--amber2); background: var(--surface); }
-  .toc-n { color: var(--amber); font-size: 9px; opacity: 0.5; flex-shrink: 0; }
+  .toc a:hover { color: var(--blue2); background: var(--surface); }
+  .toc-n { color: var(--blue1); font-size: 9px; opacity: 0.5; flex-shrink: 0; }
 
   /* ── SECTION ── */
   .section { margin: 56px 0; }
@@ -300,7 +295,7 @@
   }
 
   .sec-num-block {
-    background: var(--amber);
+    background: var(--blue1);
     padding: 8px 14px;
     display: flex;
     align-items: center;
@@ -332,7 +327,7 @@
     font-family: 'Roboto Mono', monospace;
     font-size: 7px;
     letter-spacing: 3px;
-    color: var(--amber);
+    color: var(--blue1);
     text-transform: uppercase;
     display: block;
     margin-bottom: 2px;
@@ -354,7 +349,7 @@
     font-size: 9px;
     font-weight: 500;
     letter-spacing: 4px;
-    color: var(--amber);
+    color: var(--blue1);
     text-transform: uppercase;
     margin: 28px 0 14px;
     padding-bottom: 6px;
@@ -377,7 +372,7 @@
     transition: border-color 0.2s;
   }
 
-  .exo-row:hover { border-color: rgba(245,158,11,0.4); }
+  .exo-row:hover { border-color: rgba(59,130,246,0.4); }
 
   .exo-num {
     background: var(--raised);
@@ -387,7 +382,7 @@
     font-family: 'Teko', sans-serif;
     font-size: 26px;
     font-weight: 700;
-    color: var(--amber);
+    color: var(--blue1);
     opacity: 0.5;
     border-right: 1px solid var(--border);
     letter-spacing: 1px;
@@ -416,7 +411,7 @@
     font-family: 'Roboto Mono', monospace;
     font-size: 8px;
     letter-spacing: 2px;
-    color: var(--amber);
+    color: var(--blue1);
     text-transform: uppercase;
     opacity: 0.7;
   }
@@ -486,7 +481,7 @@
     font-family: 'Roboto Mono', monospace;
     font-size: 8px;
     letter-spacing: 2px;
-    color: var(--amber);
+    color: var(--blue1);
     text-transform: uppercase;
     display: block;
     margin-bottom: 8px;
@@ -508,12 +503,12 @@
     font-family: 'Roboto Mono', monospace;
     font-size: 8px;
     letter-spacing: 3px;
-    color: var(--amber);
+    color: var(--blue1);
     text-transform: uppercase;
     padding: 10px 14px;
     text-align: left;
     background: var(--raised);
-    border-bottom: 2px solid var(--amber);
+    border-bottom: 2px solid var(--blue1);
     white-space: nowrap;
   }
 
@@ -541,7 +536,7 @@
     content: '▸';
     position: absolute;
     left: 4px;
-    color: var(--amber);
+    color: var(--blue1);
     font-size: 12px;
     top: 10px;
   }
@@ -550,28 +545,28 @@
   .callout {
     background: var(--base);
     border: 1px solid var(--border2);
-    border-left: 4px solid var(--amber);
+    border-left: 4px solid var(--blue1);
     padding: 16px 20px;
     margin: 14px 0;
   }
 
   .callout.blue  { border-left-color: var(--blue); }
-  .callout.sage  { border-left-color: var(--sage); }
-  .callout.rust  { border-left-color: var(--rust); }
+  .callout.sage  { border-left-color: var(--teal); }
+  .callout.rust  { border-left-color: var(--indigo); }
 
   .ct {
     font-family: 'Roboto Mono', monospace;
     font-size: 9px;
     letter-spacing: 3px;
-    color: var(--amber);
+    color: var(--blue1);
     text-transform: uppercase;
     display: block;
     margin-bottom: 8px;
   }
 
   .callout.blue .ct  { color: var(--blue); }
-  .callout.sage .ct  { color: var(--sage); }
-  .callout.rust .ct  { color: var(--rust); }
+  .callout.sage .ct  { color: var(--teal); }
+  .callout.rust .ct  { color: var(--indigo); }
 
   .callout p { font-size: 14px; margin: 0; }
 
@@ -590,7 +585,7 @@
     font-size: 20px;
     font-weight: 700;
     color: var(--black);
-    background: var(--amber);
+    background: var(--blue1);
     width: 28px; height: 28px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
@@ -627,7 +622,7 @@
   /* ── FOOTER ── */
   footer {
     margin-top: 64px;
-    border-top: 3px solid var(--amber);
+    border-top: 3px solid var(--blue1);
     padding: 32px 0 60px;
     display: flex;
     justify-content: space-between;
@@ -640,7 +635,7 @@
     font-family: 'Teko', sans-serif;
     font-size: 32px;
     font-weight: 700;
-    color: var(--amber);
+    color: var(--blue1);
     letter-spacing: 3px;
     text-transform: uppercase;
     text-shadow: var(--a-glow);
@@ -668,7 +663,7 @@
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--black); }
   ::-webkit-scrollbar-thumb { background: var(--border2); }
-  ::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--blue1); }
 
   @media (max-width: 640px) {
     .toc-list { grid-template-columns: 1fr; }
@@ -683,7 +678,7 @@
 </head>
 <body>
 
-<div class="heat-glow"></div>
+<div class="depth-glow"></div>
 
 <nav class="hub-nav">
   <a class="hub-back" href="index.html">
@@ -996,7 +991,7 @@
   </div>
 
   <footer class="reveal">
-    <div class="footer-brand">Exocraft Ops</div>
+    <div class="footer-brand">EXOCRAFT OPS</div>
     <div class="footer-info">
       <p>Exocrafts · Manual VI</p>
       <p>No Man's Sky · All Platforms · Voyagers/Beacon Era (2025+)</p>
