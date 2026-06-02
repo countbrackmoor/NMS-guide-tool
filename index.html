@@ -33,6 +33,10 @@
     --m-col:   #8b5cf6;
     --m-dim:   rgba(139,92,246,0.15);
     --m-glow:  0 0 40px rgba(139,92,246,0.4);
+    /* Base Building — green */
+    --b-col:   #10b981;
+    --b-dim:   rgba(16,185,129,0.15);
+    --b-glow:  0 0 40px rgba(16,185,129,0.4);
     /* Exocrafts — dark blue */
     --e-col:   #3b82f6;
     --e-dim:   rgba(59,130,246,0.15);
@@ -303,7 +307,8 @@
   .guide-card.trading     { --c: var(--t-col); --cd: var(--t-dim); --cg: var(--t-glow); }
   .guide-card.vessels     { --c: var(--v-col); --cd: var(--v-dim); --cg: var(--v-glow); }
   .guide-card.multitools  { --c: var(--m-col); --cd: var(--m-dim); --cg: var(--m-glow); }
-  .guide-card.exocrafts   { --c: var(--e-col); --cd: var(--e-dim); --cg: var(--e-glow); }
+  .guide-card.exocrafts      { --c: var(--e-col); --cd: var(--e-dim); --cg: var(--e-glow); }
+  .guide-card.base-building { --c: var(--b-col); --cd: var(--b-dim); --cg: var(--b-glow); }
 
   .guide-card:hover { border-color: var(--c); box-shadow: var(--cg); }
 
@@ -621,7 +626,7 @@
     <div class="subtitle">Fan Field Reference · Beacon &amp; Voyagers Era</div>
 
     <p class="hero-desc">
-      A fan-made reference for <strong style="color:var(--white);font-weight:400;">No Man's Sky</strong> — four comprehensive field manuals covering Settlements, Freighters &amp; Frigates, Trading &amp; Crafting, and Vehicles &amp; Craft. Fact-checked for the Beacon and Voyagers updates.
+      A fan-made reference for <strong style="color:var(--white);font-weight:400;">No Man's Sky</strong> — seven comprehensive field manuals covering Settlements, Freighters &amp; Frigates, Trading &amp; Crafting, Ships, Multi-Tools, Exocrafts, and Base Building. Fact-checked for the Beacon and Voyagers updates.
     </p>
 
     <div class="scroll-hint">Explore the Codex</div>
@@ -632,7 +637,7 @@
   <!-- ══ STATS STRIP ══ -->
   <div class="stats-strip reveal" style="margin-top:64px;">
     <div class="stat-item">
-      <span class="stat-val" style="color:var(--s-col)">6</span>
+      <span class="stat-val" style="color:var(--s-col)">7</span>
       <span class="stat-label">Field Manuals</span>
     </div>
     <div class="stat-item">
@@ -666,7 +671,7 @@
             <div class="particle" style="width:2px;height:2px;left:35%;top:80%;--dur:3.5s;--delay:2s;"></div>
             <div class="particle" style="width:3px;height:3px;left:60%;top:65%;--dur:5.5s;--delay:1.5s;"></div>
           </div>
-          <img src="settlements.png" alt="NMS Settlement" style="width:90%;height:90%;object-fit:contain;position:relative;z-index:1;mix-blend-mode:lighten;filter:drop-shadow(0 0 16px rgba(0,229,255,0.2));">
+          <img src="settlements.png" alt="NMS Settlement" style="width:92%;height:92%;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 0 20px rgba(0,229,255,0.35));">
         </div>
         <div class="card-content">
           <div>
@@ -712,7 +717,7 @@
         <div class="card-content">
           <div>
             <div class="card-tag">Manual II · Fleet Operations</div>
-            <div class="card-title">Admiral's<br>Command Manual</div>
+            <div class="card-title">Freighter<br>Command Manual</div>
             <p class="card-desc">
               Build and command a capital ship fleet. Acquire the perfect S-class freighter, kit it out with technology and crew quarters, then deploy frigates across the galaxy on automated expeditions. Covers the full progression from first free freighter to a 12-frigate fleet generating hundreds of millions passively.
             </p>
@@ -720,11 +725,10 @@
               <span class="topic">Acquiring Freighters</span>
               <span class="topic">Classes & Types</span>
               <span class="topic">Upgrades</span>
-              <span class="topic">Base Building</span>
+              <span class="topic">Freighter Base Building</span>
               <span class="topic">Frigates</span>
               <span class="topic">Expeditions</span>
               <span class="topic">Fleet Strategy</span>
-              <span class="topic">Combat</span>
             </div>
           </div>
           <div class="card-cta">
@@ -874,6 +878,44 @@
         </div>
       </div>
       <div class="card-number">VI</div>
+    </a>
+
+
+    <!-- BASE BUILDING -->
+    <a class="guide-card base-building reveal" href="nms-base-building-guide.html" style="transition-delay:0.6s;">
+      <div class="card-topbar"></div>
+      <div class="card-inner">
+        <div class="card-visual">
+          <div class="card-particles">
+            <div class="particle" style="width:2px;height:2px;left:25%;top:45%;--dur:5s;--delay:0.4s;"></div>
+            <div class="particle" style="width:3px;height:3px;left:65%;top:65%;--dur:6s;--delay:1.2s;"></div>
+            <div class="particle" style="width:2px;height:2px;left:50%;top:30%;--dur:4.5s;--delay:0.9s;"></div>
+          </div>
+          <img src="base-building.png" alt="NMS Base" style="width:95%;height:95%;object-fit:contain;position:relative;z-index:1;mix-blend-mode:lighten;filter:drop-shadow(0 0 20px rgba(16,185,129,0.3));">
+        </div>
+        <div class="card-content">
+          <div>
+            <div class="card-tag">Manual VII · Base Building</div>
+            <div class="card-title">
+              <span class="card-game">No Man's Sky</span>
+              Base<br><em>Operations</em>
+            </div>
+            <p class="card-desc">Power systems, wiring logic, industrial extractors, refiners, prefab structures, and base radius extension. Everything from site selection to fully automated resource farms.</p>
+            <div class="card-topics">
+              <span class="topic">Power Grid</span>
+              <span class="topic">Logic Gates</span>
+              <span class="topic">Extractors</span>
+              <span class="topic">Prefabs</span>
+              <span class="topic">Radius Tips</span>
+            </div>
+          </div>
+          <div class="card-cta">
+            <span class="cta-text">Open Manual</span>
+            <span class="cta-arrow">→</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-number">VII</div>
     </a>
 
   </div><!-- /guides -->
