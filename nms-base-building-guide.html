@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="512x512">
+  <link rel="apple-touch-icon" href="/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No Man's Sky — Base Construction &amp; Engineering</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:   #030a08;
+    --dark:    #061410;
+    --base:    #081c16;
+    --surface: #0c2620;
+    --raised:  #10302a;
+    --border:  #183e34;
+    --border2: #204e44;
+    --teal:    #10b981;
+    --teal2:   #6ee7b7;
+    --t-dim:   rgba(16,185,129,0.1);
+    --t-glow:  0 0 24px rgba(16,185,129,0.4);
+    --cyan:    #22d3ee;
+    --amber:   #fbbf24;
+    --rose:    #fb7185;
+    --sky:     #38bdf8;
+    --white:   #f0fff8;
+    --offwhite:#c0e8d8;
+    --muted:   #3a7060;
+    --text:    #70a898;
+    --dim:     #1a3830;
+    --grid:    rgba(16,185,129,0.035);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Chakra Petch', sans-serif;
+    font-weight: 400;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ── BLUEPRINT GRID ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 59px, var(--grid) 59px, var(--grid) 60px),
+      repeating-linear-gradient(90deg, transparent, transparent 59px, var(--grid) 59px, var(--grid) 60px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── CORNER GLOW ── */
+  .env-glow {
+    position: fixed;
+    width: 600px; height: 500px;
+    top: -200px; left: -150px;
+    background: radial-gradient(ellipse, rgba(16,185,129,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: envPulse 12s ease-in-out infinite alternate;
+  }
+  .env-glow-br {
+    position: fixed;
+    width: 400px; height: 400px;
+    bottom: -150px; right: -100px;
+    background: radial-gradient(ellipse, rgba(16,185,129,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: envPulse 12s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes envPulse {
+    from { opacity: 0.5; transform: scale(1); }
+    to   { opacity: 1;   transform: scale(1.1); }
+  }
+
+  /* ── HUB NAV ── */
+  .hub-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 48px;
+    background: rgba(3,10,8,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(16,185,129,0.2);
+  }
+
+  .hub-back {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .hub-back:hover { color: var(--teal2); }
+  .hub-back-arrow { font-size: 14px; transition: transform 0.2s; }
+  .hub-back:hover .hub-back-arrow { transform: translateX(-3px); }
+
+  .hub-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(16,185,129,0.35);
+    text-transform: uppercase;
+  }
+
+  .hub-indicator {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: var(--t-glow);
+    animation: blink 2.8s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.15; }
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 28px;
+    position: relative;
+    z-index: 1;
+    padding-top: 48px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 52px 0 44px;
+    position: relative;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 48px;
+  }
+
+  .header-bg-text {
+    position: absolute;
+    top: 20px; right: -8px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 140px;
+    font-weight: 700;
+    color: var(--teal);
+    opacity: 0.025;
+    letter-spacing: 4px;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    text-transform: uppercase;
+  }
+
+  /* Blueprint corner brackets */
+  header::before, header::after {
+    content: '';
+    position: absolute;
+    width: 40px; height: 40px;
+  }
+  header::before {
+    top: 44px; left: 0;
+    border-top: 2px solid var(--teal);
+    border-left: 2px solid var(--teal);
+    opacity: 0.5;
+  }
+  header::after {
+    bottom: -1px; right: 0;
+    border-bottom: 2px solid var(--teal);
+    border-right: 2px solid var(--teal);
+    opacity: 0.3;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 6px;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    padding-left: 52px;
+    display: block;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(42px, 8vw, 80px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 0.92;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  h1 .sub {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.16em;
+    color: var(--teal);
+    letter-spacing: 8px;
+    font-weight: 400;
+    margin-bottom: 6px;
+    text-shadow: var(--t-glow);
+    text-transform: uppercase;
+  }
+
+  h1 .accent { color: var(--teal); text-shadow: var(--t-glow); }
+
+  .header-meta {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .hm-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--border2);
+    padding: 5px 12px;
+    color: var(--muted);
+    border-radius: 2px;
+  }
+  .hm-pill.active {
+    border-color: var(--teal);
+    color: var(--teal);
+    background: var(--t-dim);
+  }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--base);
+    border: 1px solid var(--border2);
+    padding: 0;
+    margin-bottom: 52px;
+    overflow: hidden;
+  }
+
+  .toc-head {
+    background: var(--raised);
+    padding: 10px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--teal);
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--teal);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toc-head::before {
+    content: '⬡';
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+  .toc-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .toc a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 1px;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .toc a:nth-child(even) { border-right: none; }
+  .toc a:hover { color: var(--teal2); background: var(--surface); }
+  .toc-n { color: var(--teal); font-size: 9px; opacity: 0.5; flex-shrink: 0; }
+
+  /* ── SECTION ── */
+  .section { margin: 56px 0; }
+
+  .sec-head {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 24px;
+  }
+
+  .sec-num-block {
+    background: var(--teal);
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sec-num {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+
+  .sec-label-block {
+    background: var(--raised);
+    border: 1px solid var(--border2);
+    border-left: none;
+    padding: 8px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .sec-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 3px;
+    color: var(--teal);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+    opacity: 0.7;
+  }
+
+  h2 {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: clamp(22px, 3.5vw, 36px);
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin: 28px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--border2);
+  }
+
+  p { font-size: 15px; margin-bottom: 12px; }
+  strong { color: var(--offwhite); font-weight: 600; }
+  a { color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(16,185,129,0.3); transition: border-color 0.15s; }
+  a:hover { border-color: var(--teal2); color: var(--teal2); }
+
+  /* ── COMPONENT GRID ── */
+  .comp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
+  .comp-card {
+    background: var(--base);
+    padding: 18px 14px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+    cursor: default;
+  }
+  .comp-card:hover { background: var(--surface); }
+
+  .comp-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--cyan));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .comp-card:hover::before { transform: scaleX(1); }
+
+  .cc-icon { font-size: 24px; display: block; margin-bottom: 8px; }
+
+  .cc-name {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .cc-role {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--teal);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .comp-card p { font-size: 12px; margin: 0; line-height: 1.5; }
+
+  /* ── WIRING DIAGRAM BOXES ── */
+  .wire-diagram {
+    background: var(--dark);
+    border: 1px solid var(--border2);
+    padding: 20px;
+    margin: 16px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wire-diagram::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(16,185,129,0.03) 19px, rgba(16,185,129,0.03) 20px),
+      repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(16,185,129,0.03) 19px, rgba(16,185,129,0.03) 20px);
+    pointer-events: none;
+  }
+
+  .wd-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .wd-title::before { content: '◈'; opacity: 0.6; }
+
+  .wire-diagram p { font-size: 13px; position: relative; z-index: 1; }
+
+  .wire-flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .wf-node {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+    border: 1px solid var(--border2);
+    color: var(--offwhite);
+    background: var(--base);
+    white-space: nowrap;
+  }
+  .wf-node.active { border-color: var(--teal); color: var(--teal); background: var(--t-dim); }
+
+  .wf-arrow {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--teal);
+    font-size: 14px;
+    opacity: 0.5;
+  }
+
+  /* ── TABLE ── */
+  .dtable-wrap { overflow-x: auto; margin: 14px 0; }
+
+  .dtable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border2);
+    font-size: 13px;
+  }
+
+  .dtable th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: var(--teal);
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    background: var(--raised);
+    border-bottom: 2px solid var(--teal);
+    white-space: nowrap;
+  }
+
+  .dtable td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--base);
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .dtable tr:hover td { background: var(--surface); }
+
+  /* ── LIST ── */
+  ul.bl { list-style: none; margin: 10px 0; }
+
+  ul.bl li {
+    font-size: 14px;
+    padding: 8px 0 8px 24px;
+    border-bottom: 1px dashed var(--border);
+    position: relative;
+  }
+
+  ul.bl li::before {
+    content: '▹';
+    position: absolute;
+    left: 4px;
+    color: var(--teal);
+    font-size: 14px;
+    top: 9px;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--base);
+    border: 1px solid var(--border2);
+    border-left: 4px solid var(--teal);
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+
+  .callout.cyan  { border-left-color: var(--cyan); }
+  .callout.amber { border-left-color: var(--amber); }
+  .callout.rose  { border-left-color: var(--rose); }
+  .callout.sky   { border-left-color: var(--sky); }
+
+  .ct {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--teal);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .callout.cyan  .ct { color: var(--cyan); }
+  .callout.amber .ct { color: var(--amber); }
+  .callout.rose  .ct { color: var(--rose); }
+  .callout.sky   .ct { color: var(--sky); }
+
+  .callout p { font-size: 14px; margin: 0; }
+
+  /* ── STEPS ── */
+  .steps { margin: 14px 0; }
+
+  .step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .step-n {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--black);
+    background: var(--teal);
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-b { flex: 1; font-size: 14px; padding-top: 3px; }
+  .step-b strong { color: var(--offwhite); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 52px 0;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border2);
+  }
+
+  .divider span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--dim);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 64px;
+    border-top: 2px solid var(--teal);
+    padding: 32px 0 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-brand {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--teal);
+    letter-spacing: 3px;
+    text-shadow: var(--t-glow);
+  }
+
+  .footer-info {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    text-transform: uppercase;
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--teal); }
+
+  @media (max-width: 640px) {
+    .toc-list { grid-template-columns: 1fr; }
+    .toc a { border-right: none; }
+    h1 { font-size: clamp(36px, 10vw, 60px); }
+    .comp-grid { grid-template-columns: 1fr 1fr; }
+    .sec-head { flex-direction: column; gap: 0; }
+    .sec-label-block { border-left: 1px solid var(--border2); }
+    .wire-flow { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="env-glow"></div>
+<div class="env-glow-br"></div>
+
+<nav class="hub-nav">
+  <a class="hub-back" href="index.html">
+    <span class="hub-back-arrow">←</span>
+    <span>Traveller's Codex</span>
+  </a>
+  <span class="hub-title">Manual VII · Base Building</span>
+  <span class="hub-indicator"></span>
+</nav>
+
+<div class="page">
+
+  <header>
+    <div class="header-bg-text" aria-hidden="true">BASE</div>
+    <span class="eyebrow">Construction · Power · Engineering</span>
+    <h1>
+      <span class="sub">// construction &amp; engineering</span>
+      <span class="accent">Base</span> Building<br>Manual
+    </h1>
+    <div class="header-meta">
+      <div class="hm-pill active">Manual VII</div>
+      <div class="hm-pill">All Platforms</div>
+      <div class="hm-pill">Voyagers / Beacon Era</div>
+    </div>
+  </header>
+
+  <nav class="toc reveal">
+    <div class="toc-head">Construction Index</div>
+    <div class="toc-list">
+      <a href="#fundamentals"><span class="toc-n">01</span> Base Fundamentals</a>
+      <a href="#structures"><span class="toc-n">02</span> Structure Types</a>
+      <a href="#power"><span class="toc-n">03</span> Power Systems</a>
+      <a href="#extraction"><span class="toc-n">04</span> Resource Extraction</a>
+      <a href="#refiners"><span class="toc-n">05</span> Refiners &amp; Production</a>
+      <a href="#wiring"><span class="toc-n">06</span> Wiring &amp; Logic Gates</a>
+      <a href="#teleporters"><span class="toc-n">07</span> Teleporters &amp; Connectivity</a>
+      <a href="#storage"><span class="toc-n">08</span> Storage &amp; Quality of Life</a>
+      <a href="#specialist"><span class="toc-n">09</span> Specialist Builds</a>
+      <a href="#tips"><span class="toc-n">10</span> Pro Tips &amp; Tricks</a>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 01 · BASE FUNDAMENTALS        -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="fundamentals">
+    <div class="sec-head">
+      <div class="sec-num-block"><span class="sec-num">01</span></div>
+      <div class="sec-label-block">
+        <span class="sec-tag">Section 01</span>
+        <h2>Base Fundamentals</h2>
+      </div>
+    </div>
+
+    <p>Every base starts with a <strong>Base Computer</strong>. It defines your claim on the land, lets you upload the base to servers (making it visible to other players), rename it, and delete it. You can have multiple bases across different planets and systems.</p>
+
+    <h3>Placing a Base Computer</h3>
+    <ul class="bl">
+      <li>Craft the Base Computer from the build menu (no research required — it's free from the start)</li>
+      <li>Place it on any planetary surface. This becomes the centre of your base radius</li>
+      <li>The default <strong>base radius is 300u</strong> (units). Every part you build inside this sphere "belongs" to the base</li>
+      <li>You can extend the radius up to roughly <strong>1,000u</strong> by building structures at the edge — the game expands the boundary to include them</li>
+    </ul>
+
+    <div class="callout">
+      <span class="ct">Choosing a Site</span>
+      <p>Before placing the Base Computer, scout the area. Ideal base locations have: a nearby <strong>resource hotspot</strong> (electromagnetic, mineral, or gas), low or zero sentinel activity, minimal environmental hazards, and — if you care about aesthetics — a good view. Use the <strong>Survey Device</strong> on your Multi-Tool or Exocraft to scan for hotspots before committing.</p>
+    </div>
+
+    <h3>Blueprints &amp; Salvaged Data</h3>
+    <p>Most base parts must be <strong>researched</strong> before you can build them. Visit the <strong>Construction Research Station</strong> aboard the Space Anomaly and spend <strong>Salvaged Data</strong> (found by digging up Buried Technology Modules on any planet) to unlock blueprints. Blueprints unlock permanently across all saves.</p>
+
+    <h3>Base Salvaging &amp; Dismantling</h3>
+    <ul class="bl">
+      <li><strong>Dismantling</strong> individual parts returns ~50% of resources used to build them</li>
+      <li><strong>Deleting a base</strong> via the Base Computer returns resources to a "Base Salvage Capsule" that appears near where the computer was</li>
+      <li>You can also delete bases remotely from any other Base Computer's management screen</li>
+    </ul>
+  </div>
+
+  <div class="divider"><span>// section 02</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 02 · STRUCTURE TYPES          -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="structures">
+    <div class="sec-head">
+      <div class="sec-num-block"><span class="sec-num">02</span></div>
+      <div class="sec-label-block">
+        <span class="sec-tag">Section 02</span>
+        <h2>Structure Types</h2>
+      </div>
+    </div>
+
+    <p>NMS offers multiple building systems that can be mixed and matched. Each has a distinct aesthetic and different snap-point behaviour.</p>
+
+    <div class="comp-grid">
+      <div class="comp-card">
+        <span class="cc-icon">🏗</span>
+        <span class="cc-name">Prefab Rooms</span>
+        <span class="cc-role">Cuboid / Round / Large</span>
+        <p>Pre-made enclosed rooms that snap together via corridors. Cuboid rooms are the most versatile. Includes glass variants, viewing domes, and large round rooms for multi-purpose hubs.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🪵</span>
+        <span class="cc-name">Wooden Parts</span>
+        <span class="cc-role">Basic Modular</span>
+        <p>Foundations, walls, floors, roofs, stairs. Cheapest tier. Snap together in a modular grid. Great for large open structures and starting bases. Requires Carbon.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🔩</span>
+        <span class="cc-name">Metal Parts</span>
+        <span class="cc-role">Industrial Modular</span>
+        <p>Same grid system as wood but with a rugged industrial look. Requires Ferrite Dust. Sturdier aesthetic — good for outposts and hangars.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">✨</span>
+        <span class="cc-name">Alloy Parts</span>
+        <span class="cc-role">Advanced Modular</span>
+        <p>Sleek, futuristic panels. Require Pure Ferrite. The cleanest aesthetic tier — ideal for polished endgame builds and landing pads.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🔲</span>
+        <span class="cc-name">Glass &amp; Panes</span>
+        <span class="cc-role">Transparent Parts</span>
+        <p>Glass walls, floors, and cuboid frames. Require Glass (Silicate Powder × 40 → Glass in a Refiner). Essential for greenhouses, observation decks, and underwater visibility.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🎨</span>
+        <span class="cc-name">Decoration</span>
+        <span class="cc-role">Furniture / Lights / Plants</span>
+        <p>Posters, shelves, planters, terminals, light panels, flags. Purely cosmetic but make the difference between a base and a home. Many unlocked at the Quicksilver Synthesis Companion.</p>
+      </div>
+    </div>
+
+    <div class="callout amber">
+      <span class="ct">⚠ Terrain Regeneration</span>
+      <p>If you dig out terrain with the Terrain Manipulator and build inside it, the terrain <strong>will regenerate over time</strong> and clip through your base. Build above ground or on flattened surfaces. Underground bases are possible but require careful planning — prefab rooms resist terrain regrowth better than modular parts.</p>
+    </div>
+
+    <h3>Snap Points &amp; Free Placement</h3>
+    <p>All structural parts use a snap-point grid. Hold the <strong>build menu button</strong> to cycle between snap positions when placing parts. For decorative items and furniture, toggle <strong>Free Placement</strong> mode (shown in the build menu) to position things without the grid — essential for custom layouts.</p>
+  </div>
+
+  <div class="divider"><span>// section 03</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 03 · POWER SYSTEMS            -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="power">
+    <div class="sec-head">
+      <div class="sec-num-block"><span class="sec-num">03</span></div>
+      <div class="sec-label-block">
+        <span class="sec-tag">Section 03</span>
+        <h2>Power Systems</h2>
+      </div>
+    </div>
+
+    <p>Most functional base components — lights, doors, teleporters, extractors — require power. Power is measured in <strong>kP</strong> (kiloPower). Open the build menu wiring view to see your base's power supply vs. demand in real time.</p>
+
+    <h3>Power Sources</h3>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <span class="cc-icon">🔥</span>
+        <span class="cc-name">Biofuel Reactor</span>
+        <span class="cc-role">~50 kP · Fuel-Based</span>
+        <p>Burns Carbon or Condensed Carbon for power. Finite fuel — must be manually refilled. Earliest available generator. Good starter source, but doesn't scale well. One reactor supports basic lighting and a teleporter.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">☀</span>
+        <span class="cc-name">Solar Panel</span>
+        <span class="cc-role">~50 kP · Daylight Only</span>
+        <p>Generates ~50 kP during daytime, zero at night. Pair with Batteries for 24/7 power. The most popular mid-game power solution. No fuel, no hotspot — works everywhere.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">⚡</span>
+        <span class="cc-name">Electromagnetic Generator</span>
+        <span class="cc-role">~50–300 kP · Infinite</span>
+        <p>Free infinite power — but requires placement on an <strong>Electromagnetic Hotspot</strong>. Output depends on hotspot class: C (~75), B (~150), A (~225), S (~300). The best endgame power source. Stack multiple generators on one S-class hotspot for massive output.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🔋</span>
+        <span class="cc-name">Battery</span>
+        <span class="cc-role">~45,000 kP Storage</span>
+        <p>Stores excess power for later. Essential companion to Solar Panels for nighttime. Each Battery stores ~45,000 kP. Rule of thumb: 2 Solar Panels per 1 Battery for reliable 24/7 power.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="ct">Finding Electromagnetic Hotspots</span>
+      <p>Equip the <strong>Survey Device</strong> on your Multi-Tool (or Exocraft) and activate it on a planet's surface. It shows nearby hotspot markers with class ratings. Electromagnetic hotspots appear as a lightning bolt icon. Walk toward the strongest signal to find the centre — place your generators there for maximum output. S-class EM hotspots are rare but worth seeking out; a single one can power an entire mega-base.</p>
+    </div>
+
+    <h3>Wiring Power</h3>
+    <p>Use <strong>Electrical Wiring</strong> to connect power sources to consumers. Enter wiring mode in the build menu, click a power source's output node, then click the consumer's input node. Wires can branch — one source can feed multiple devices. Wire length is limited but generous; for long runs, chain through <strong>Electrical Cloaking Units</strong> to hide wires aesthetically.</p>
+
+    <div class="callout cyan">
+      <span class="ct">Power Budget Tip</span>
+      <p>The build menu's wiring view shows <strong>total supply</strong> and <strong>total demand</strong> for your entire base. If demand exceeds supply, components furthest from the power source may flicker or stop working. Always over-provision by ~20% to account for future expansion.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>// section 04</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 04 · RESOURCE EXTRACTION      -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="extraction">
+    <div class="sec-head">
+      <div class="sec-num-block"><span class="sec-num">04</span></div>
+      <div class="sec-label-block">
+        <span class="sec-tag">Section 04</span>
+        <h2>Resource Extraction</h2>
+      </div>
+    </div>
+
+    <p>Autonomous resource gathering is the backbone of an industrial base. Place extractors on hotspots and let them fill Supply Depots while you explore.</p>
+
+    <h3>Extractors &amp; Harvesters</h3>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <span class="cc-icon">⛏</span>
+        <span class="cc-name">Mineral Extractor</span>
+        <span class="cc-role">Solid Resources</span>
+        <p>Place on a <strong>Mineral Hotspot</strong> to passively extract whatever mineral that hotspot contains (Magnetised Ferrite, Pure Ferrite, Pyrite, Paraffinium, etc.). Output depends on hotspot class. Requires power. Connect to Supply Depots for storage.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">💨</span>
+        <span class="cc-name">Gas Extractor</span>
+        <span class="cc-role">Gaseous Resources</span>
+        <p>Place on a <strong>Gas Hotspot</strong> to extract Sulphurine, Radon, or Nitrogen (depends on planet biome). Same mechanics as Mineral Extractor. Gas resources are key ingredients for high-value crafting recipes.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🌬</span>
+        <span class="cc-name">Atmosphere Harvester</span>
+        <span class="cc-role">Passive Gas Collection</span>
+        <p>Does NOT require a hotspot — place anywhere on a planet. Passively collects small amounts of atmospheric gases (Oxygen, Nitrogen, Sulphurine, or Radon depending on biome). Slower than Gas Extractors but zero setup cost. Requires power.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">📦</span>
+        <span class="cc-name">Supply Depot</span>
+        <span class="cc-role">Storage Silo</span>
+        <p>Large storage containers that connect to extractors. One extractor fills one depot; chain multiple depots to a single extractor for massive stockpiles. Each depot holds ~1,000 units. Check and collect from the depot's terminal.</p>
+      </div>
+    </div>
+
+    <h3>Setting Up an Autonomous Mining Base</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b"><strong>Survey</strong> — use the Survey Device to find a mineral or gas hotspot. Note its class (S/A/B/C). Higher class = higher extraction rate.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b"><strong>Place Base Computer</strong> — drop it within range of the hotspot. If there's also an EM hotspot nearby, place the computer between them.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b"><strong>Build extractors</strong> on the hotspot centre. Stack multiple extractors for higher output (diminishing returns after ~4–5).</div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b"><strong>Wire to Supply Depots</strong> — connect extractors to depots with pipes (placed automatically when connecting output to depot input).</div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-b"><strong>Power everything</strong> — wire an EM Generator (ideal) or Solar Panel + Battery array to the extractors. Extractors without power do nothing.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">6</div>
+        <div class="step-b"><strong>Leave and return</strong> — resources accumulate even when you're off-planet. Visit periodically to empty depots.</div>
+      </div>
+    </div>
+
+    <div class="callout amber">
+      <span class="ct">⚠ Diminishing Returns</span>
+      <p>Stacking many extractors on one hotspot gives diminishing output per extractor after the 4th or 5th. For maximum yield, build a <strong>second base</strong> on another hotspot rather than stacking 10+ extractors on one spot. You'll get more total output across two smaller farms.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>// section 05</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 05 · REFINERS                 -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="refiners">
+    <div class="sec-head">
+      <div class="sec-num-block"><span class="sec-num">05</span></div>
+      <div class="sec-label-block">
+        <span class="sec-tag">Section 05</span>
+        <h2>Refiners &amp; Production</h2>
+      </div>
+    </div>
+
+    <p>Refiners convert raw materials into more valuable or useful resources. Your base can house multiple refiners for parallel processing.</p>
+
+    <div class="dtable-wrap">
+      <table class="dtable">
+        <thead>
+          <tr><th>Refiner</th><th>Input Slots</th><th>Speed</th><th>Placement</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Portable Refiner</strong></td>
+            <td>1 input</td>
+            <td>Slowest</td>
+            <td>Anywhere (inventory item, deploy like a beacon)</td>
+          </tr>
+          <tr>
+            <td><strong>Medium Refiner</strong></td>
+            <td>2 inputs</td>
+            <td>Medium</td>
+            <td>Base building (requires power)</td>
+          </tr>
+          <tr>
+            <td><strong>Large Refiner</strong></td>
+            <td>3 inputs</td>
+            <td>Fastest</td>
+            <td>Base building (requires power)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Medium and Large Refiners unlock recipes that the Portable can't access — many 2- and 3-ingredient recipes produce far more valuable outputs. These are the workhorses of endgame crafting loops.</p>
+
+    <div class="callout">
+      <span class="ct">📖 Full Refiner Recipe Reference</span>
+      <p>For a complete breakdown of refining recipes, crafting chains, and the most efficient paths to high-value items like Stasis Devices and Fusion Ignitors, see the <a href="nms-trading-crafting-guide.html">Trading &amp; Crafting Manual</a>.</p>
+    </div>
+
+    <h3>Refiner Farm Layout Tips</h3>
+    <ul class="bl">
+      <li>Place Medium and Large Refiners in a row inside a large room. Leave walking space to access each one's interface</li>
+      <li>Build a row of <strong>Storage Containers</strong> adjacent so you can quickly load inputs and store outputs</li>
+      <li>Wire all refiners to a single power bus for clean cabling</li>
+      <li>Label rooms with signage (Message Module) if your base has multiple production lines</li>
+    </ul>
+  </div>
+
+  <div class="divider"><span>// section 06</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 06 · WIRING & LOGIC GATES     -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="wiring">
+    <div class="sec-head">
+      <div class="sec-num-block"><span class="sec-num">06</span></div>
+      <div class="sec-label-block">
+        <span class="sec-tag">Section 06</span>
+        <h2>Wiring &amp; Logic Gates</h2>
+      </div>
+    </div>
+
+    <p>Beyond basic power delivery, NMS has a surprisingly deep <strong>electrical logic system</strong>. With switches, inverters, and a bit of creative wiring, you can build automated doors, day/night lights, alarm systems, and even binary counters.</p>
+
+    <h3>Switches</h3>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <span class="cc-icon">🔘</span>
+        <span class="cc-name">Manual Switch</span>
+        <span class="cc-role">Player-Activated</span>
+        <p>A wall-mounted toggle. Click to turn power on/off. The simplest switch — wire between a power source and device to make it togglable.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">📡</span>
+        <span class="cc-name">Proximity Switch</span>
+        <span class="cc-role">Automatic / Range</span>
+        <p>Activates when a player enters its detection radius. Outputs a control signal while the player is near. Turns off when they leave. The core component for automatic systems.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🦶</span>
+        <span class="cc-name">Floor Switch</span>
+        <span class="cc-role">Pressure Pad</span>
+        <p>A floor-mounted pressure plate. Activates when stepped on. Same use as Proximity Switch but requires direct contact.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🔄</span>
+        <span class="cc-name">Auto Switch</span>
+        <span class="cc-role">Control = Pass</span>
+        <p>When control signal is <strong>ON</strong>, power passes through. When control is OFF, power is blocked. The opposite of the Power Inverter.</p>
+      </div>
+    </div>
+
+    <h3>The Power Inverter</h3>
+
+    <div class="wire-diagram">
+      <div class="wd-title">Power Inverter — How It Works</div>
+      <p>The Power Inverter has <strong>three connections</strong>: a green port, a red port, and a control port on top.</p>
+      <ul class="bl">
+        <li>The green and red ports are interchangeable as power <strong>input/output</strong>. Convention: use <strong>red as input</strong> (power in) and <strong>green as output</strong> (power out) so your wiring stays readable</li>
+        <li>The <strong>control port</strong> (top) accepts a signal from a switch or other logic device</li>
+        <li>When the control signal is <strong>ON → power is BLOCKED</strong> (cannot pass through)</li>
+        <li>When the control signal is <strong>OFF → power PASSES</strong> through normally</li>
+      </ul>
+      <p style="margin-top:12px;">This is the <strong>opposite</strong> of the Auto Switch (which passes power when control is ON).</p>
+    </div>
+
+    <div class="callout rose">
+      <span class="ct">🧠 Why The Inverter Matters</span>
+      <p>The Power Inverter is the key to <strong>every possible logic gate</strong>. You can use it to build a NAND gate, and NAND gates can build every other logic gate (AND, OR, XOR, NOT, NOR, XNOR). The combination of the Inverter and the Auto Switch lets you shortcut many of these constructions.</p>
+    </div>
+
+    <h3>Example: Automatic Door Opener</h3>
+    <p>Powered doors in NMS are <strong>closed when powered</strong>. So to make doors that open automatically when you approach, you need to <em>cut</em> the power when the player is near.</p>
+
+    <div class="wire-diagram">
+      <div class="wd-title">Wiring Diagram — Auto Door</div>
+      <div class="wire-flow">
+        <span class="wf-node active">Power Source</span>
+        <span class="wf-arrow">→</span>
+        <span class="wf-node">Inverter (red IN)</span>
+        <span class="wf-arrow">→</span>
+        <span class="wf-node">Inverter (green OUT)</span>
+        <span class="wf-arrow">→</span>
+        <span class="wf-node active">Door</span>
+      </div>
+      <div class="wire-flow">
+        <span class="wf-node active">Power Source</span>
+        <span class="wf-arrow">→</span>
+        <span class="wf-node">Proximity Switch (IN)</span>
+        <span class="wf-arrow">→</span>
+        <span class="wf-node">Proximity Switch (OUT)</span>
+        <span class="wf-arrow">→</span>
+        <span class="wf-node active">Inverter (CONTROL)</span>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b">Wire your <strong>power source</strong> into the Inverter's red (input) port AND into the Proximity Switch's input.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b">Wire the <strong>Proximity Switch output</strong> into the Inverter's <strong>control port</strong> (top).</div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b">Wire the <strong>Inverter's green (output)</strong> into the <strong>door</strong>.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b"><strong>Result:</strong> power flows to the door → door stays closed. Player approaches → Proximity Switch activates → sends signal to Inverter control → Inverter blocks power → door loses power → door opens. Player walks away → switch deactivates → Inverter resumes → door closes.</div>
+      </div>
+    </div>
+
+    <h3>Other Practical Circuits</h3>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <span class="cc-icon">💡</span>
+        <span class="cc-name">Night Lights</span>
+        <span class="cc-role">Auto Switch + Solar</span>
+        <p>Wire a Solar Panel into an <strong>Auto Switch</strong>'s control. Wire a Battery into the Auto Switch's input and lights into its output. During the day, solar sends control signal → power passes → lights on? No — flip it: wire through an <strong>Inverter</strong> instead. Solar active → control ON → Inverter blocks → lights OFF during day. At night, solar dies → control OFF → Inverter passes → lights ON.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🚨</span>
+        <span class="cc-name">Sentinel Alarm</span>
+        <span class="cc-role">Proximity + Lights</span>
+        <p>Place Proximity Switches at your base perimeter. Wire their output through a <strong>Auto Switch</strong> to red warning lights and a siren. Anything that triggers the proximity sensor activates the alarm.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🔐</span>
+        <span class="cc-name">Airlock</span>
+        <span class="cc-role">Sequential Doors</span>
+        <p>Two doors in sequence, each with its own Proximity Switch and Inverter. The inner door only opens after the outer door closes. Requires careful switch placement so both switches can't trigger simultaneously.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🎵</span>
+        <span class="cc-name">Sequencer Lights</span>
+        <span class="cc-role">Chained Delays</span>
+        <p>Chain multiple Auto Switches with Proximity triggers to create sequential lighting patterns — lights that turn on one after another as you walk through a corridor.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>// section 07</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 07 · TELEPORTERS              -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="teleporters">
+    <div class="sec-head">
+      <div class="sec-num-block"><span class="sec-num">07</span></div>
+      <div class="sec-label-block">
+        <span class="sec-tag">Section 07</span>
+        <h2>Teleporters &amp; Connectivity</h2>
+      </div>
+    </div>
+
+    <p>Teleporters connect your base to the galactic network and to other points within the same base.</p>
+
+    <div class="comp-grid">
+      <div class="comp-card">
+        <span class="cc-icon">🌀</span>
+        <span class="cc-name">Base Teleport Module</span>
+        <span class="cc-role">Network Link</span>
+        <p>Connects your base to the teleporter network. Once built and powered, your base appears in the teleporter list at every Space Station and the Anomaly. Also lets you teleport <strong>from</strong> the base to any discovered station or other base.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">⚡</span>
+        <span class="cc-name">Short-Range Teleporter</span>
+        <span class="cc-role">Within-Base Travel</span>
+        <p>A pair of linked pads that teleport you instantly between two points within the same base. Build one at your landing pad area and another at a distant mining outpost for fast travel. Requires power at both ends.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="ct">Power Requirement</span>
+      <p>The Base Teleport Module draws significant power (~20 kP). The Short-Range Teleporter draws less but needs power at <strong>both</strong> pads. Budget for this when planning your power grid.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>// section 08</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 08 · STORAGE & QOL            -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="storage">
+    <div class="sec-head">
+      <div class="sec-num-block"><span class="sec-num">08</span></div>
+      <div class="sec-label-block">
+        <span class="sec-tag">Section 08</span>
+        <h2>Storage &amp; Quality of Life</h2>
+      </div>
+    </div>
+
+    <h3>Storage Containers</h3>
+    <p>There are <strong>10 Storage Containers</strong> (numbered 0–9). Each has its own inventory that's shared across all your bases — Container 3 at Base A has the same contents as Container 3 at Base B. Build all 10 in a row at your main base for easy access. They do not require power.</p>
+
+    <h3>Other Essential Utilities</h3>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <span class="cc-icon">💾</span>
+        <span class="cc-name">Save Point</span>
+        <span class="cc-role">Manual Save</span>
+        <p>Creates a manual save when activated. Build one at every base — essential before risky operations.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🛡</span>
+        <span class="cc-name">Hazard Protection Unit</span>
+        <span class="cc-role">Shield Recharge</span>
+        <p>Recharges your hazard protection when you stand near it. Essential on extreme weather planets.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">❤</span>
+        <span class="cc-name">Health Station</span>
+        <span class="cc-role">Health Recharge</span>
+        <p>Restores health when used. Build in your base near the entrance for post-combat recovery.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🛬</span>
+        <span class="cc-name">Landing Pad</span>
+        <span class="cc-role">Ship Docking</span>
+        <p>Provides a dedicated ship landing zone. NPC traders will also land on your pad, letting you buy/sell from your base. Build at least one.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">📝</span>
+        <span class="cc-name">Message Module</span>
+        <span class="cc-role">Text Signs</span>
+        <p>Place text labels around your base. Use for room names, direction arrows, and production line labels in industrial setups.</p>
+      </div>
+      <div class="comp-card">
+        <span class="cc-icon">🔬</span>
+        <span class="cc-name">Science Terminal</span>
+        <span class="cc-role">NPC Workstation</span>
+        <p>Hire a Scientist from a Korvax system and assign them here for research missions and unique blueprints.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>// section 09</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 09 · SPECIALIST BUILDS        -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="specialist">
+    <div class="sec-head">
+      <div class="sec-num-block"><span class="sec-num">09</span></div>
+      <div class="sec-label-block">
+        <span class="sec-tag">Section 09</span>
+        <h2>Specialist Builds</h2>
+      </div>
+    </div>
+
+    <h3>Underwater Bases</h3>
+    <p>Build beneath the ocean using specialised underwater parts: <strong>Underwater Corridors, Viewing Domes, Marine Shelters</strong>, and the <strong>Nautilon Chamber</strong> (for submarine docking). Underwater parts provide oxygen and keep water out. Glass panels give gorgeous ocean views. Pair with a <strong>Nautilon Geobay</strong> nearby for easy sub access.</p>
+
+    <h3>Freighter Bases</h3>
+    <ul class="bl">
+      <li>Freighters have their own internal base-building grid — separate from planetary bases</li>
+      <li>Freighter rooms do <strong>not require power</strong> — everything works passively</li>
+      <li>Build specialist terminals, storage containers, refiners, and farming trays on your freighter for a mobile production hub</li>
+      <li>Freighter base layout uses a fixed room-grid system with corridors connecting sections</li>
+      <li>Part limit is separate from planetary bases</li>
+    </ul>
+
+    <h3>Farming Bases</h3>
+    <p>Build <strong>Biodomes</strong> or use <strong>Planting Trays</strong> to grow crops. Each crop has different growth times and can be harvested repeatedly. Key farming crops include:</p>
+    <div class="dtable-wrap">
+      <table class="dtable">
+        <thead>
+          <tr><th>Crop</th><th>Grows In</th><th>Used For</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Gravitino Host</strong></td><td>Any biome (indoor)</td><td>Gravitino Balls — high sell value</td></tr>
+          <tr><td><strong>Frost Crystal</strong></td><td>Cold biome / indoor</td><td>Glass crafting, cooking</td></tr>
+          <tr><td><strong>Solar Vine</strong></td><td>Hot biome / indoor</td><td>Solanium for circuit boards</td></tr>
+          <tr><td><strong>Gamma Root</strong></td><td>Radioactive / indoor</td><td>Component for various mid-tier crafts</td></tr>
+          <tr><td><strong>Fungal Cluster</strong></td><td>Toxic biome / indoor</td><td>Mushroom for Lubricant chain</td></tr>
+          <tr><td><strong>Star Bramble</strong></td><td>Any biome (indoor)</td><td>Cactus Flesh equivalent in crafting chains</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <span class="ct">Stasis Device / Fusion Ignitor Farms</span>
+      <p>The endgame crafting challenge. Setting up automated farms for all component crops and minerals across multiple bases (one per biome type) lets you mass-produce the two most valuable items in the game. See the <a href="nms-trading-crafting-guide.html">Trading &amp; Crafting Manual</a> for the full recipe tree.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>// section 10</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 10 · TIPS                     -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="tips">
+    <div class="sec-head">
+      <div class="sec-num-block"><span class="sec-num">10</span></div>
+      <div class="sec-label-block">
+        <span class="sec-tag">Section 10</span>
+        <h2>Pro Tips &amp; Tricks</h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Extending Base Radius</span>
+      <p>The default 300u radius extends every time you build at the edge. Walk to the boundary, place a part, and your radius expands to include it. Repeat to push the border out to ~1,000u. This lets you connect a mineral hotspot to an EM hotspot that are hundreds of units apart — just build a trail of parts between them.</p>
+    </div>
+
+    <div class="callout sky">
+      <span class="ct">💡 Glitch Building</span>
+      <p>An advanced technique: start placing one object type, then <strong>quickly swap to another</strong> while the placement hologram is active. The second object inherits the first's snap point, letting you place things in positions the game normally wouldn't allow — floating structures, intersecting parts, and impossible angles. Search "NMS glitch building" for video tutorials.</p>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Free Placement Mode</span>
+      <p>Toggle Free Placement in the build menu to detach objects from the snap grid. Essential for placing decorations, lights, and furniture exactly where you want them. Also works for structural parts — useful for organic, non-grid designs.</p>
+    </div>
+
+    <div class="callout sky">
+      <span class="ct">💡 Base Part Limit</span>
+      <p>Each base has a part limit of approximately <strong>3,000 parts</strong>. Complex builds with lots of wiring and small decorations eat into this fast. For mega-builds, use fewer larger parts (large prefab rooms count as 1 part each, same as a single wall panel). Monitor the build count in the Base Computer menu.</p>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Wire Hiding</span>
+      <p>Use <strong>Electrical Cloaking Units</strong> to hide ugly wire runs. Place them inside walls or under floors — they relay power without visible wires. Also run wires through floors and behind walls where possible. A clean base has no visible wiring.</p>
+    </div>
+
+    <div class="callout sky">
+      <span class="ct">💡 Upload Your Base</span>
+      <p>Use the Base Computer to <strong>upload</strong> your base. This makes it visible to other players in the same system. Uploaded bases persist even when you're offline. If you DON'T upload, other players won't see your base and it can't be found via the Anomaly's Featured Bases system.</p>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Build on Paradise Planets</span>
+      <p>For a stress-free main base, find a <strong>Paradise</strong> or <strong>Blissful</strong> planet. These have no storms, no extreme hazards, and no aggressive sentinels. Your base will never be interrupted by weather and you won't drain suit power just standing around. Save the hazardous planets for mining outposts.</p>
+    </div>
+
+    <div class="callout sky">
+      <span class="ct">💡 Terrain Editing Tip</span>
+      <p>If you flatten terrain with the Terrain Manipulator to create a building pad, the game may eventually regenerate that terrain. To prevent clipping: build <strong>foundations first</strong> (Wood/Metal/Alloy Floor panels), then build on top. Foundations resist terrain regrowth. Avoid building below the original ground level if possible.</p>
+    </div>
+  </div>
+
+  <footer class="reveal">
+    <div class="footer-brand">BASE ENGINEERING</div>
+    <div class="footer-info">
+      <p>Base Building · Manual VII</p>
+      <p>No Man's Sky · All Platforms · Voyagers / Beacon Era (2025+)</p>
+    </div>
+  </footer>
+
+</div><!-- /page -->
+
+<script>
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  els.forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>
