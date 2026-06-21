@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/favicon.png" sizes="512x512">
+  <link rel="apple-touch-icon" href="/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No Man's Sky — Galactic Cooking Manual</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black:   #080409;
+    --dark:    #100812;
+    --base:    #160d1c;
+    --surface: #1e1228;
+    --raised:  #261832;
+    --border:  #321e42;
+    --border2: #422855;
+    --fuchsia: #d946ef;
+    --fuchsia2:#f0abfc;
+    --f-dim:   rgba(217,70,239,0.1);
+    --f-glow:  0 0 24px rgba(217,70,239,0.4);
+    --rose:    #fb7185;
+    --amber:   #fbbf24;
+    --teal:    #2dd4bf;
+    --sky:     #7dd3fc;
+    --white:   #fdf4ff;
+    --offwhite:#e8d0f0;
+    --muted:   #6b4880;
+    --text:    #9070a8;
+    --dim:     #2e1a3e;
+    --spice:   rgba(217,70,239,0.04);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── SPICE DUST TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(ellipse at 20% 80%, rgba(217,70,239,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(251,113,133,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HUB NAV ── */
+  .hub-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 48px;
+    background: rgba(8,4,9,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(217,70,239,0.2);
+  }
+
+  .hub-back {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .hub-back:hover { color: var(--fuchsia2); }
+  .hub-back-arrow { font-size: 14px; transition: transform 0.2s; }
+  .hub-back:hover .hub-back-arrow { transform: translateX(-3px); }
+
+  .hub-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(217,70,239,0.35);
+    text-transform: uppercase;
+  }
+
+  .hub-indicator {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--fuchsia);
+    box-shadow: var(--f-glow);
+    animation: blink 2.8s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.15; }
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 28px;
+    position: relative;
+    z-index: 1;
+    padding-top: 48px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 56px 0 48px;
+    position: relative;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 6px;
+    color: var(--fuchsia);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.8;
+    display: block;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(48px, 9vw, 88px);
+    font-weight: 400;
+    color: var(--white);
+    line-height: 0.95;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--fuchsia);
+    text-shadow: var(--f-glow);
+  }
+
+  h1 .sub {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.15em;
+    color: var(--fuchsia);
+    letter-spacing: 8px;
+    font-style: normal;
+    margin-bottom: 8px;
+    text-shadow: var(--f-glow);
+    text-transform: uppercase;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 8px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hm-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--border2);
+    padding: 5px 12px;
+    color: var(--muted);
+    border-radius: 20px;
+  }
+  .hm-pill.active {
+    border-color: var(--fuchsia);
+    color: var(--fuchsia);
+    background: var(--f-dim);
+  }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--base);
+    border: 1px solid var(--border2);
+    border-top: 2px solid var(--fuchsia);
+    padding: 22px 28px;
+    margin-bottom: 52px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 32px;
+    position: relative;
+  }
+
+  .toc::before {
+    content: 'MENU';
+    position: absolute;
+    top: -10px; left: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    background: var(--base);
+    padding: 0 8px;
+    color: var(--fuchsia);
+  }
+
+  .toc a {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 1px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    transition: color 0.15s, padding-left 0.15s;
+  }
+
+  .toc a:hover { color: var(--fuchsia2); padding-left: 4px; }
+  .toc-n { color: var(--fuchsia); font-size: 9px; opacity: 0.5; flex-shrink: 0; }
+
+  /* ── SECTION ── */
+  .section { margin: 56px 0; }
+
+  .sec-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .sec-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+    font-weight: 400;
+    color: var(--fuchsia);
+    opacity: 0.25;
+    line-height: 1;
+    flex-shrink: 0;
+    text-shadow: var(--f-glow);
+  }
+
+  .sec-inner { flex: 1; }
+
+  .sec-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 3px;
+    color: var(--fuchsia);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+    opacity: 0.7;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 400;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    color: var(--fuchsia);
+    text-transform: uppercase;
+    margin: 28px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  h3::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--border2), transparent);
+  }
+
+  p { font-size: 15px; margin-bottom: 12px; }
+  strong { color: var(--offwhite); font-weight: 500; }
+  a { color: var(--fuchsia); text-decoration: none; border-bottom: 1px solid rgba(217,70,239,0.25); transition: border-color 0.15s; }
+  a:hover { border-color: var(--fuchsia2); color: var(--fuchsia2); }
+
+  /* ── INGREDIENT CARDS ── */
+  .ing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 14px 0;
+  }
+
+  .ing-card {
+    background: var(--base);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 14px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .ing-card:hover { border-color: rgba(217,70,239,0.4); background: var(--surface); }
+
+  .ing-icon { font-size: 28px; display: block; margin-bottom: 8px; }
+
+  .ing-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--offwhite);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .ing-source {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--fuchsia);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  .ing-card p { font-size: 12px; margin: 0; line-height: 1.5; }
+
+  /* ── PROCESSING CHAIN ── */
+  .chain {
+    background: var(--base);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 14px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chain::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--fuchsia), var(--rose), transparent);
+  }
+
+  .chain-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--fuchsia);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chain-title::before { content: '◆'; font-size: 8px; opacity: 0.6; }
+
+  .chain-flow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .chain-node {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 4px;
+    background: var(--raised);
+    border: 1px solid var(--border2);
+    color: var(--offwhite);
+    white-space: nowrap;
+  }
+
+  .chain-node.raw { border-color: var(--border2); color: var(--text); }
+  .chain-node.processed { border-color: rgba(217,70,239,0.5); color: var(--fuchsia2); background: var(--f-dim); }
+  .chain-node.final { border-color: var(--fuchsia); color: var(--white); background: rgba(217,70,239,0.15); font-weight: 600; }
+
+  .chain-arrow {
+    color: var(--fuchsia);
+    font-size: 14px;
+    opacity: 0.4;
+  }
+
+  .chain-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+  }
+
+  /* ── RECIPE TABLE WITH FILTERS ── */
+  .recipe-filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 16px 0 12px;
+  }
+
+  .filter-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover { border-color: var(--fuchsia); color: var(--fuchsia2); }
+  .filter-btn.active { border-color: var(--fuchsia); background: var(--f-dim); color: var(--fuchsia); }
+
+  .filter-btn[data-filter="hazard"].active { border-color: var(--amber); background: rgba(251,191,36,0.1); color: var(--amber); }
+  .filter-btn[data-filter="jetpack"].active { border-color: var(--sky); background: rgba(125,211,252,0.08); color: var(--sky); }
+  .filter-btn[data-filter="stamina"].active { border-color: var(--teal); background: rgba(45,212,191,0.08); color: var(--teal); }
+  .filter-btn[data-filter="health"].active  { border-color: var(--rose); background: rgba(251,113,133,0.08); color: var(--rose); }
+
+  .recipe-table-wrap { overflow-x: auto; margin: 0 0 14px; }
+
+  .recipe-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .recipe-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    background: var(--raised);
+    color: var(--fuchsia);
+    border-bottom: 2px solid var(--fuchsia);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+
+  .recipe-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--base);
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .recipe-table tr:hover td { background: var(--surface); }
+
+  .recipe-table tr.hidden { display: none; }
+
+  .recipe-name { color: var(--offwhite); font-weight: 500; }
+
+  .badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .badge.hazard { background: rgba(251,191,36,0.12); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+  .badge.jetpack { background: rgba(125,211,252,0.1); color: var(--sky); border: 1px solid rgba(125,211,252,0.25); }
+  .badge.stamina { background: rgba(45,212,191,0.1); color: var(--teal); border: 1px solid rgba(45,212,191,0.25); }
+  .badge.health  { background: rgba(251,113,133,0.1); color: var(--rose); border: 1px solid rgba(251,113,133,0.25); }
+
+  .ing-list { font-size: 11px; color: var(--muted); line-height: 1.6; }
+  .ing-list span { color: var(--text); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--base);
+    border: 1px solid var(--border2);
+    border-left: 4px solid var(--fuchsia);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+
+  .callout.amber { border-left-color: var(--amber); }
+  .callout.teal  { border-left-color: var(--teal); }
+  .callout.rose  { border-left-color: var(--rose); }
+  .callout.sky   { border-left-color: var(--sky); }
+
+  .ct {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--fuchsia);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .callout.amber .ct { color: var(--amber); }
+  .callout.teal  .ct { color: var(--teal); }
+  .callout.rose  .ct { color: var(--rose); }
+  .callout.sky   .ct { color: var(--sky); }
+
+  .callout p { font-size: 14px; margin: 0; }
+
+  /* ── LIST ── */
+  ul.bl { list-style: none; margin: 10px 0; }
+
+  ul.bl li {
+    font-size: 14px;
+    padding: 8px 0 8px 22px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  ul.bl li::before {
+    content: '◇';
+    position: absolute;
+    left: 2px;
+    color: var(--fuchsia);
+    font-size: 10px;
+    top: 11px;
+  }
+
+  /* ── STEPS ── */
+  .steps { margin: 14px 0; }
+  .step { display: flex; gap: 14px; margin-bottom: 10px; align-items: flex-start; }
+
+  .step-n {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--fuchsia);
+    opacity: 0.5;
+    flex-shrink: 0;
+    width: 28px;
+    text-align: center;
+    margin-top: -2px;
+  }
+
+  .step-b { flex: 1; font-size: 14px; }
+  .step-b strong { color: var(--offwhite); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 52px 0;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border2), transparent);
+  }
+
+  .divider span {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--dim);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 64px;
+    border-top: 1px solid var(--border2);
+    padding: 32px 0 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: relative;
+    text-align: center;
+  }
+
+  footer::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 50%;
+    transform: translateX(-50%);
+    width: 80px; height: 1px;
+    background: var(--fuchsia);
+    box-shadow: var(--f-glow);
+  }
+
+  .footer-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--fuchsia);
+    text-shadow: var(--f-glow);
+  }
+
+  .footer-info {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    text-transform: uppercase;
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--fuchsia); }
+
+  @media (max-width: 640px) {
+    .toc { grid-template-columns: 1fr; }
+    .ing-grid { grid-template-columns: 1fr 1fr; }
+    h1 { font-size: clamp(40px, 12vw, 70px); }
+    .chain-flow { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="hub-nav">
+  <a class="hub-back" href="index.html">
+    <span class="hub-back-arrow">←</span>
+    <span>Traveller's Codex</span>
+  </a>
+  <span class="hub-title">Manual VIII · Cooking</span>
+  <span class="hub-indicator"></span>
+</nav>
+
+<div class="page">
+
+  <header>
+    <span class="eyebrow">Nutrient Processor · Galactic Cuisine</span>
+    <h1>
+      <span class="sub">// manual viii</span>
+      Galactic <em>Cooking</em>
+    </h1>
+    <div class="header-meta">
+      <div class="hm-pill active">Manual VIII</div>
+      <div class="hm-pill">All Platforms</div>
+      <div class="hm-pill">Relics Update (2025)</div>
+    </div>
+  </header>
+
+  <nav class="toc reveal">
+    <a href="#processor"><span class="toc-n">01</span> The Nutrient Processor</a>
+    <a href="#ingredients"><span class="toc-n">02</span> Ingredient Sourcing</a>
+    <a href="#chains"><span class="toc-n">03</span> Processing Chains</a>
+    <a href="#recipes"><span class="toc-n">04</span> Recipe Reference</a>
+    <a href="#cronus"><span class="toc-n">05</span> Cronus &amp; Nanite Farming</a>
+    <a href="#tips"><span class="toc-n">06</span> Pro Tips</a>
+  </nav>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 01 · THE NUTRIENT PROCESSOR   -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="processor">
+    <div class="sec-head">
+      <div class="sec-num">01</div>
+      <div class="sec-inner">
+        <span class="sec-tag">Section 01</span>
+        <h2>The Nutrient Processor</h2>
+      </div>
+    </div>
+
+    <p>Cooking in No Man's Sky is done entirely through the <strong>Nutrient Processor</strong> — a portable base building device that combines raw and processed ingredients into edible consumables. It's not a recipe memorisation game; it's a <strong>combinatorial discovery system</strong>. Experiment freely.</p>
+
+    <h3>Key Mechanics</h3>
+    <ul class="bl">
+      <li><strong>3 input slots</strong> — combine one, two, or three ingredients at once. The output updates live as you add ingredients, so you can preview recipes before committing</li>
+      <li><strong>No fuel required</strong> — unlike Refiners, the Nutrient Processor runs without Carbon or power input</li>
+      <li><strong>2.5 seconds per batch</strong> — all recipes take the same time regardless of complexity</li>
+      <li><strong>1:1 ratio</strong> — one unit of each ingredient in produces one unit of output. To produce 10 dishes, you need 10 of each ingredient</li>
+      <li><strong>Ingredient Storage</strong> — 50 shared slots (up to 50 units each) accessible across all Nutrient Processors you own. Keeps your main inventory free</li>
+    </ul>
+
+    <div class="callout amber">
+      <span class="ct">Getting the Blueprint</span>
+      <p>Purchase the Nutrient Processor blueprint at the <strong>Construction Research Station</strong> aboard the Space Anomaly for <strong>10 Salvaged Data</strong>. It's one of the most underrated early unlocks — buy it as soon as you have the data.</p>
+    </div>
+
+    <div class="callout teal">
+      <span class="ct">Catalogue Trick</span>
+      <p>You don't have to actually cook a dish to record it in your catalogue. Arrange the right ingredients in the Processor so the output appears in the output slot — then simply <strong>don't press confirm</strong>. The recipe gets catalogued silently. Useful for completionists who want to log dishes without wasting ingredients.</p>
+    </div>
+
+    <h3>Using Multiple Processors</h3>
+    <p>Place <strong>two or three Nutrient Processors side-by-side</strong> and run parallel batches. Since each stage of a multi-step recipe takes 2.5 seconds, a triple-processor setup lets you process intermediates in two machines while the third combines them into the final dish — roughly tripling your throughput.</p>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 02 · INGREDIENT SOURCING      -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="ingredients">
+    <div class="sec-head">
+      <div class="sec-num">02</div>
+      <div class="sec-inner">
+        <span class="sec-tag">Section 02</span>
+        <h2>Ingredient Sourcing</h2>
+      </div>
+    </div>
+
+    <p>Ingredients come from four primary sources. Most serious cooking setups automate at least the flora side via farms, supplemented by creature harvesting and trade post purchases.</p>
+
+    <div class="ing-grid">
+      <div class="ing-card">
+        <span class="ing-icon">🌿</span>
+        <span class="ing-name">Flora</span>
+        <span class="ing-source">Harvestable Plants</span>
+        <p>Scan plants with your Multi-Tool Analysis Visor to identify food-producing species. Key plants: <strong>Fungal Mould</strong> (batter base), <strong>Frost Crystal / Frostwort</strong> (pastry base), <strong>Solanium</strong> (sweeteners), <strong>Gamma Weed</strong> (stew base), <strong>Cactus Flesh</strong> (extracts).</p>
+      </div>
+      <div class="ing-card">
+        <span class="ing-icon">🐾</span>
+        <span class="ing-name">Fauna</span>
+        <span class="ing-source">Creature Products</span>
+        <p>Tame creatures with Creature Pellets to harvest <strong>Milk</strong>, <strong>Eggs</strong>, <strong>Honey</strong>, and other byproducts. Kill creatures for <strong>Mordite</strong> (meat substitute) and organ drops. Use <strong>Livestock Units + Automated Feeders</strong> at your base for passive production.</p>
+      </div>
+      <div class="ing-card">
+        <span class="ing-icon">🐟</span>
+        <span class="ing-name">Fish</span>
+        <span class="ing-source">Aquarius Update+</span>
+        <p>Caught with a <strong>Fishing Rig</strong> placed in water. Fish are ingredients in a range of seafood recipes added in the Aquarius update. Bait (including cooked bait) increases catch size and rarity. A new and growing recipe category.</p>
+      </div>
+      <div class="ing-card">
+        <span class="ing-icon">🛒</span>
+        <span class="ing-name">Trade Posts</span>
+        <span class="ing-source">Purchased</span>
+        <p>NPC pilots at Trade Posts and Space Stations often sell raw food ingredients like <strong>Sweet Root</strong>, <strong>Pulpy Roots</strong>, and <strong>Grahj'am</strong>. Check regularly — stock resets on station visits. Useful for rare ingredients you can't farm.</p>
+      </div>
+      <div class="ing-card">
+        <span class="ing-icon">🌾</span>
+        <span class="ing-name">Farming</span>
+        <span class="ing-source">Base / Freighter</span>
+        <p>The most efficient source. Build <strong>Biodomes</strong> or <strong>Hydroponic Trays</strong> and plant food crops for a passive, infinite supply. A freighter farm can provide enough raw material for hundreds of dishes per day without any planet-side effort.</p>
+      </div>
+      <div class="ing-card">
+        <span class="ing-icon">✨</span>
+        <span class="ing-name">Processed</span>
+        <span class="ing-source">Nutrient Processor</span>
+        <p>Many ingredients only exist as <em>outputs</em> of the Processor itself — batters, custards, creams, and jams can only be made by cooking, not found in the wild. These intermediate products are the backbone of complex recipes.</p>
+      </div>
+    </div>
+
+    <h3>Farm Priority List</h3>
+    <p>If you're building a serious cooking operation, grow these first — they unlock the widest range of recipes:</p>
+    <ul class="bl">
+      <li><strong>Fungal Mould</strong> → processes into the batter and dough family, the core of most baked goods</li>
+      <li><strong>Frost Crystal / Frostwort</strong> → produces glass grains and pastry components</li>
+      <li><strong>Solanium</strong> → sugar and sweetener base for higher-tier desserts</li>
+      <li><strong>Gamma Weed</strong> → stew and soup base</li>
+      <li><strong>Cactus Flesh</strong> → cactus nectar, used in a wide variety of recipes (single-process from raw)</li>
+      <li><strong>Any docile fauna</strong> for milk and eggs via Livestock Unit + Automated Feeder</li>
+    </ul>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 03 · PROCESSING CHAINS        -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="chains">
+    <div class="sec-head">
+      <div class="sec-num">03</div>
+      <div class="sec-inner">
+        <span class="sec-tag">Section 03</span>
+        <h2>Processing Chains</h2>
+      </div>
+    </div>
+
+    <p>The core insight of NMS cooking: <strong>raw ingredients rarely make the best dishes directly</strong>. Process raw materials into intermediate products first, then combine intermediates to reach high-value final dishes. Think of it like real cooking — you turn wheat into flour before making bread.</p>
+
+    <div class="callout">
+      <span class="ct">The Rule</span>
+      <p>Always ask: <em>"Can I run this raw ingredient through the Processor first?"</em> Almost every raw ingredient has a single-ingredient processing step that produces a more useful intermediate. Selling or eating the raw form is almost always worse than taking the extra step.</p>
+    </div>
+
+    <h3>Example Chains — Baking</h3>
+
+    <div class="chain">
+      <div class="chain-title">Batter Chain</div>
+      <div class="chain-flow">
+        <span class="chain-node raw">Fungal Mould</span>
+        <span class="chain-arrow">→</span>
+        <span class="chain-node processed">Proto-Batter</span>
+        <span class="chain-arrow">+</span>
+        <span class="chain-node raw">Eggs / Milk</span>
+        <span class="chain-arrow">→</span>
+        <span class="chain-node processed">Cake Batter</span>
+        <span class="chain-arrow">+</span>
+        <span class="chain-node processed">Cream</span>
+        <span class="chain-arrow">→</span>
+        <span class="chain-node final">Cream Buns (50% Hazard)</span>
+      </div>
+      <div class="chain-note">Proto-Batter is a single-ingredient step from Fungal Mould. Each step = 2.5 seconds in the Processor.</div>
+    </div>
+
+    <div class="chain">
+      <div class="chain-title">Custard Chain</div>
+      <div class="chain-flow">
+        <span class="chain-node raw">Milk / Fauna Byproduct</span>
+        <span class="chain-arrow">→</span>
+        <span class="chain-node processed">Viscous Custard</span>
+        <span class="chain-arrow">+</span>
+        <span class="chain-node processed">Cake Batter</span>
+        <span class="chain-arrow">→</span>
+        <span class="chain-node final">Custard Fancy (50% Hazard)</span>
+      </div>
+    </div>
+
+    <div class="chain">
+      <div class="chain-title">High-Value Batter Upgrade Chain</div>
+      <div class="chain-flow">
+        <span class="chain-node processed">Cake Batter</span>
+        <span class="chain-arrow">+</span>
+        <span class="chain-node raw">ingredient</span>
+        <span class="chain-arrow">→</span>
+        <span class="chain-node processed">Extra-Fluffy Batter</span>
+        <span class="chain-arrow">→</span>
+        <span class="chain-node processed">Wailing Batter</span>
+        <span class="chain-arrow">→</span>
+        <span class="chain-node final">Writhing, Roiling Batter</span>
+      </div>
+      <div class="chain-note">Higher-tier batters produce Jetpack Boost dishes. Each step up increases the output value and Cronus nanite reward.</div>
+    </div>
+
+    <div class="chain">
+      <div class="chain-title">Syrupy Batter Chain (Health Restoration)</div>
+      <div class="chain-flow">
+        <span class="chain-node processed">Syrupy Nectar</span>
+        <span class="chain-arrow">or</span>
+        <span class="chain-node processed">Butter Syrup</span>
+        <span class="chain-arrow">→</span>
+        <span class="chain-node processed">Syrupy Batter</span>
+        <span class="chain-arrow">+</span>
+        <span class="chain-node processed">Cream / Custard / etc.</span>
+        <span class="chain-arrow">→</span>
+        <span class="chain-node final">Syrupy dishes (50% Health)</span>
+      </div>
+      <div class="chain-note">Syrupy Batter is rarer to produce but yields 50% health restoration — the most powerful consumable effect in the game.</div>
+    </div>
+
+    <div class="callout teal">
+      <span class="ct">Batter Tier Recap</span>
+      <p>Batter complexity determines the output buff tier. <strong>Cake Batter</strong> → Hazard Protection. <strong>Thick, Sweet Batter</strong> → Stamina Boost. <strong>Extra-Fluffy / Wailing / Writhing Batter</strong> → Jetpack Boost. <strong>Syrupy Batter</strong> → Health Restoration. Upgrading your batter one step before cooking is always worth it.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 04 · RECIPE REFERENCE         -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="recipes">
+    <div class="sec-head">
+      <div class="sec-num">04</div>
+      <div class="sec-inner">
+        <span class="sec-tag">Section 04</span>
+        <h2>Recipe Reference</h2>
+      </div>
+    </div>
+
+    <p>The following recipes are <strong>baked goods</strong> sourced from the NMS fandom wiki (updated Relics, June 2025). This is one section of the full cooking system — for complete recipe listings including meat dishes, fish, stews, and pies, see the <a href="https://nomanssky.fandom.com/wiki/Cooking" target="_blank">NMS Cooking wiki</a>.</p>
+
+    <div class="recipe-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="hazard">🛡 Hazard Protection</button>
+      <button class="filter-btn" data-filter="jetpack">🚀 Jetpack Boost</button>
+      <button class="filter-btn" data-filter="stamina">⚡ Stamina Boost</button>
+      <button class="filter-btn" data-filter="health">❤ Health Restore</button>
+    </div>
+
+    <div class="recipe-table-wrap">
+      <table class="recipe-table" id="recipeTable">
+        <thead>
+          <tr>
+            <th>Dish</th>
+            <th>Ingredient 1</th>
+            <th>Ingredient 2</th>
+            <th>Ingredient 3</th>
+            <th>Effect</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- HAZARD PROTECTION -->
+          <tr data-type="hazard">
+            <td class="recipe-name">Cream Buns</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Esophageal Surprise</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Cactus Nectar</span></td>
+            <td class="ing-list"><span>Cactus Jelly + Cream or Bone Cream</span></td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Custard Fancy</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Viscous Custard or Very Thick Custard</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Briney Delight</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Salty Custard</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Interstellar Fancy</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Stellar Custard</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Glittering Honey Cake</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Synthetic Honey</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Questionably Sweet Cake</td>
+            <td class="ing-list"><span>Cake Batter or Thick, Sweet Batter</span></td>
+            <td class="ing-list"><span>Gooey Butter or Sticky 'Honey'</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Chocolate Cake</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Bittersweet Cocoa</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Caramel-Encrusted Cake</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Crunchy Caramel</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Spiced 'Apple' Cake</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Crab 'Apple'</span></td>
+            <td class="ing-list"><span>Wriggling Jam + Cream or Bone Cream</span></td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Traditional Cake</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Grahj'am or Furball Jelly</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Ever-Boiling Cake</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Ever-burning Jam</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Perpetual Cake</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Anomalous Jam</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+          <tr data-type="hazard">
+            <td class="recipe-name">Horrifying, Gooey Delight</td>
+            <td class="ing-list"><span>Cake Batter or Proto-Batter</span></td>
+            <td class="ing-list"><span>Monstrous Custard</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge hazard">50% Hazard</span></td>
+          </tr>
+
+          <!-- STAMINA BOOST -->
+          <tr data-type="stamina">
+            <td class="recipe-name">Cream Curiosity</td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td class="ing-list">—</td>
+            <td class="ing-list">—</td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Chocolate Curiosity</td>
+            <td class="ing-list"><span>Bittersweet Cocoa</span></td>
+            <td class="ing-list">—</td>
+            <td class="ing-list">—</td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Caramel Curiosity</td>
+            <td class="ing-list"><span>Crunchy Caramel</span></td>
+            <td class="ing-list">—</td>
+            <td class="ing-list">—</td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Custard Curiosity</td>
+            <td class="ing-list"><span>Viscous Custard or Very Thick Custard</span></td>
+            <td class="ing-list">—</td>
+            <td class="ing-list">—</td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Most Curious Cake</td>
+            <td class="ing-list"><span>Gooey Butter or Sticky 'Honey'</span></td>
+            <td class="ing-list">—</td>
+            <td class="ing-list">—</td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Honey-Soaked Fancy</td>
+            <td class="ing-list"><span>Thick, Sweet Batter</span></td>
+            <td class="ing-list"><span>Synthetic Honey</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Sweet Cream Dreams</td>
+            <td class="ing-list"><span>Thick, Sweet Batter</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Gooey Chocolate Cake</td>
+            <td class="ing-list"><span>Thick, Sweet Batter</span></td>
+            <td class="ing-list"><span>Bittersweet Cocoa</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Gooey Caramel Cake</td>
+            <td class="ing-list"><span>Thick, Sweet Batter</span></td>
+            <td class="ing-list"><span>Crunchy Caramel</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Gooey Fruit Surprise</td>
+            <td class="ing-list"><span>Thick, Sweet Batter</span></td>
+            <td class="ing-list"><span>Crab 'Apple'</span></td>
+            <td class="ing-list"><span>Wriggling Jam + Cream or Bone Cream</span></td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Jam Oozers</td>
+            <td class="ing-list"><span>Thick, Sweet Batter</span></td>
+            <td class="ing-list"><span>Grahj'am or Furball Jelly</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Gooey Mouthburner</td>
+            <td class="ing-list"><span>Thick, Sweet Batter</span></td>
+            <td class="ing-list"><span>Ever-burning Jam</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+          <tr data-type="stamina">
+            <td class="recipe-name">Starbirth Delight</td>
+            <td class="ing-list"><span>Thick, Sweet Batter</span></td>
+            <td class="ing-list"><span>Stellar Custard</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge stamina">Stamina +15s</span></td>
+          </tr>
+
+          <!-- JETPACK BOOST -->
+          <tr data-type="jetpack">
+            <td class="recipe-name">Burning Jam Surprise</td>
+            <td class="ing-list"><span>Writhing, Roiling Batter</span></td>
+            <td class="ing-list"><span>Ever-burning Jam</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Chocolate Dream</td>
+            <td class="ing-list"><span>Extra-Fluffy Batter</span></td>
+            <td class="ing-list"><span>Bittersweet Cocoa</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Honied Angel Cake</td>
+            <td class="ing-list"><span>Extra-Fluffy Batter</span></td>
+            <td class="ing-list"><span>Synthetic Honey</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Extra-Fluffy Cream Cake</td>
+            <td class="ing-list"><span>Extra-Fluffy Batter</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Fluffy Caramel Delight</td>
+            <td class="ing-list"><span>Extra-Fluffy Batter</span></td>
+            <td class="ing-list"><span>Crunchy Caramel</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Soft Custard Fancy</td>
+            <td class="ing-list"><span>Extra-Fluffy Batter</span></td>
+            <td class="ing-list"><span>Any Custard (Viscous/Salty/Stellar/Very Thick/Monstrous)</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Monstrous Honey Cake</td>
+            <td class="ing-list"><span>Wailing Batter</span></td>
+            <td class="ing-list"><span>Synthetic Honey</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Doomed Cream Cake</td>
+            <td class="ing-list"><span>Wailing Batter</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Haunted Chocolate Dreams</td>
+            <td class="ing-list"><span>Wailing Batter</span></td>
+            <td class="ing-list"><span>Bittersweet Cocoa</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Cake of Glass</td>
+            <td class="ing-list"><span>Wailing Batter</span></td>
+            <td class="ing-list"><span>Anomalous Jam</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Unbound Cream Horn</td>
+            <td class="ing-list"><span>Writhing, Roiling Batter</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Volatile Chocolate Fancy</td>
+            <td class="ing-list"><span>Writhing, Roiling Batter</span></td>
+            <td class="ing-list"><span>Bittersweet Cocoa</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Cake of the Lost</td>
+            <td class="ing-list"><span>Writhing, Roiling Batter</span></td>
+            <td class="ing-list"><span>Any Custard (Viscous/Salty/Monstrous/Stellar/Very Thick)</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Caramelised Nightmare</td>
+            <td class="ing-list"><span>Writhing, Roiling Batter</span></td>
+            <td class="ing-list"><span>Crunchy Caramel</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Ambrosial Curse</td>
+            <td class="ing-list"><span>Writhing, Roiling Batter</span></td>
+            <td class="ing-list"><span>Syrupy Nectar or Butter Syrup</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Mucal Curiosity</td>
+            <td class="ing-list"><span>Sweetened Mucous</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+          <tr data-type="jetpack">
+            <td class="recipe-name">Nectar Islands</td>
+            <td class="ing-list"><span>Extra-Fluffy Batter</span></td>
+            <td class="ing-list"><span>Syrupy Nectar or Butter Syrup</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge jetpack">Jetpack +8s</span></td>
+          </tr>
+
+          <!-- HEALTH -->
+          <tr data-type="health">
+            <td class="recipe-name">Nectar Sponge Cake</td>
+            <td class="ing-list"><span>Syrupy Nectar or Butter Syrup</span></td>
+            <td class="ing-list">—</td>
+            <td class="ing-list">—</td>
+            <td><span class="badge health">2% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Squirming Fancy</td>
+            <td class="ing-list"><span>Writhing, Roiling Batter</span></td>
+            <td class="ing-list"><span>Sweetened Mucous</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge health">1% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Gelatinous Sponge</td>
+            <td class="ing-list"><span>Cake Batter</span></td>
+            <td class="ing-list"><span>Sweetened Mucous</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge health">1% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Frosted Mire</td>
+            <td class="ing-list"><span>Extra-Fluffy Batter</span></td>
+            <td class="ing-list"><span>Sweetened Mucous</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge health">1% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Creamy Clouds of Nectar</td>
+            <td class="ing-list"><span>Syrupy Batter</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge health">50% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Chocolate Oozer</td>
+            <td class="ing-list"><span>Syrupy Batter</span></td>
+            <td class="ing-list"><span>Bittersweet Cocoa</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge health">50% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Syrupy Caramel Slice</td>
+            <td class="ing-list"><span>Syrupy Batter</span></td>
+            <td class="ing-list"><span>Crunchy Caramel</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge health">50% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Ambrosial Wonder</td>
+            <td class="ing-list"><span>Syrupy Batter</span></td>
+            <td class="ing-list"><span>Synthetic Honey</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge health">50% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Sponge of Ambrosia</td>
+            <td class="ing-list"><span>Syrupy Batter</span></td>
+            <td class="ing-list"><span>Viscous Custard or Very Thick Custard</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge health">50% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Sweet and Salty Puff</td>
+            <td class="ing-list"><span>Syrupy Batter</span></td>
+            <td class="ing-list"><span>Salty Custard</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge health">50% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Starpollen Surprise</td>
+            <td class="ing-list"><span>Syrupy Batter</span></td>
+            <td class="ing-list"><span>Stellar Custard</span></td>
+            <td class="ing-list">—</td>
+            <td><span class="badge health">50% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Syrupy Tingler</td>
+            <td class="ing-list"><span>Syrupy Batter</span></td>
+            <td class="ing-list"><span>Ever-burning Jam</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge health">50% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Jammy Burster</td>
+            <td class="ing-list"><span>Syrupy Batter</span></td>
+            <td class="ing-list"><span>Grahj'am or Furball Jelly</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge health">50% Health</span></td>
+          </tr>
+          <tr data-type="health">
+            <td class="recipe-name">Splicer's Delight</td>
+            <td class="ing-list"><span>Syrupy Batter</span></td>
+            <td class="ing-list"><span>Sweetened Mucous</span></td>
+            <td class="ing-list"><span>Cream or Bone Cream</span></td>
+            <td><span class="badge health">50% Health</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <span class="ct">Scope Note</span>
+      <p>This table covers confirmed baking recipes from the NMS wiki (Relics update, June 2025). The full cooking system includes savoury dishes, meat recipes, fish (Aquarius update), pies, stews, and more. See the <a href="https://nomanssky.fandom.com/wiki/Cooking" target="_blank">NMS Cooking wiki page</a> for the complete listing, and <a href="https://nomansskyrecipes.com/cooking/" target="_blank">nomansskyrecipes.com</a> for a searchable interface.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 05 · CRONUS & NANITE FARMING  -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="cronus">
+    <div class="sec-head">
+      <div class="sec-num">05</div>
+      <div class="sec-inner">
+        <span class="sec-tag">Section 05</span>
+        <h2>Cronus &amp; Nanite Farming</h2>
+      </div>
+    </div>
+
+    <p><strong>Iteration: Cronus</strong> is an NPC on the Space Anomaly who operates a grill and will buy your cooked food for Nanite Clusters. He pays significantly more than standard terminals for high-tier dishes, making cooking one of the most efficient passive Nanite income streams in the game.</p>
+
+    <h3>Cronus's Grill</h3>
+    <ul class="bl">
+      <li>Found on the Space Anomaly near the back — look for the grill station with the alien NPC</li>
+      <li>Bring a <strong>stack of cooked dishes</strong> and sell them all at once. Higher-tier dishes (complex multi-step recipes) earn substantially more nanites per item</li>
+      <li>Nanite payouts have some randomness — the same dish won't always pay the same amount, but <strong>more complex dishes have a consistently higher payout range</strong></li>
+      <li>There's no cooldown or sell limit — sell as many as you can make</li>
+    </ul>
+
+    <div class="callout amber">
+      <span class="ct">Best Dishes for Cronus</span>
+      <p>Focus on dishes using <strong>Writhing, Roiling Batter</strong> or <strong>Wailing Batter</strong> as the base — these are the highest-tier batters and produce Jetpack Boost dishes that Cronus values most. A well-optimised cooking farm producing these high-tier bakes can generate thousands of Nanites per Anomaly visit.</p>
+    </div>
+
+    <h3>Setting Up a Nanite Cooking Farm</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b"><strong>Farm Fungal Mould</strong> — plant it in multiple Biodomes. This is the root of every batter chain. The bigger the farm, the more dishes per run.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b"><strong>Harvest creature byproducts</strong> — set up a Livestock Unit and Automated Feeder with docile fauna to passively generate Milk, Cream, and Eggs for custard and cream production.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b"><strong>Set up 3 Nutrient Processors</strong> side-by-side. Run Fungal Mould through the first to produce Proto-Batter; combine Proto-Batter with creature products for Cake Batter in the second; upgrade Cake Batter to higher-tier batter in the third.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b"><strong>Combine high-tier batter</strong> with Cream, Jams, or Custard to produce the final dish. Use all three processors in rotation to run parallel batches.</div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-b"><strong>Visit Cronus</strong> on the Anomaly and sell everything. Restock from Ingredient Storage (which refills as your farm runs), and repeat.</div>
+      </div>
+    </div>
+
+    <div class="callout teal">
+      <span class="ct">Catalogue Completionism &amp; Nanites</span>
+      <p>Every unique dish you cook for the <em>first time</em> earns a small Nanite bonus on top of the Cronus sale. Working through all 250+ recipes systematically using the catalogue trick (see section 01) nets a surprisingly large one-time windfall — worth doing early if you're chasing Nanites.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- ══════════════════════════════ -->
+  <!-- 06 · PRO TIPS                 -->
+  <!-- ══════════════════════════════ -->
+  <div class="section reveal" id="tips">
+    <div class="sec-head">
+      <div class="sec-num">06</div>
+      <div class="sec-inner">
+        <span class="sec-tag">Section 06</span>
+        <h2>Pro Tips</h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Only one buff at a time</span>
+      <p>Eating a new food item <strong>replaces</strong> any active buff — it doesn't stack. Choose your meal based on what you're about to do: Jetpack boost for platforming, Hazard Protection for hostile environments, Stamina for long sprints, Health for combat.</p>
+    </div>
+
+    <div class="callout amber">
+      <span class="ct">💡 Dedicate a Storage Container</span>
+      <p>Raw cooking ingredients and processed intermediates fill up fast. Dedicate <strong>Storage Container 9</strong> (or any unused number) to cooking supplies — one slot type per ingredient. Label it with a Message Module. Your Ingredient Storage (in the Processor itself) handles 50 slots of active pantry; the container is your long-term stockpile.</p>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Systematic discovery</span>
+      <p>To discover new recipes efficiently, take one processed ingredient (like Cake Batter) and try it with every other single ingredient you have, one at a time. You'll fill your catalogue far faster than experimenting randomly — and you'll spot the pattern of what each base ingredient produces across different batter tiers.</p>
+    </div>
+
+    <div class="callout amber">
+      <span class="ct">💡 Never sell raw ingredients</span>
+      <p>Almost every raw ingredient is worth more processed than sold directly. Even a single Nutrient Processor step multiplies the value. Two or three steps multiplies it further. The Cronus nanite value of a complex dish can be 10–20× the raw sell value of its constituent ingredients.</p>
+    </div>
+
+    <div class="callout">
+      <span class="ct">💡 Freighter farm is the best kitchen</span>
+      <p>A freighter base with Hydroponic Trays for cooking crops means your pantry is always stocked regardless of which planet you're on. Set up crop automation on the freighter first, then worry about planetary bases for scale later.</p>
+    </div>
+
+    <div class="callout amber">
+      <span class="ct">💡 Share food on the Anomaly</span>
+      <p>NMS has a lovely community tradition of players distributing home-cooked food to strangers on the Anomaly. Drop a stack of high-tier dishes near the entrance before visiting Cronus — it costs you a few seconds and makes someone's session.</p>
+    </div>
+  </div>
+
+  <footer class="reveal">
+    <div class="footer-brand">Galactic Cooking</div>
+    <div class="footer-info">
+      <p>Cooking &amp; Nutrient Processor · Manual VIII</p>
+      <p>No Man's Sky · All Platforms · Relics Update (2025)</p>
+    </div>
+  </footer>
+
+</div><!-- /page -->
+
+<script>
+// Filter buttons
+(function() {
+  const btns = document.querySelectorAll('.filter-btn');
+  const rows = document.querySelectorAll('#recipeTable tbody tr');
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      rows.forEach(row => {
+        if (filter === 'all' || row.dataset.type === filter) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    });
+  });
+})();
+
+// Scroll reveal
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  els.forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>
