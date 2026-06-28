@@ -672,12 +672,11 @@
   }
 
   /* ── SCROLL REVEAL ── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.55s ease, transform 0.55s ease;
+  @keyframes revealUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal { animation: revealUp 0.5s ease both; }
 
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 4px; }
@@ -1347,20 +1346,11 @@
   });
 })();})();
 
-// Scroll reveal
-(function() {
-  const els = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.08 });
-  els.forEach(el => io.observe(el));
-})();
+// scroll reveal handled by CSS animation
 </script>
 
 <script>
-// ── NMS COOKING FLOWCHART (vanilla JS + SVG) ────────────────────────────
+try { // ── NMS COOKING FLOWCHART ──
 (function(){
   var container=document.getElementById('cookingFlowChart');
   if(!container)return;
@@ -1588,6 +1578,7 @@
   applyPan();
   updateHighlight();
 })();
+} catch(e) { console.warn("Flowchart error:", e); }
 </script>
 </body>
 </html>
