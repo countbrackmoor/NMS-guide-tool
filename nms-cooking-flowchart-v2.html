@@ -1,1 +1,581 @@
-placeholder-see-guide
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NMS Cooking — Recipe Flow</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { width:100%; height:100%; overflow:hidden; background:#06030a; }
+#root { width:100%; height:100%; }
+@keyframes flow  { to { stroke-dashoffset:-24; } }
+@keyframes glow  { 0%,100%{opacity:1}50%{opacity:.35} }
+@keyframes fadein{ from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body><div id="root"></div>
+<script type="text/babel">
+const {useState,useRef,useCallback,useEffect}=React;
+
+/* ─── STYLES PER TYPE ─────────────────────────────────────── */
+const T={
+  health: {c:'#fb7185',bg:'#12040a',bdr:'#4a0f1a',tag:'S · HEALTH',  shape:'pill'},
+  jetpack:{c:'#7dd3fc',bg:'#040c14',bdr:'#0f3050',tag:'A · JETPACK', shape:'pill'},
+  stamina:{c:'#2dd4bf',bg:'#030e0c',bdr:'#0a3830',tag:'B · STAMINA', shape:'pill'},
+  hazard: {c:'#fbbf24',bg:'#100c02',bdr:'#4a3a06',tag:'C · HAZARD',  shape:'pill'},
+  batter: {c:'#d946ef',bg:'#0f0514',bdr:'#4a1060',tag:'BATTER',      shape:'rect'},
+  base:   {c:'#a78bfa',bg:'#0c0816',bdr:'#362a60',tag:'BASE',         shape:'rect'},
+  l1:     {c:'#818cf8',bg:'#0a0816',bdr:'#282460',tag:'PROCESSED',    shape:'rect'},
+  l2:     {c:'#60a5fa',bg:'#040c18',bdr:'#103050',tag:'PROCESSED',    shape:'rect'},
+  raw:    {c:'#34d399',bg:'#030e08',bdr:'#0f3a20',tag:'RAW',           shape:'rect'},
+};
+
+/* ─── NODE DATA ───────────────────────────────────────────── */
+// Layout: Dishes (x=60) → OUTPUTS ON LEFT, flow right toward raw ingredients
+// Arrows point rightward meaning "this dish needs →"
+const NW=152, NH=46;
+
+const NODES=[
+  /* ── S TIER: HEALTH (x=60, y=40-320) ── */
+  {id:'dh1',x:60,y:42, type:'health',label:'Creamy Clouds of Nectar',  icon:'❤️',recipe:'Syrupy Batter ×1 · Cream ×1',                     effect:'50% Health Restore'},
+  {id:'dh2',x:60,y:97, type:'health',label:'Chocolate Oozer',          icon:'🍫',recipe:'Syrupy Batter ×1 · Bittersweet Cocoa ×1',          effect:'50% Health Restore'},
+  {id:'dh3',x:60,y:152,type:'health',label:'Ambrosial Wonder',         icon:'✨',recipe:'Syrupy Batter ×1 · Synthetic Honey ×1',            effect:'50% Health Restore'},
+  {id:'dh4',x:60,y:207,type:'health',label:'Sponge of Ambrosia',       icon:'🍯',recipe:'Syrupy Batter ×1 · Viscous Custard ×1',            effect:'50% Health Restore'},
+  {id:'dh5',x:60,y:262,type:'health',label:'Syrupy Caramel Slice',     icon:'🍬',recipe:'Syrupy Batter ×1 · Crunchy Caramel ×1',            effect:'50% Health Restore'},
+  {id:'dh6',x:60,y:317,type:'health',label:"Splicer's Delight",        icon:'🧬',recipe:'Syrupy Batter ×1 · Sweetened Mucous ×1 · Cream ×1', effect:'50% Health Restore'},
+
+  /* ── A TIER: JETPACK via WRITHING (x=60, y=410-520) ── */
+  {id:'dj1',x:60,y:412,type:'jetpack',label:'Cake of the Lost',        icon:'🌀',recipe:'Writhing Roiling Batter ×1 · Viscous Custard ×1',  effect:'Jetpack +8s'},
+  {id:'dj2',x:60,y:467,type:'jetpack',label:'Burning Jam Surprise',    icon:'🔥',recipe:'Writhing Roiling Batter ×1 · Ever-burning Jam ×1 · Cream ×1',effect:'Jetpack +8s'},
+  {id:'dj3',x:60,y:522,type:'jetpack',label:'Caramelised Nightmare',   icon:'🌑',recipe:'Writhing Roiling Batter ×1 · Crunchy Caramel ×1',  effect:'Jetpack +8s'},
+
+  /* ── A TIER: JETPACK via WAILING (y=600-655) ── */
+  {id:'dj4',x:60,y:602,type:'jetpack',label:'Doomed Cream Cake',       icon:'💀',recipe:'Wailing Batter ×1 · Cream ×1',                    effect:'Jetpack +8s'},
+  {id:'dj5',x:60,y:657,type:'jetpack',label:'Cake of Glass',           icon:'💎',recipe:'Wailing Batter ×1 · Anomalous Jam ×1 · Cream ×1',  effect:'Jetpack +8s'},
+
+  /* ── A TIER: JETPACK via EXTRA-FLUFFY (y=735-790) ── */
+  {id:'dj6',x:60,y:737,type:'jetpack',label:'Chocolate Dream',         icon:'💙',recipe:'Extra-Fluffy Batter ×1 · Bittersweet Cocoa ×1',   effect:'Jetpack +8s'},
+  {id:'dj7',x:60,y:792,type:'jetpack',label:'Honied Angel Cake',       icon:'😇',recipe:'Extra-Fluffy Batter ×1 · Synthetic Honey ×1',     effect:'Jetpack +8s'},
+
+  /* ── B TIER: STAMINA (y=870-925) ── */
+  {id:'ds1',x:60,y:872,type:'stamina',label:'Sweet Cream Dreams',      icon:'⭐',recipe:'Thick Sweet Batter ×1 · Cream ×1',                 effect:'Stamina +15s'},
+  {id:'ds2',x:60,y:927,type:'stamina',label:'Gooey Chocolate Cake',    icon:'🍫',recipe:'Thick Sweet Batter ×1 · Bittersweet Cocoa ×1',     effect:'Stamina +15s'},
+
+  /* ── C TIER: HAZARD (y=1005-1115) ── */
+  {id:'dc1',x:60,y:1007,type:'hazard',label:'Cream Buns',              icon:'🍞',recipe:'Cake Batter ×1 · Cream ×1',                        effect:'Hazard 50%'},
+  {id:'dc2',x:60,y:1062,type:'hazard',label:'Custard Fancy',           icon:'🍮',recipe:'Cake Batter ×1 · Viscous Custard ×1',              effect:'Hazard 50%'},
+  {id:'dc3',x:60,y:1117,type:'hazard',label:'Chocolate Cake',          icon:'🎂',recipe:'Cake Batter ×1 · Bittersweet Cocoa ×1',            effect:'Hazard 50%'},
+  {id:'dc4',x:60,y:1172,type:'hazard',label:'Glittering Honey Cake',   icon:'🍰',recipe:'Cake Batter ×1 · Synthetic Honey ×1',              effect:'Hazard 50%'},
+
+  /* ── COL 1: TIER-1 BATTERS (x=300) ── */
+  {id:'sb', x:300,y:179,type:'batter',label:'Syrupy Batter',           icon:'💧',recipe:'Syrupy Nectar ×1',                                  how:'Single-ingredient Processor step — feeds all 50% Health dishes'},
+  {id:'wr', x:300,y:467,type:'batter',label:'Writhing Roiling Batter', icon:'🌑',recipe:'Wailing Batter ×1 + any ingredient',                how:'Top-tier batter. Highest Cronus nanite value. Needs the full batter chain.'},
+  {id:'wa1',x:300,y:629,type:'batter',label:'Wailing Batter',          icon:'😱',recipe:'Extra-Fluffy Batter ×1 + any ingredient',          how:'2nd-highest batter tier. Directly feeds Wailing Jetpack dishes.'},
+  {id:'ef1',x:300,y:764,type:'batter',label:'Extra-Fluffy Batter',     icon:'☁️',recipe:'Cake Batter ×1 + any ingredient',                  how:'3rd batter tier. Also feeds Extra-Fluffy Jetpack dishes directly.'},
+  {id:'ts', x:300,y:899,type:'batter',label:'Thick Sweet Batter',      icon:'🧁',recipe:'Cake Batter ×1 + Gooey Butter ×1 (or Sticky Honey)', how:'Stamina branch. Same Cake Batter base as the rest of the chain.'},
+
+  /* ── COL 2: CHAIN STEP 2 (x=540) ── */
+  {id:'sn', x:540,y:179,type:'raw',   label:'Syrupy Nectar',           icon:'🌸',how:'Rare fauna byproduct. Feed large docile/exotic creatures with Creature Pellets. Livestock Unit + Feeder helps.'},
+  {id:'wa2',x:540,y:467,type:'batter',label:'Wailing Batter',          icon:'😱',recipe:'Extra-Fluffy Batter ×1 + any ingredient',          how:'Needed by Writhing. Same node as in the Wailing-dish column — just one step further back.'},
+  {id:'ef2',x:540,y:629,type:'batter',label:'Extra-Fluffy Batter',     icon:'☁️',recipe:'Cake Batter ×1 + any ingredient',                  how:'Needed by Wailing. One step further back in the chain.'},
+  {id:'cb1',x:540,y:764,type:'base',  label:'Cake Batter',             icon:'🎂',recipe:'Sweetened Butter ×1 + Refined Flour ×1 + Creature Egg ×1',how:'The central base of most cooking chains. Three-ingredient Processor recipe.'},
+  {id:'cb2',x:540,y:899,type:'base',  label:'Cake Batter',             icon:'🎂',recipe:'Sweetened Butter ×1 + Refined Flour ×1 + Creature Egg ×1',how:'Same recipe as above — appears here as Thick Sweet Batter source too.'},
+
+  /* ── COL 3: CHAIN STEP 3 (x=780) ── */
+  {id:'ef3',x:780,y:467,type:'batter',label:'Extra-Fluffy Batter',     icon:'☁️',recipe:'Cake Batter ×1 + any ingredient',                  how:'Needed by Wailing (for Writhing chain). Three steps back from the Writhing dish.'},
+  {id:'cb3',x:780,y:580,type:'base',  label:'Cake Batter',             icon:'🎂',recipe:'Sweetened Butter ×1 + Refined Flour ×1 + Creature Egg ×1',how:'The foundation. Appears here as the root of Extra-Fluffy (for Writhing chain).'},
+  {id:'cb4',x:780,y:899,type:'base',  label:'Cake Batter',             icon:'🎂',recipe:'Sweetened Butter ×1 + Refined Flour ×1 + Creature Egg ×1',how:'Same recipe. Shown at this depth for Hazard dishes connecting directly.'},
+
+  /* ── CAKE BATTER SPINE (x=1020) ── */
+  // One authoritative Cake Batter node feeding base ingredients
+  {id:'cbX',x:1020,y:680,type:'base', label:'Cake Batter',             icon:'🎂',recipe:'Sweetened Butter ×1 + Refined Flour ×1 + Creature Egg ×1',how:'Built in the Nutrient Processor from three processed ingredients.'},
+  {id:'sb2',x:1020,y:800,type:'l2',   label:'Sweetened Butter',        icon:'🧈',recipe:'Cream ×1 + Processed Sugar ×1',                   how:'Combine Cream with Processed Sugar in the Processor.'},
+  {id:'rf', x:1020,y:880,type:'l2',   label:'Refined Flour',           icon:'🌾',recipe:'Glass Grains ×1',                                  how:'Single-step from Glass Grains. Glass Grains come from Frost Crystal.'},
+  {id:'eg', x:1020,y:960,type:'raw',  label:'Creature Egg',            icon:'🥚',how:'Collect from creature nests on any planet. Also dropped by egg-type fauna when fed.'},
+
+  /* ── L1 INGREDIENTS (x=1260) ── */
+  {id:'cr', x:1260,y:780,type:'l1',   label:'Cream',                   icon:'🍦',recipe:'Wild Milk ×1',                                     how:'Single-step from Wild Milk. Wild Milk from feeding docile creatures.'},
+  {id:'ps', x:1260,y:860,type:'l1',   label:'Processed Sugar',         icon:'🍬',recipe:'Solanium ×1 (or sweet plant)',                     how:'Process Solanium, Cactus Flesh, or similar sweet plants × 1.'},
+  {id:'gg', x:1260,y:940,type:'l1',   label:'Glass Grains',            icon:'🌾',recipe:'Frost Crystal ×1',                                 how:'Single-step from Frost Crystal in the Processor.'},
+
+  /* ── RAW INGREDIENTS (x=1500) ── */
+  {id:'wm', x:1500,y:760,type:'raw',  label:'Wild Milk',               icon:'🥛',how:'Feed docile/herbivore creatures with Creature Pellets. Livestock Unit + Automated Feeder for passive supply.'},
+  {id:'sol',x:1500,y:840,type:'raw',  label:'Solanium',                icon:'🌶',how:'Harvest from plants on scorching hot planets. Farm: Solanium Sprout in Biodomes.'},
+  {id:'fc', x:1500,y:920,type:'raw',  label:'Frost Crystal',           icon:'❄️',how:'Harvest from ice plants on frozen worlds. Farm: Frostwort in Hydroponic Trays.'},
+
+  /* ── EXTRA: OPTIONAL INGREDIENTS (x=1500 upper) ── */
+  {id:'ic', x:1500,y:460,type:'raw',  label:'Impulse Beans',           icon:'🫘',how:'Grows on lush planets. Sold by NPC traders. → Bittersweet Cocoa × 1 in Processor.'},
+  {id:'sh', x:1500,y:540,type:'raw',  label:'Synthetic Honey',         icon:'🍯',how:'Byproduct from insectoid/bee-type creatures. Use Creature Pellets + Livestock Unit.'},
+  {id:'bc', x:1260,y:460,type:'l1',   label:'Bittersweet Cocoa',       icon:'🍫',recipe:'Impulse Beans ×1',                                 how:'Single-step from Impulse Beans. Used in all chocolate-variant dishes.'},
+];
+
+/* ─── EDGE DATA ───────────────────────────────────────────── */
+// Edges: from → to means "from NEEDS to"  (left node NEEDS right node)
+const EDGES=[
+  // Health dishes → Syrupy Batter
+  {f:'dh1',t:'sb'},{f:'dh2',t:'sb'},{f:'dh3',t:'sb'},{f:'dh4',t:'sb'},{f:'dh5',t:'sb'},{f:'dh6',t:'sb'},
+  // Syrupy Batter → Syrupy Nectar (terminal raw)
+  {f:'sb',t:'sn'},
+  
+  // Writhing jetpack → Writhing Batter
+  {f:'dj1',t:'wr'},{f:'dj2',t:'wr'},{f:'dj3',t:'wr'},
+  // Writhing Batter → Wailing Batter (col 2)
+  {f:'wr',t:'wa2'},
+  // Wailing (col 2) → Extra-Fluffy (col 3)
+  {f:'wa2',t:'ef3'},
+  // Extra-Fluffy (col 3) → Cake Batter (col 3, cb3)
+  {f:'ef3',t:'cb3'},
+  // cb3 → cbX (spine)
+  {f:'cb3',t:'cbX'},
+  
+  // Wailing dishes → Wailing Batter (col 1)
+  {f:'dj4',t:'wa1'},{f:'dj5',t:'wa1'},
+  // Wailing (col 1) → Extra-Fluffy (col 2)
+  {f:'wa1',t:'ef2'},
+  // Extra-Fluffy (col 2) → Cake Batter (col 2, cb1)
+  {f:'ef2',t:'cb1'},
+  // cb1 → cbX
+  {f:'cb1',t:'cbX'},
+  
+  // Extra-Fluffy dishes → Extra-Fluffy Batter (col 1)
+  {f:'dj6',t:'ef1'},{f:'dj7',t:'ef1'},
+  // Extra-Fluffy (col 1) → Cake Batter (col 2, cb2 position... but let's go to col 2, cb1)
+  {f:'ef1',t:'cb1'},
+  
+  // Stamina dishes → Thick Sweet Batter
+  {f:'ds1',t:'ts'},{f:'ds2',t:'ts'},
+  // Thick Sweet → Cake Batter (col 2)
+  {f:'ts',t:'cb2'},
+  // cb2 → cbX
+  {f:'cb2',t:'cbX'},
+  
+  // Hazard dishes → Cake Batter (col 3, cb4)
+  {f:'dc1',t:'cb4'},{f:'dc2',t:'cb4'},{f:'dc3',t:'cb4'},{f:'dc4',t:'cb4'},
+  // cb4 → cbX
+  {f:'cb4',t:'cbX'},
+  
+  // cbX → its ingredients
+  {f:'cbX',t:'sb2'},{f:'cbX',t:'rf'},{f:'cbX',t:'eg'},
+  
+  // Sweetened Butter → Cream + Processed Sugar
+  {f:'sb2',t:'cr'},{f:'sb2',t:'ps'},
+  // Refined Flour → Glass Grains
+  {f:'rf',t:'gg'},
+  
+  // Cream → Wild Milk
+  {f:'cr',t:'wm'},
+  // Processed Sugar → Solanium
+  {f:'ps',t:'sol'},
+  // Glass Grains → Frost Crystal
+  {f:'gg',t:'fc'},
+  
+  // Optional ingredient connections (dotted)
+  {f:'dh2',t:'bc',dot:true},{f:'dj6',t:'bc',dot:true},{f:'ds2',t:'bc',dot:true},{f:'dc3',t:'bc',dot:true},
+  {f:'bc',t:'ic'},
+  {f:'dh3',t:'sh',dot:true},{f:'dj7',t:'sh',dot:true},
+  {f:'sh',t:'ic',hidden:true},// just for context, hidden
+];
+
+const CANVAS_W=1680, CANVAS_H=1280;
+
+/* ─── FULL TABLE DATA (all from spreadsheet cooking tab) ─── */
+const TABLE_DATA=[
+  ['Creamy Clouds of Nectar','Syrupy Batter','Cream','','50% Health'],
+  ['Chocolate Oozer','Syrupy Batter','Bittersweet Cocoa','','50% Health'],
+  ['Ambrosial Wonder','Syrupy Batter','Synthetic Honey','','50% Health'],
+  ['Sponge of Ambrosia','Syrupy Batter','Viscous Custard','','50% Health'],
+  ['Syrupy Caramel Slice','Syrupy Batter','Crunchy Caramel','','50% Health'],
+  ["Splicer's Delight",'Syrupy Batter','Sweetened Mucous','Cream','50% Health'],
+  ["Jammy Burster",'Syrupy Batter',"Grahj'am",'Cream','50% Health'],
+  ['Sweet and Salty Puff','Syrupy Batter','Salty Custard','','50% Health'],
+  ['Starpollen Surprise','Syrupy Batter','Stellar Custard','','50% Health'],
+  ["Candied 'Apples'",'Syrupy Batter','Wriggling Jam','','50% Health'],
+  ['Cake of the Lost','Writhing Roiling Batter','Viscous Custard','','Jetpack +8s'],
+  ['Burning Jam Surprise','Writhing Roiling Batter','Ever-burning Jam','Cream','Jetpack +8s'],
+  ['Ambrosial Curse','Writhing Roiling Batter','Syrupy Nectar','','Jetpack +8s'],
+  ['Caramelised Nightmare','Writhing Roiling Batter','Crunchy Caramel','','Jetpack +8s'],
+  ['Cake of Sin','Writhing Roiling Batter',"Crab 'Apple'",'','Jetpack +8s'],
+  ['Unbound Cream Horn','Writhing Roiling Batter','Cream','','Jetpack +8s'],
+  ['Cake of Glass','Wailing Batter','Anomalous Jam','Cream','Jetpack +8s'],
+  ['Monstrous Honey Cake','Wailing Batter','Synthetic Honey','','Jetpack +8s'],
+  ['Cake of Burning Dread','Wailing Batter','Ever-burning Jam','Cream','Jetpack +8s'],
+  ['Appalling Jam Sponge','Wailing Batter',"Grahj'am",'Cream','Jetpack +8s'],
+  ['Doomed Cream Cake','Wailing Batter','Cream','','Jetpack +8s'],
+  ['Chocolate Dream','Extra-Fluffy Batter','Bittersweet Cocoa','','Jetpack +8s'],
+  ['Honied Angel Cake','Extra-Fluffy Batter','Synthetic Honey','','Jetpack +8s'],
+  ['Soft Custard Fancy','Extra-Fluffy Batter','Viscous Custard','','Jetpack +8s'],
+  ['Nectar Islands','Extra-Fluffy Batter','Syrupy Nectar','','Jetpack +8s'],
+  ['Extra-Fluffy Cream Cake','Extra-Fluffy Batter','Cream','','Jetpack +8s'],
+  ['Starbirth Delight','Thick Sweet Batter','Stellar Custard','','Stamina +15s'],
+  ['Honey-Soaked Fancy','Thick Sweet Batter','Synthetic Honey','','Stamina +15s'],
+  ['Gooey Chocolate Cake','Thick Sweet Batter','Bittersweet Cocoa','','Stamina +15s'],
+  ['Sweet Cream Dreams','Thick Sweet Batter','Cream','','Stamina +15s'],
+  ['Gooey Caramel Cake','Thick Sweet Batter','Crunchy Caramel','','Stamina +15s'],
+  ['Gooey Mouthburner','Thick Sweet Batter','Ever-burning Jam','Cream','Stamina +15s'],
+  ['Interstellar Fancy','Cake Batter','Stellar Custard','','Hazard 50%'],
+  ['Glittering Honey Cake','Cake Batter','Synthetic Honey','','Hazard 50%'],
+  ['Chocolate Cake','Cake Batter','Bittersweet Cocoa','','Hazard 50%'],
+  ['Custard Fancy','Cake Batter','Viscous Custard','','Hazard 50%'],
+  ['Traditional Cake','Cake Batter',"Grahj'am",'Cream','Hazard 50%'],
+  ['Cream Buns','Cake Batter','Cream','','Hazard 50%'],
+  ['Perpetual Cake','Cake Batter','Anomalous Jam','Cream','Hazard 50%'],
+  ["Briney Delight",'Cake Batter','Salty Custard','','Hazard 50%'],
+  ['Syrupy Batter','Syrupy Nectar','','','Intermediate'],
+  ['Writhing Roiling Batter','Wailing Batter','+ ingredient','','Intermediate'],
+  ['Wailing Batter','Extra-Fluffy Batter','+ ingredient','','Intermediate'],
+  ['Extra-Fluffy Batter','Cake Batter','+ ingredient','','Intermediate'],
+  ['Thick Sweet Batter','Cake Batter','Gooey Butter','','Intermediate'],
+  ['Cake Batter','Sweetened Butter','Refined Flour','Creature Egg','Intermediate'],
+  ['Sweetened Butter','Cream','Processed Sugar','','Intermediate'],
+  ['Refined Flour','Glass Grains','','','Intermediate'],
+  ['Glass Grains','Frost Crystal','','','Intermediate'],
+  ['Cream','Wild Milk','','','Intermediate'],
+  ['Bittersweet Cocoa','Impulse Beans','','','Intermediate'],
+  ['Viscous Custard','Cream','','','Intermediate'],
+  ['Crunchy Caramel','Processed Sugar','Salt','','Intermediate'],
+  ['Bone Cream','Bone Milk','','','Intermediate'],
+  ['Bone Milk','Bone Nuggets','','','Intermediate'],
+  ['Anomalous Tart','Pie Case','Anomalous Jam','','Utility/Cronus'],
+  ['Cheesy Vegetable Pie','Pie Case','Tangy Cheese','Jade Peas','Utility/Cronus'],
+  ['Caramel Tart','Pie Case','Crunchy Caramel','','Utility/Cronus'],
+  ['Baked Eggs','Creature Egg','','','Utility/Cronus'],
+  ["'Apple' Roll",'Sugar Dough','Wriggling Jam','','Utility/Cronus'],
+  ['Abyssal Stew','Hypnotic Eye','Horrifying Mush','','Utility/Cronus'],
+  ['Bone Broth','Softened Marrow','Meaty Chunks','','Utility/Cronus'],
+  ['Boiled Flipper','Moon Turtle','','','Fish/Aquarius'],
+  ['Brined Flesh','Whispering Bonefish','','','Fish/Aquarius'],
+  ['Assorted Roe','Any Raw Seafood','Any Raw Seafood','','Fish/Aquarius'],
+];
+
+/* ─── NODE MAP ─────────────────────────────────────────────── */
+const nodeMap={};
+NODES.forEach(n=>nodeMap[n.id]=n);
+
+function App(){
+  const [pan,setPan]=useState({x:16,y:16});
+  const [dragging,setDragging]=useState(false);
+  const [dragStart,setDragStart]=useState(null);
+  const [selected,setSelected]=useState(null);
+  const [showTable,setShowTable]=useState(false);
+  const [tFilter,setTFilter]=useState('all');
+
+  const onMouseDown=useCallback(e=>{
+    if(e.target.closest('.nd'))return;
+    setDragging(true);
+    setDragStart({x:e.clientX-pan.x,y:e.clientY-pan.y});
+    setSelected(null);
+  },[pan]);
+  const onMouseMove=useCallback(e=>{
+    if(!dragging||!dragStart)return;
+    setPan({x:e.clientX-dragStart.x,y:e.clientY-dragStart.y});
+  },[dragging,dragStart]);
+  const onMouseUp=useCallback(()=>setDragging(false),[]);
+
+  // Connected node ids when one is selected
+  const connectedSet = selected ? new Set([
+    selected,
+    ...EDGES.filter(e=>e.f===selected||e.t===selected).flatMap(e=>[e.f,e.t])
+  ]) : null;
+
+  const getSel=()=>selected?nodeMap[selected]:null;
+
+  // Edge path: smooth bezier, horizontal flow
+  const edgePath=(f,t)=>{
+    const fn=nodeMap[f],tn=nodeMap[t];
+    if(!fn||!tn)return'';
+    const x1=fn.x+NW, y1=fn.y+NH/2;
+    const x2=tn.x,     y2=tn.y+NH/2;
+    const dx=(x2-x1)*0.55;
+    return `M${x1} ${y1} C${x1+dx} ${y1} ${x2-dx} ${y2} ${x2} ${y2}`;
+  };
+
+  const ecol=e=>{
+    if(e.includes('Health'))return'#fb7185';
+    if(e.includes('Jetpack'))return'#7dd3fc';
+    if(e.includes('Stamina'))return'#2dd4bf';
+    if(e.includes('Hazard'))return'#fbbf24';
+    return'#a78bfa';
+  };
+
+  const tableRows=tFilter==='all'?TABLE_DATA:TABLE_DATA.filter(r=>r[4].toLowerCase().includes(tFilter));
+
+  // Detail card positioning: clamp inside viewport
+  const selNode=getSel();
+  const cardX=selNode?Math.min(selNode.x+pan.x+NW+12, window.innerWidth-320):0;
+  const cardY=selNode?Math.min(Math.max(selNode.y+pan.y+56,60),window.innerHeight-280):0;
+
+  return(
+    <div style={{width:'100%',height:'100vh',background:'#06030a',overflow:'hidden',position:'relative',fontFamily:"'DM Sans',sans-serif"}}>
+
+      {/* TOP BAR */}
+      <div style={{position:'fixed',top:0,left:0,right:0,zIndex:500,height:46,
+        background:'rgba(6,3,10,.97)',borderBottom:'1px solid rgba(217,70,239,.2)',
+        display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 20px',backdropFilter:'blur(8px)'}}>
+        <div style={{display:'flex',alignItems:'center',gap:12}}>
+          <span style={{fontFamily:"'DM Serif Display',serif",fontStyle:'italic',fontSize:18,color:'#d946ef'}}>
+            Galactic Cooking
+          </span>
+          <span style={{fontFamily:"'DM Mono',monospace",fontSize:9,letterSpacing:3,color:'rgba(217,70,239,.4)',textTransform:'uppercase'}}>
+            Best outputs left → ingredients right · click any node
+          </span>
+        </div>
+        <div style={{display:'flex',gap:12,alignItems:'center'}}>
+          {/* Legend */}
+          {[['health','#fb7185','S Health'],['jetpack','#7dd3fc','A Jetpack'],['stamina','#2dd4bf','B Stamina'],['hazard','#fbbf24','C Hazard'],['batter','#d946ef','Batter'],['raw','#34d399','Raw']].map(([k,c,l])=>(
+            <div key={k} style={{display:'flex',alignItems:'center',gap:4}}>
+              <div style={{width:7,height:7,borderRadius:'50%',background:c}}/>
+              <span style={{fontFamily:"'DM Mono',monospace",fontSize:8,color:c,letterSpacing:1,textTransform:'uppercase'}}>{l}</span>
+            </div>
+          ))}
+          <button onClick={()=>setShowTable(true)} style={{
+            fontFamily:"'DM Mono',monospace",fontSize:9,letterSpacing:2,
+            padding:'5px 14px',borderRadius:16,
+            border:'1px solid rgba(217,70,239,.5)',
+            background:'rgba(217,70,239,.1)',color:'#d946ef',cursor:'pointer',textTransform:'uppercase',
+          }}>All Recipes ↗</button>
+        </div>
+      </div>
+
+      {/* TIER LABELS — fixed on left edge */}
+      <div style={{position:'fixed',left:0,top:46,bottom:0,width:36,zIndex:200,pointerEvents:'none'}}>
+        {[
+          {label:'S',color:'#fb7185',top:56},
+          {label:'A',color:'#7dd3fc',top:425},
+          {label:'B',color:'#2dd4bf',top:885},
+          {label:'C',color:'#fbbf24',top:1020},
+        ].map(({label,color,top})=>(
+          <div key={label} style={{
+            position:'absolute',left:0,top:top+pan.y,
+            fontFamily:"'DM Serif Display',serif",fontStyle:'italic',fontSize:32,
+            color:color,opacity:.15,lineHeight:1,
+            textShadow:`0 0 20px ${color}`,
+            transition:'top .05s',
+          }}>{label}</div>
+        ))}
+      </div>
+
+      {/* CANVAS */}
+      <div onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
+        style={{position:'absolute',inset:0,top:46,cursor:dragging?'grabbing':'grab',overflow:'hidden'}}>
+        <div style={{position:'absolute',transform:`translate(${pan.x}px,${pan.y}px)`,width:CANVAS_W,height:CANVAS_H}}>
+
+          {/* Column gradient zones */}
+          {[
+            {x:0,  w:230,bg:'rgba(251,113,133,.015)',label:'OUTPUTS'},
+            {x:230,w:270,bg:'rgba(217,70,239,.015)', label:'BATTER CHAIN'},
+            {x:500,w:740,bg:'rgba(167,139,250,.012)',label:'PROCESSING'},
+            {x:1240,w:440,bg:'rgba(52,211,153,.015)',label:'RAW SOURCES'},
+          ].map(z=>(
+            <div key={z.x} style={{position:'absolute',left:z.x,top:0,width:z.w,height:CANVAS_H,
+              background:z.bg,borderRight:'1px solid rgba(255,255,255,.025)'}}>
+              <span style={{position:'absolute',top:8,left:10,
+                fontFamily:"'DM Mono',monospace",fontSize:7,letterSpacing:4,
+                color:'rgba(255,255,255,.07)',textTransform:'uppercase'}}>{z.label}</span>
+            </div>
+          ))}
+
+          {/* EDGES */}
+          <svg style={{position:'absolute',inset:0,width:CANVAS_W,height:CANVAS_H,pointerEvents:'none',overflow:'visible'}}>
+            <defs>
+              <marker id="arr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+                <polygon points="0 0,7 2.5,0 5" fill="rgba(217,70,239,.3)"/>
+              </marker>
+              <marker id="arr-hi" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto">
+                <polygon points="0 0,7 2.5,0 5" fill="rgba(217,70,239,.9)"/>
+              </marker>
+            </defs>
+            {EDGES.filter(e=>!e.hidden).map((e,i)=>{
+              if(!nodeMap[e.f]||!nodeMap[e.t])return null;
+              const isConn=connectedSet&&(connectedSet.has(e.f)||connectedSet.has(e.t));
+              const dim=!!selected&&!isConn;
+              const fType=T[nodeMap[e.f].type];
+              return(
+                <path key={i} d={edgePath(e.f,e.t)} fill="none"
+                  stroke={isConn?fType.c:'rgba(217,70,239,.25)'}
+                  strokeWidth={isConn?2:1}
+                  strokeOpacity={dim?.05:isConn?1:(e.dot?.15:.35)}
+                  strokeDasharray={e.dot?'4 5':(isConn?'8 5':'none')}
+                  markerEnd={isConn?'url(#arr-hi)':'url(#arr)'}
+                  style={isConn?{animation:'flow .7s linear infinite'}:{}}
+                />
+              );
+            })}
+          </svg>
+
+          {/* NODES */}
+          {NODES.map(node=>{
+            const ts=T[node.type];
+            const isSel=selected===node.id;
+            const isConn=connectedSet?.has(node.id);
+            const dim=!!selected&&!connectedSet?.has(node.id);
+            const isPill=['health','jetpack','stamina','hazard'].includes(node.type);
+            return(
+              <div key={node.id} className="nd"
+                onClick={e=>{e.stopPropagation();setSelected(selected===node.id?null:node.id);}}
+                style={{
+                  position:'absolute',left:node.x,top:node.y,
+                  width:NW,height:NH,
+                  borderRadius:isPill?NH/2:7,
+                  background:ts.bg,
+                  border:`1px solid ${isSel||isConn?ts.c:ts.bdr}`,
+                  boxShadow:isSel?`0 0 18px ${ts.c}55,0 0 36px ${ts.c}22`:isConn?`0 0 10px ${ts.c}33`:'none',
+                  cursor:'pointer',
+                  display:'flex',alignItems:'center',gap:7,padding:'0 10px',
+                  opacity:dim?.15:1,
+                  transition:'opacity .12s,border-color .12s,box-shadow .12s',
+                  zIndex:isSel?10:1,
+                  userSelect:'none',
+                }}>
+                <span style={{fontSize:14,flexShrink:0,opacity:.85}}>{node.icon}</span>
+                <span style={{
+                  fontFamily:"'DM Mono',monospace",
+                  fontSize:node.label.length>18?8.5:9.5,
+                  fontWeight:500,letterSpacing:.3,lineHeight:1.2,
+                  color:isSel||isConn?ts.c:`${ts.c}cc`,
+                }}>{node.label}</span>
+                {isSel&&<div style={{
+                  position:'absolute',top:-2,right:-2,width:7,height:7,borderRadius:'50%',
+                  background:ts.c,boxShadow:`0 0 8px ${ts.c}`,
+                  animation:'glow 1.2s ease-in-out infinite',
+                }}/>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* FLOATING DETAIL CARD */}
+      {selNode&&(()=>{
+        const ts=T[selNode.type];
+        return(
+          <div style={{
+            position:'fixed',left:cardX,top:cardY,width:290,zIndex:600,
+            background:'#0e0812',border:`1px solid ${ts.c}`,borderRadius:10,padding:18,
+            boxShadow:`0 0 28px ${ts.c}33,0 8px 30px rgba(0,0,0,.7)`,
+            animation:'fadein .15s ease',
+          }}>
+            <button onClick={()=>setSelected(null)} style={{
+              position:'absolute',top:8,right:10,background:'transparent',border:'none',
+              color:'rgba(255,255,255,.3)',fontSize:18,cursor:'pointer'}}>×</button>
+            <div style={{fontFamily:"'DM Mono',monospace",fontSize:8,letterSpacing:3,color:ts.c,textTransform:'uppercase',marginBottom:5,opacity:.8}}>
+              {ts.tag}
+            </div>
+            <div style={{fontFamily:"'DM Serif Display',serif",fontSize:19,color:'#f8f0ff',marginBottom:14,lineHeight:1.2}}>
+              {selNode.label}
+            </div>
+            {selNode.effect&&(
+              <div style={{
+                display:'inline-block',marginBottom:12,
+                fontFamily:"'DM Mono',monospace",fontSize:9,
+                padding:'2px 12px',borderRadius:20,
+                background:`${ts.c}20`,color:ts.c,border:`1px solid ${ts.c}44`,
+              }}>{selNode.effect}</div>
+            )}
+            {selNode.recipe&&(
+              <div style={{marginBottom:12}}>
+                <div style={{fontFamily:"'DM Mono',monospace",fontSize:8,color:ts.c,letterSpacing:2,textTransform:'uppercase',marginBottom:7}}>Recipe</div>
+                <div style={{background:'rgba(255,255,255,.03)',borderRadius:5,padding:'9px 11px',
+                  border:'1px dashed rgba(255,255,255,.07)',
+                  fontFamily:"'DM Mono',monospace",fontSize:10.5,color:'#c0a8d8',lineHeight:1.85}}>
+                  {selNode.recipe.split(' · ').map((s,i)=><div key={i}>{s}</div>)}
+                </div>
+              </div>
+            )}
+            {selNode.how&&(
+              <div>
+                <div style={{fontFamily:"'DM Mono',monospace",fontSize:8,color:ts.c,letterSpacing:2,textTransform:'uppercase',marginBottom:6}}>
+                  {selNode.type==='raw'?'Where to Get':'Notes'}
+                </div>
+                <div style={{fontSize:12,color:'#7060a0',lineHeight:1.65}}>{selNode.how}</div>
+              </div>
+            )}
+          </div>
+        );
+      })()}
+
+      {/* TABLE MODAL */}
+      {showTable&&(
+        <div style={{position:'fixed',inset:0,zIndex:800,background:'rgba(0,0,0,.88)',backdropFilter:'blur(8px)',
+          display:'flex',alignItems:'center',justifyContent:'center'}}
+          onClick={()=>setShowTable(false)}>
+          <div style={{width:'92%',maxWidth:1020,maxHeight:'86vh',background:'#0e0812',
+            border:'1px solid rgba(217,70,239,.3)',borderRadius:12,overflow:'hidden',
+            display:'flex',flexDirection:'column',animation:'fadein .18s ease'}}
+            onClick={e=>e.stopPropagation()}>
+            <div style={{padding:'14px 22px',borderBottom:'1px solid rgba(217,70,239,.15)',
+              display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:0}}>
+              <div>
+                <div style={{fontFamily:"'DM Serif Display',serif",fontStyle:'italic',fontSize:21,color:'#f0f0ff'}}>
+                  Complete Recipe Reference
+                </div>
+                <div style={{fontFamily:"'DM Mono',monospace",fontSize:9,color:'rgba(217,70,239,.5)',letterSpacing:2,textTransform:'uppercase',marginTop:3}}>
+                  {tableRows.length} recipes · all cooking outputs from spreadsheet
+                </div>
+              </div>
+              <div style={{display:'flex',gap:5,alignItems:'center',flexWrap:'wrap'}}>
+                {[['all','All'],['health','S · Health'],['jetpack','A · Jetpack'],['stamina','B · Stamina'],['hazard','C · Hazard'],['intermediate','Prep'],['utility','Utility'],['fish','Fish']].map(([k,l])=>(
+                  <button key={k} onClick={()=>setTFilter(k)} style={{
+                    fontFamily:"'DM Mono',monospace",fontSize:8,letterSpacing:1,
+                    padding:'3px 9px',borderRadius:10,textTransform:'uppercase',
+                    border:`1px solid ${tFilter===k?'rgba(217,70,239,.7)':'rgba(217,70,239,.2)'}`,
+                    background:tFilter===k?'rgba(217,70,239,.15)':'transparent',
+                    color:tFilter===k?'#d946ef':'#6b5080',cursor:'pointer',whiteSpace:'nowrap',
+                  }}>{l}</button>
+                ))}
+                <button onClick={()=>setShowTable(false)} style={{
+                  marginLeft:8,background:'transparent',border:'none',
+                  color:'rgba(255,255,255,.3)',fontSize:20,cursor:'pointer'}}>×</button>
+              </div>
+            </div>
+            <div style={{overflowY:'auto',flex:1}}>
+              <table style={{width:'100%',borderCollapse:'collapse'}}>
+                <thead style={{position:'sticky',top:0,background:'#0e0812',zIndex:1}}>
+                  <tr style={{borderBottom:'2px solid rgba(217,70,239,.25)'}}>
+                    {['Output','Ingredient 1','Ingredient 2','Ingredient 3','Effect'].map(h=>(
+                      <th key={h} style={{fontFamily:"'DM Mono',monospace",fontSize:8,letterSpacing:2,
+                        color:'#d946ef',textTransform:'uppercase',padding:'9px 14px',textAlign:'left',fontWeight:500}}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {tableRows.map((r,i)=>{
+                    const c=ecol(r[4]);
+                    return(
+                      <tr key={i} style={{borderBottom:'1px solid rgba(217,70,239,.06)',transition:'background .1s'}}
+                        onMouseEnter={e=>e.currentTarget.style.background='rgba(217,70,239,.04)'}
+                        onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                        <td style={{padding:'8px 14px',fontSize:13,color:'#e0d0f0',fontWeight:500}}>{r[0]}</td>
+                        <td style={{padding:'8px 14px',fontSize:11,color:'#6b5080',fontFamily:"'DM Mono',monospace"}}>{r[1]}</td>
+                        <td style={{padding:'8px 14px',fontSize:11,color:'#6b5080',fontFamily:"'DM Mono',monospace"}}>{r[2]}</td>
+                        <td style={{padding:'8px 14px',fontSize:11,color:'#6b5080',fontFamily:"'DM Mono',monospace"}}>{r[3]}</td>
+                        <td style={{padding:'8px 14px'}}>
+                          <span style={{fontFamily:"'DM Mono',monospace",fontSize:8,padding:'2px 9px',borderRadius:9,
+                            background:`${c}18`,color:c,border:`1px solid ${c}33`}}>{r[4]}</span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div style={{position:'fixed',bottom:14,left:'50%',transform:'translateX(-50%)',
+        fontFamily:"'DM Mono',monospace",fontSize:8,letterSpacing:2,
+        color:'rgba(217,70,239,.25)',textTransform:'uppercase',pointerEvents:'none'}}>
+        drag to pan · click nodes · connected nodes highlight · use All Recipes for full table
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.render(<App/>,document.getElementById('root'));
+</script>
+</body>
+</html>
