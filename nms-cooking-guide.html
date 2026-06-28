@@ -441,14 +441,18 @@
   }
 
   /* ── SORTABLE TABLE ── */
-  .recipe-table th {
+  .recipe-table th[data-col] {
     cursor: pointer;
     user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(217,70,239,0.12);
   }
   .recipe-table th:hover { color: var(--fuchsia2); }
-  .sort-icon { opacity: 0.4; margin-left: 4px; font-size: 10px; }
-  .sort-icon.asc  { opacity: 1; }
-  .sort-icon.desc { opacity: 1; }
+  .sort-icon {
+    opacity: 0.4; margin-left: 4px; font-size: 10px;
+    pointer-events: none; display: inline-block;
+  }
 
   /* ── RECIPE TABLE WITH FILTERS ── */
   .recipe-filters {
@@ -672,11 +676,12 @@
   }
 
   /* ── SCROLL REVEAL ── */
-  @keyframes revealUp {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
   }
-  .reveal { animation: revealUp 0.5s ease both; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 4px; }
@@ -1321,264 +1326,82 @@
   });
 })();
 
-// Sortable table headers
+// Sortable table headers — iOS compatible
 (function() {
-  let sortCol = -1, sortDir = 1;
-  const icons = document.querySelectorAll('.sort-icon');
-  document.querySelectorAll('.recipe-table th[data-col]').forEach(th => {
-    th.style.cursor = 'pointer';
-    th.addEventListener('click', () => {
-      const col = parseInt(th.dataset.col);
-      if (sortCol === col) { sortDir *= -1; } else { sortDir = 1; sortCol = col; }
-      icons.forEach((ic, i) => {
-        ic.textContent = i === col ? (sortDir === 1 ? ' ↑' : ' ↓') : ' ↕';
-        ic.style.opacity = i === col ? '1' : '0.35';
-      });
-      const tbody = document.querySelector('#recipeTable tbody');
-      Array.from(tbody.querySelectorAll('tr'))
-        .sort((a, b) => {
-          const at = (a.cells[col]?.textContent || '').trim().toLowerCase();
-          const bt = (b.cells[col]?.textContent || '').trim().toLowerCase();
-          return at.localeCompare(bt) * sortDir;
-        })
-        .forEach(r => tbody.appendChild(r));
+  var sortCol = -1, sortDir = 1;
+  function doSort(col) {
+    if (sortCol === col) { sortDir *= -1; } else { sortDir = 1; sortCol = col; }
+    document.querySelectorAll('.sort-icon').forEach(function(ic, i) {
+      ic.textContent = i === col ? (sortDir === 1 ? ' ↑' : ' ↓') : ' ↕';
+      ic.style.opacity = i === col ? '1' : '0.35';
     });
+    var tbody = document.querySelector('#recipeTable tbody');
+    Array.from(tbody.querySelectorAll('tr'))
+      .sort(function(a, b) {
+        var at = ((a.cells[col] && a.cells[col].textContent) || '').trim().toLowerCase();
+        var bt = ((b.cells[col] && b.cells[col].textContent) || '').trim().toLowerCase();
+        return at < bt ? -sortDir : at > bt ? sortDir : 0;
+      })
+      .forEach(function(r) { tbody.appendChild(r); });
+  }
+  document.querySelectorAll('.recipe-table th[data-col]').forEach(function(th) {
+    var col = parseInt(th.getAttribute('data-col'), 10);
+    th.addEventListener('click', function() { doSort(col); });
+    th.addEventListener('touchend', function(e) { e.preventDefault(); doSort(col); });
   });
 })();})();
 
-// scroll reveal handled by CSS animation
+// Scroll reveal
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  els.forEach(el => io.observe(el));
+})();
 </script>
 
 <script>
-try { // ── NMS COOKING FLOWCHART ──
+// NMS Cooking Flowchart - iOS Safari compatible
 (function(){
-  var container=document.getElementById('cookingFlowChart');
-  if(!container)return;
-  var W=1680,H=1280,NW=152,NH=46;
-  var pan={x:16,y:16},dragging=false,dragStart=null,selected=null;
-
-  var T={
-    health: {c:'#fb7185',bg:'#12040a',bdr:'#4a0f1a',tag:'S · HEALTH'},
-    jetpack:{c:'#7dd3fc',bg:'#040c14',bdr:'#0f3050',tag:'A · JETPACK'},
-    stamina:{c:'#2dd4bf',bg:'#030e0c',bdr:'#0a3830',tag:'B · STAMINA'},
-    hazard: {c:'#fbbf24',bg:'#100c02',bdr:'#4a3a06',tag:'C · HAZARD'},
-    batter: {c:'#d946ef',bg:'#0f0514',bdr:'#4a1060',tag:'BATTER'},
-    base:   {c:'#a78bfa',bg:'#0c0816',bdr:'#362a60',tag:'BASE'},
-    l1:     {c:'#818cf8',bg:'#0a0816',bdr:'#282460',tag:'PROCESSED'},
-    l2:     {c:'#60a5fa',bg:'#040c18',bdr:'#103050',tag:'PROCESSED'},
-    raw:    {c:'#34d399',bg:'#030e08',bdr:'#0f3a20',tag:'RAW'},
-  };
-
-  var NODES=[
-    {id:'dh1',x:60,y:42,type:'health',label:'Creamy Clouds',icon:'❤',recipe:'Syrupy Batter + Cream',effect:'50% Health'},
-    {id:'dh2',x:60,y:97,type:'health',label:'Chocolate Oozer',icon:'🍫',recipe:'Syrupy Batter + Bittersweet Cocoa',effect:'50% Health'},
-    {id:'dh3',x:60,y:152,type:'health',label:'Ambrosial Wonder',icon:'✨',recipe:'Syrupy Batter + Synthetic Honey',effect:'50% Health'},
-    {id:'dh4',x:60,y:207,type:'health',label:'Sponge of Ambrosia',icon:'🍯',recipe:'Syrupy Batter + Viscous Custard',effect:'50% Health'},
-    {id:'dh5',x:60,y:262,type:'health',label:'Syrupy Caramel Slice',icon:'🍬',recipe:'Syrupy Batter + Crunchy Caramel',effect:'50% Health'},
-    {id:'dh6',x:60,y:317,type:'health',label:"Splicer's Delight",icon:'🧬',recipe:'Syrupy Batter + Sweetened Mucous + Cream',effect:'50% Health'},
-    {id:'dj1',x:60,y:412,type:'jetpack',label:'Cake of the Lost',icon:'🌀',recipe:'Writhing Batter + Viscous Custard',effect:'Jetpack +8s'},
-    {id:'dj2',x:60,y:467,type:'jetpack',label:'Burning Jam Surprise',icon:'🔥',recipe:'Writhing Batter + Ever-burning Jam + Cream',effect:'Jetpack +8s'},
-    {id:'dj3',x:60,y:522,type:'jetpack',label:'Caramelised Nightmare',icon:'🌑',recipe:'Writhing Batter + Crunchy Caramel',effect:'Jetpack +8s'},
-    {id:'dj4',x:60,y:602,type:'jetpack',label:'Doomed Cream Cake',icon:'💀',recipe:'Wailing Batter + Cream',effect:'Jetpack +8s'},
-    {id:'dj5',x:60,y:657,type:'jetpack',label:'Cake of Glass',icon:'💎',recipe:'Wailing Batter + Anomalous Jam + Cream',effect:'Jetpack +8s'},
-    {id:'dj6',x:60,y:737,type:'jetpack',label:'Chocolate Dream',icon:'💙',recipe:'Extra-Fluffy Batter + Bittersweet Cocoa',effect:'Jetpack +8s'},
-    {id:'dj7',x:60,y:792,type:'jetpack',label:'Honied Angel Cake',icon:'😇',recipe:'Extra-Fluffy Batter + Synthetic Honey',effect:'Jetpack +8s'},
-    {id:'ds1',x:60,y:872,type:'stamina',label:'Sweet Cream Dreams',icon:'⭐',recipe:'Thick Sweet Batter + Cream',effect:'Stamina +15s'},
-    {id:'ds2',x:60,y:927,type:'stamina',label:'Gooey Chocolate Cake',icon:'🍫',recipe:'Thick Sweet Batter + Bittersweet Cocoa',effect:'Stamina +15s'},
-    {id:'dc1',x:60,y:1007,type:'hazard',label:'Cream Buns',icon:'🍞',recipe:'Cake Batter + Cream',effect:'Hazard 50%'},
-    {id:'dc2',x:60,y:1062,type:'hazard',label:'Custard Fancy',icon:'🍮',recipe:'Cake Batter + Viscous Custard',effect:'Hazard 50%'},
-    {id:'dc3',x:60,y:1117,type:'hazard',label:'Chocolate Cake',icon:'🎂',recipe:'Cake Batter + Bittersweet Cocoa',effect:'Hazard 50%'},
-    {id:'dc4',x:60,y:1172,type:'hazard',label:'Glittering Honey Cake',icon:'🍰',recipe:'Cake Batter + Synthetic Honey',effect:'Hazard 50%'},
-    {id:'sb',x:300,y:179,type:'batter',label:'Syrupy Batter',icon:'💧',recipe:'Syrupy Nectar x1',how:'Single Processor step. Feeds all 50% Health dishes.'},
-    {id:'wr',x:300,y:467,type:'batter',label:'Writhing Roiling Batter',icon:'🌑',recipe:'Wailing Batter + any ingredient',how:'Top-tier batter. Highest Cronus nanite value.'},
-    {id:'wa1',x:300,y:629,type:'batter',label:'Wailing Batter',icon:'😱',recipe:'Extra-Fluffy Batter + any ingredient',how:'2nd batter tier. Feeds Wailing Jetpack dishes directly.'},
-    {id:'ef1',x:300,y:764,type:'batter',label:'Extra-Fluffy Batter',icon:'☁',recipe:'Cake Batter + any ingredient',how:'3rd batter tier. Also feeds Extra-Fluffy dishes.'},
-    {id:'ts',x:300,y:899,type:'batter',label:'Thick Sweet Batter',icon:'🧁',recipe:'Cake Batter + Gooey Butter',how:'Stamina branch from Cake Batter.'},
-    {id:'sn',x:540,y:179,type:'raw',label:'Syrupy Nectar',icon:'🌸',how:'Rare fauna byproduct. Feed large docile/exotic creatures. Use Livestock Unit + Feeder.'},
-    {id:'wa2',x:540,y:467,type:'batter',label:'Wailing Batter',icon:'😱',recipe:'Extra-Fluffy Batter + any ingredient',how:'Needed by Writhing Batter.'},
-    {id:'ef2',x:540,y:629,type:'batter',label:'Extra-Fluffy Batter',icon:'☁',recipe:'Cake Batter + any ingredient',how:'Needed by Wailing Batter.'},
-    {id:'cb1',x:540,y:764,type:'base',label:'Cake Batter',icon:'🎂',recipe:'Sweetened Butter + Refined Flour + Creature Egg',how:'The central base of most cooking chains.'},
-    {id:'cb2',x:540,y:899,type:'base',label:'Cake Batter',icon:'🎂',recipe:'Sweetened Butter + Refined Flour + Creature Egg',how:'Cake Batter — source for Thick Sweet Batter.'},
-    {id:'ef3',x:780,y:467,type:'batter',label:'Extra-Fluffy Batter',icon:'☁',recipe:'Cake Batter + any ingredient',how:'Three steps back from Writhing dish.'},
-    {id:'cb3',x:780,y:580,type:'base',label:'Cake Batter',icon:'🎂',recipe:'Sweetened Butter + Refined Flour + Creature Egg',how:'Root of Extra-Fluffy (Writhing chain).'},
-    {id:'cb4',x:780,y:899,type:'base',label:'Cake Batter',icon:'🎂',recipe:'Sweetened Butter + Refined Flour + Creature Egg',how:'Source for Hazard dishes directly.'},
-    {id:'cbX',x:1020,y:680,type:'base',label:'Cake Batter',icon:'🎂',recipe:'Sweetened Butter + Refined Flour + Creature Egg',how:'The spine. All batter chains trace back here.'},
-    {id:'sb2',x:1020,y:800,type:'l2',label:'Sweetened Butter',icon:'🧈',recipe:'Cream + Processed Sugar',how:'Two-ingredient Processor step.'},
-    {id:'rf',x:1020,y:880,type:'l2',label:'Refined Flour',icon:'🌾',recipe:'Glass Grains x1',how:'From Glass Grains. Glass Grains from Frost Crystal or Heptaloid Wheat.'},
-    {id:'eg',x:1020,y:960,type:'raw',label:'Creature Egg',icon:'🥚',how:'Collect from creature nests. Egg-type fauna drop it when fed.'},
-    {id:'cr',x:1260,y:780,type:'l1',label:'Cream',icon:'🍦',recipe:'Wild Milk x1',how:'Single Processor step from Wild Milk.'},
-    {id:'ps',x:1260,y:860,type:'l1',label:'Processed Sugar',icon:'🍬',recipe:'Solanium x1 (or any sweet plant)',how:'Any sweet plant (Solanium, Cactus Flesh, Star Bulb) x1.'},
-    {id:'gg',x:1260,y:940,type:'l1',label:'Glass Grains',icon:'🌾',recipe:'Frost Crystal x1 or Heptaloid Wheat x1',how:'From Frost Crystal (frozen worlds) or Heptaloid Wheat (farmable).'},
-    {id:'wm',x:1500,y:760,type:'raw',label:'Wild Milk',icon:'🥛',how:'Feed docile herbivore creatures. Livestock Unit + Automated Feeder for passive supply.'},
-    {id:'sol',x:1500,y:840,type:'raw',label:'Solanium',icon:'🌶',how:'Harvest from plants on scorching hot planets. Farm in Biodomes.'},
-    {id:'fc',x:1500,y:920,type:'raw',label:'Frost Crystal / Heptaloid Wheat',icon:'❄',how:'Frost Crystal from frozen worlds; Heptaloid Wheat farmable in Hydroponic Trays.'},
-    {id:'ic',x:1500,y:460,type:'raw',label:'Impulse Beans',icon:'🫘',how:'Grows on lush planets. Sold by NPC traders. Processes into Bittersweet Cocoa.'},
-    {id:'sh',x:1500,y:540,type:'raw',label:'Synthetic Honey',icon:'🍯',how:'Byproduct from insectoid creatures. Use Creature Pellets + Livestock Unit.'},
-    {id:'bc',x:1260,y:460,type:'l1',label:'Bittersweet Cocoa',icon:'🍫',recipe:'Impulse Beans x1',how:'Single Processor step. Used in all chocolate-variant dishes.'},
-  ];
-
-  var EDGES=[
-    {f:'dh1',t:'sb'},{f:'dh2',t:'sb'},{f:'dh3',t:'sb'},{f:'dh4',t:'sb'},{f:'dh5',t:'sb'},{f:'dh6',t:'sb'},
-    {f:'sb',t:'sn'},
-    {f:'dj1',t:'wr'},{f:'dj2',t:'wr'},{f:'dj3',t:'wr'},
-    {f:'wr',t:'wa2'},{f:'wa2',t:'ef3'},{f:'ef3',t:'cb3'},{f:'cb3',t:'cbX'},
-    {f:'dj4',t:'wa1'},{f:'dj5',t:'wa1'},{f:'wa1',t:'ef2'},{f:'ef2',t:'cb1'},{f:'cb1',t:'cbX'},
-    {f:'dj6',t:'ef1'},{f:'dj7',t:'ef1'},{f:'ef1',t:'cb1'},
-    {f:'ds1',t:'ts'},{f:'ds2',t:'ts'},{f:'ts',t:'cb2'},{f:'cb2',t:'cbX'},
-    {f:'dc1',t:'cb4'},{f:'dc2',t:'cb4'},{f:'dc3',t:'cb4'},{f:'dc4',t:'cb4'},{f:'cb4',t:'cbX'},
-    {f:'cbX',t:'sb2'},{f:'cbX',t:'rf'},{f:'cbX',t:'eg'},
-    {f:'sb2',t:'cr'},{f:'sb2',t:'ps'},{f:'rf',t:'gg'},{f:'cr',t:'wm'},{f:'ps',t:'sol'},{f:'gg',t:'fc'},
-    {f:'dh2',t:'bc',dot:1},{f:'dj6',t:'bc',dot:1},{f:'ds2',t:'bc',dot:1},{f:'dc3',t:'bc',dot:1},
-    {f:'bc',t:'ic'},{f:'dh3',t:'sh',dot:1},{f:'dj7',t:'sh',dot:1},
-  ];
-
-  var nodeMap={};
-  NODES.forEach(function(n){nodeMap[n.id]=n;});
-
-  // Build DOM
-  var canvas=document.createElement('div');
-  canvas.style.cssText='position:absolute;transform-origin:0 0;';
-  container.appendChild(canvas);
-
-  // SVG layer
-  var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.style.cssText='position:absolute;left:0;top:0;overflow:visible;pointer-events:none;';
-  svg.setAttribute('width',W);svg.setAttribute('height',H);
-  var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
-  defs.innerHTML='<marker id="cfArr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="rgba(217,70,239,.3)"/></marker><marker id="cfArrHi" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="rgba(217,70,239,.9)"/></marker>';
-  svg.appendChild(defs);
-  canvas.appendChild(svg);
-
-  // Column zones
-  [{x:0,w:230,bg:'rgba(251,113,133,.015)',l:'OUTPUTS'},{x:230,w:270,bg:'rgba(217,70,239,.015)',l:'BATTER CHAIN'},{x:500,w:740,bg:'rgba(167,139,250,.012)',l:'PROCESSING'},{x:1240,w:440,bg:'rgba(52,211,153,.015)',l:'RAW SOURCES'}].forEach(function(z){
-    var d=document.createElement('div');
-    d.style.cssText='position:absolute;border-right:1px solid rgba(255,255,255,.025);';
-    d.style.left=z.x+'px';d.style.top='0';d.style.width=z.w+'px';d.style.height=H+'px';d.style.background=z.bg;
-    var lbl=document.createElement('span');
-    lbl.style.cssText='position:absolute;top:8px;left:10px;font:7px/1 DM Mono,monospace;letter-spacing:4px;color:rgba(255,255,255,.07);text-transform:uppercase;';
-    lbl.textContent=z.l;d.appendChild(lbl);canvas.appendChild(d);
-  });
-
-  // Create edge paths
-  var edgePaths={};
-  EDGES.forEach(function(e,i){
-    var fn=nodeMap[e.f],tn=nodeMap[e.t];
-    if(!fn||!tn)return;
-    var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  var el=document.getElementById('cookingFlowChart');
+  if(!el)return;
+  var W=1680,H=1280,NW=152,NH=46,pan={x:16,y:16},hasMoved=false,selected=null,t0=null;
+  var T={health:{c:'#fb7185',bg:'#12040a',bdr:'#4a0f1a',tag:'S HEALTH'},jetpack:{c:'#7dd3fc',bg:'#040c14',bdr:'#0f3050',tag:'A JETPACK'},stamina:{c:'#2dd4bf',bg:'#030e0c',bdr:'#0a3830',tag:'B STAMINA'},hazard:{c:'#fbbf24',bg:'#100c02',bdr:'#4a3a06',tag:'C HAZARD'},batter:{c:'#d946ef',bg:'#0f0514',bdr:'#4a1060',tag:'BATTER'},base:{c:'#a78bfa',bg:'#0c0816',bdr:'#362a60',tag:'BASE'},l1:{c:'#818cf8',bg:'#0a0816',bdr:'#282460',tag:'PROCESSED'},l2:{c:'#60a5fa',bg:'#040c18',bdr:'#103050',tag:'PROCESSED'},raw:{c:'#34d399',bg:'#030e08',bdr:'#0f3a20',tag:'RAW'}};
+  var N=[{id:'dh1',x:60,y:42,t:'health',l:'Creamy Clouds',r:'Syrupy Batter + Cream',e:'50% Health'},{id:'dh2',x:60,y:97,t:'health',l:'Chocolate Oozer',r:'Syrupy Batter + Bittersweet Cocoa',e:'50% Health'},{id:'dh3',x:60,y:152,t:'health',l:'Ambrosial Wonder',r:'Syrupy Batter + Synthetic Honey',e:'50% Health'},{id:'dh4',x:60,y:207,t:'health',l:'Sponge of Ambrosia',r:'Syrupy Batter + Viscous Custard',e:'50% Health'},{id:'dh5',x:60,y:262,t:'health',l:'Syrupy Caramel Slice',r:'Syrupy Batter + Crunchy Caramel',e:'50% Health'},{id:'dh6',x:60,y:317,t:'health',l:"Splicer's Delight",r:'Syrupy Batter + Sweetened Mucous + Cream',e:'50% Health'},{id:'dj1',x:60,y:412,t:'jetpack',l:'Cake of the Lost',r:'Writhing Batter + Viscous Custard',e:'Jetpack +8s'},{id:'dj2',x:60,y:467,t:'jetpack',l:'Burning Jam Surprise',r:'Writhing Batter + Ever-burning Jam + Cream',e:'Jetpack +8s'},{id:'dj3',x:60,y:522,t:'jetpack',l:'Caramelised Nightmare',r:'Writhing Batter + Crunchy Caramel',e:'Jetpack +8s'},{id:'dj4',x:60,y:602,t:'jetpack',l:'Doomed Cream Cake',r:'Wailing Batter + Cream',e:'Jetpack +8s'},{id:'dj5',x:60,y:657,t:'jetpack',l:'Cake of Glass',r:'Wailing Batter + Anomalous Jam + Cream',e:'Jetpack +8s'},{id:'dj6',x:60,y:737,t:'jetpack',l:'Chocolate Dream',r:'Extra-Fluffy Batter + Bittersweet Cocoa',e:'Jetpack +8s'},{id:'dj7',x:60,y:792,t:'jetpack',l:'Honied Angel Cake',r:'Extra-Fluffy Batter + Synthetic Honey',e:'Jetpack +8s'},{id:'ds1',x:60,y:872,t:'stamina',l:'Sweet Cream Dreams',r:'Thick Sweet Batter + Cream',e:'Stamina +15s'},{id:'ds2',x:60,y:927,t:'stamina',l:'Gooey Chocolate Cake',r:'Thick Sweet Batter + Bittersweet Cocoa',e:'Stamina +15s'},{id:'dc1',x:60,y:1007,t:'hazard',l:'Cream Buns',r:'Cake Batter + Cream',e:'Hazard 50%'},{id:'dc2',x:60,y:1062,t:'hazard',l:'Custard Fancy',r:'Cake Batter + Viscous Custard',e:'Hazard 50%'},{id:'dc3',x:60,y:1117,t:'hazard',l:'Chocolate Cake',r:'Cake Batter + Bittersweet Cocoa',e:'Hazard 50%'},{id:'dc4',x:60,y:1172,t:'hazard',l:'Glittering Honey Cake',r:'Cake Batter + Synthetic Honey',e:'Hazard 50%'},{id:'sb',x:300,y:179,t:'batter',l:'Syrupy Batter',r:'Syrupy Nectar x1',h:'Single Processor step. Feeds all 50% Health dishes.'},{id:'wr',x:300,y:467,t:'batter',l:'Writhing Roiling Batter',r:'Wailing Batter + any ingredient',h:'Top-tier batter. Highest Cronus nanite value.'},{id:'wa1',x:300,y:629,t:'batter',l:'Wailing Batter',r:'Extra-Fluffy Batter + any ingredient',h:'2nd batter tier. Feeds Wailing Jetpack dishes.'},{id:'ef1',x:300,y:764,t:'batter',l:'Extra-Fluffy Batter',r:'Cake Batter + any ingredient',h:'3rd batter tier. Also feeds Extra-Fluffy dishes.'},{id:'ts',x:300,y:899,t:'batter',l:'Thick Sweet Batter',r:'Cake Batter + Gooey Butter',h:'Stamina branch from Cake Batter.'},{id:'sn',x:540,y:179,t:'raw',l:'Syrupy Nectar',h:'Rare fauna byproduct. Feed docile creatures with Creature Pellets. Livestock Unit + Feeder.'},{id:'wa2',x:540,y:467,t:'batter',l:'Wailing Batter',r:'Extra-Fluffy Batter + any ingredient',h:'Needed by Writhing Batter.'},{id:'ef2',x:540,y:629,t:'batter',l:'Extra-Fluffy Batter',r:'Cake Batter + any ingredient',h:'Needed by Wailing Batter.'},{id:'cb1',x:540,y:764,t:'base',l:'Cake Batter',r:'Sweetened Butter + Refined Flour + Creature Egg',h:'Central base of most cooking chains.'},{id:'cb2',x:540,y:899,t:'base',l:'Cake Batter',r:'Sweetened Butter + Refined Flour + Creature Egg',h:'Source for Thick Sweet Batter.'},{id:'ef3',x:780,y:467,t:'batter',l:'Extra-Fluffy Batter',r:'Cake Batter + any ingredient',h:'Three steps back from Writhing dish.'},{id:'cb3',x:780,y:580,t:'base',l:'Cake Batter',r:'Sweetened Butter + Refined Flour + Creature Egg',h:'Root of Extra-Fluffy (Writhing chain).'},{id:'cb4',x:780,y:899,t:'base',l:'Cake Batter',r:'Sweetened Butter + Refined Flour + Creature Egg',h:'Source for Hazard dishes.'},{id:'cbX',x:1020,y:680,t:'base',l:'Cake Batter',r:'Sweetened Butter + Refined Flour + Creature Egg',h:'All batter chains trace back here.'},{id:'sb2',x:1020,y:800,t:'l2',l:'Sweetened Butter',r:'Cream + Processed Sugar',h:'Two-ingredient Processor step.'},{id:'rf',x:1020,y:880,t:'l2',l:'Refined Flour',r:'Glass Grains x1',h:'Glass Grains from Frost Crystal or Heptaloid Wheat.'},{id:'eg',x:1020,y:960,t:'raw',l:'Creature Egg',h:'Collect from creature nests.'},{id:'cr',x:1260,y:780,t:'l1',l:'Cream',r:'Wild Milk x1',h:'Single Processor step from Wild Milk.'},{id:'ps',x:1260,y:860,t:'l1',l:'Processed Sugar',r:'Solanium x1 (or sweet plant)',h:'Any sweet plant x1.'},{id:'gg',x:1260,y:940,t:'l1',l:'Glass Grains',r:'Frost Crystal x1 or Heptaloid Wheat x1',h:'From Frost Crystal or Heptaloid Wheat (farmable).'},{id:'wm',x:1500,y:760,t:'raw',l:'Wild Milk',h:'Feed docile herbivore creatures with Creature Pellets.'},{id:'sol',x:1500,y:840,t:'raw',l:'Solanium',h:'Harvest on scorching planets. Farm in Biodomes.'},{id:'fc',x:1500,y:920,t:'raw',l:'Frost Crystal / Heptaloid Wheat',h:'Frost Crystal: frozen worlds. Heptaloid Wheat: farmable in Hydroponic Trays.'},{id:'ic',x:1500,y:460,t:'raw',l:'Impulse Beans',h:'Grows on lush planets. Sold by traders. -> Bittersweet Cocoa.'},{id:'sh',x:1500,y:540,t:'raw',l:'Synthetic Honey',h:'Byproduct from insectoid creatures. Creature Pellets + Livestock Unit.'},{id:'bc',x:1260,y:460,t:'l1',l:'Bittersweet Cocoa',r:'Impulse Beans x1',h:'Single Processor step. Used in all chocolate-variant dishes.'}];
+  var E=[{f:'dh1',t:'sb'},{f:'dh2',t:'sb'},{f:'dh3',t:'sb'},{f:'dh4',t:'sb'},{f:'dh5',t:'sb'},{f:'dh6',t:'sb'},{f:'sb',t:'sn'},{f:'dj1',t:'wr'},{f:'dj2',t:'wr'},{f:'dj3',t:'wr'},{f:'wr',t:'wa2'},{f:'wa2',t:'ef3'},{f:'ef3',t:'cb3'},{f:'cb3',t:'cbX'},{f:'dj4',t:'wa1'},{f:'dj5',t:'wa1'},{f:'wa1',t:'ef2'},{f:'ef2',t:'cb1'},{f:'cb1',t:'cbX'},{f:'dj6',t:'ef1'},{f:'dj7',t:'ef1'},{f:'ef1',t:'cb1'},{f:'ds1',t:'ts'},{f:'ds2',t:'ts'},{f:'ts',t:'cb2'},{f:'cb2',t:'cbX'},{f:'dc1',t:'cb4'},{f:'dc2',t:'cb4'},{f:'dc3',t:'cb4'},{f:'dc4',t:'cb4'},{f:'cb4',t:'cbX'},{f:'cbX',t:'sb2'},{f:'cbX',t:'rf'},{f:'cbX',t:'eg'},{f:'sb2',t:'cr'},{f:'sb2',t:'ps'},{f:'rf',t:'gg'},{f:'cr',t:'wm'},{f:'ps',t:'sol'},{f:'gg',t:'fc'},{f:'dh2',t:'bc',d:1},{f:'dj6',t:'bc',d:1},{f:'ds2',t:'bc',d:1},{f:'dc3',t:'bc',d:1},{f:'bc',t:'ic'},{f:'dh3',t:'sh',d:1},{f:'dj7',t:'sh',d:1}];
+  var nm={};N.forEach(function(n){nm[n.id]=n;});
+  var cv=document.createElement('div');cv.style.cssText='position:absolute;top:0;left:0;will-change:transform;';el.appendChild(cv);
+  var svgNS='http://www.w3.org/2000/svg';
+  var sg=document.createElementNS(svgNS,'svg');sg.setAttribute('width',String(W));sg.setAttribute('height',String(H));sg.style.cssText='position:absolute;top:0;left:0;pointer-events:none;overflow:visible;display:block;';cv.appendChild(sg);
+  var ep={};
+  E.forEach(function(e){
+    var fn=nm[e.f],tn=nm[e.t];if(!fn||!tn)return;
     var x1=fn.x+NW,y1=fn.y+NH/2,x2=tn.x,y2=tn.y+NH/2,dx=(x2-x1)*.55;
-    p.setAttribute('d','M'+x1+' '+y1+' C'+(x1+dx)+' '+y1+' '+(x2-dx)+' '+y2+' '+x2+' '+y2);
-    p.setAttribute('fill','none');
-    p.setAttribute('stroke','rgba(217,70,239,.25)');
-    p.setAttribute('stroke-width','1');
-    p.setAttribute('stroke-opacity',e.dot?.15:.35);
-    if(e.dot)p.setAttribute('stroke-dasharray','4 5');
-    p.setAttribute('marker-end','url(#cfArr)');
-    svg.appendChild(p);
-    edgePaths[e.f+'->'+e.t]=p;
+    var p=document.createElementNS(svgNS,'path');p.setAttribute('d','M'+x1+' '+y1+' C'+(x1+dx)+' '+y1+' '+(x2-dx)+' '+y2+' '+x2+' '+y2);p.setAttribute('fill','none');p.setAttribute('stroke',e.d?'rgba(217,70,239,0.18)':'rgba(217,70,239,0.3)');p.setAttribute('stroke-width',e.d?'1':'1.5');if(e.d)p.setAttribute('stroke-dasharray','4 5');sg.appendChild(p);
+    var obj={p:p};
+    if(!e.d){var ax=x2-8,ay=y2;var a=document.createElementNS(svgNS,'polyline');a.setAttribute('points',(ax-7)+','+(ay-4)+' '+x2+','+ay+' '+(ax-7)+','+(ay+4));a.setAttribute('fill','none');a.setAttribute('stroke','rgba(217,70,239,0.35)');a.setAttribute('stroke-width','1.5');a.setAttribute('stroke-linejoin','round');sg.appendChild(a);obj.a=a;}
+    ep[e.f+'->'+e.t]=obj;
   });
-
-  // Detail card
-  var card=document.createElement('div');
-  card.style.cssText='position:fixed;display:none;width:280px;z-index:9999;background:#0e0812;border-radius:10px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,.7);font-family:DM Sans,sans-serif;';
-  document.body.appendChild(card);
-
-  function showCard(node,screenX,screenY){
-    var ts=T[node.type];
-    card.style.borderColor=ts.c;
-    card.style.border='1px solid '+ts.c;
-    var lines=['<div style="font:8px/1 DM Mono,monospace;letter-spacing:3px;color:'+ts.c+';text-transform:uppercase;margin-bottom:5px;opacity:.8">'+ts.tag+'</div>',
-      '<div style="font:italic 19px/1.2 DM Serif Display,serif;color:#f8f0ff;margin-bottom:12px">'+node.label+'</div>'];
-    if(node.effect)lines.push('<div style="display:inline-block;margin-bottom:10px;font:9px/1 DM Mono,monospace;padding:2px 12px;border-radius:20px;background:'+ts.c+'20;color:'+ts.c+';border:1px solid '+ts.c+'44">'+node.effect+'</div>');
-    if(node.recipe)lines.push('<div style="margin-bottom:10px"><div style="font:8px/1 DM Mono,monospace;letter-spacing:2px;color:'+ts.c+';text-transform:uppercase;margin-bottom:6px">Recipe</div><div style="background:rgba(255,255,255,.03);border-radius:5px;padding:9px;border:1px dashed rgba(255,255,255,.07);font:10.5px/1.85 DM Mono,monospace;color:#c0a8d8">'+node.recipe+'</div></div>');
-    if(node.how)lines.push('<div><div style="font:8px/1 DM Mono,monospace;letter-spacing:2px;color:'+ts.c+';text-transform:uppercase;margin-bottom:5px">'+(node.type==="raw"?"Where to Get":"Notes")+'</div><div style="font:12px/1.65 DM Sans,sans-serif;color:#7060a0">'+node.how+'</div></div>');
-    lines.push('<button onclick="this.parentNode.style.display='none'" style="position:absolute;top:8px;right:10px;background:transparent;border:none;color:rgba(255,255,255,.3);font-size:18px;cursor:pointer">×</button>');
-    card.innerHTML=lines.join('');
-    var cx=Math.min(screenX+16,window.innerWidth-300);
-    var cy=Math.min(Math.max(screenY-40,60),window.innerHeight-280);
-    card.style.left=cx+'px';card.style.top=cy+'px';card.style.display='block';
-  }
-
-  // Create node elements
-  var nodeEls={};
-  NODES.forEach(function(node){
-    var ts=T[node.type];
-    var isPill=['health','jetpack','stamina','hazard'].indexOf(node.type)>=0;
-    var el=document.createElement('div');
-    el.style.cssText='position:absolute;cursor:pointer;display:flex;align-items:center;gap:7px;padding:0 10px;transition:opacity .12s,border-color .12s,box-shadow .12s;user-select:none;';
-    el.style.left=node.x+'px';el.style.top=node.y+'px';
-    el.style.width=NW+'px';el.style.height=NH+'px';
-    el.style.borderRadius=isPill?NH/2+'px':'7px';
-    el.style.background=ts.bg;
-    el.style.border='1px solid '+ts.bdr;
-    var icon=document.createElement('span');
-    icon.style.cssText='font-size:14px;flex-shrink:0;opacity:.85;';
-    icon.textContent=node.icon;
-    var label=document.createElement('span');
-    label.style.cssText='font:'+(node.label.length>18?'8.5':'9.5')+'px/1.2 DM Mono,monospace;font-weight:500;letter-spacing:.3px;color:'+ts.c+'cc;';
-    label.textContent=node.label;
-    el.appendChild(icon);el.appendChild(label);
-    el.addEventListener('click',function(ev){
-      ev.stopPropagation();
-      if(selected===node.id){selected=null;card.style.display='none';updateHighlight();}
-      else{selected=node.id;var r=el.getBoundingClientRect();showCard(node,r.right,r.top);updateHighlight();}
-    });
-    canvas.appendChild(el);
-    nodeEls[node.id]=el;
+  var card=document.createElement('div');card.style.cssText='position:absolute;display:none;width:248px;z-index:20;border-radius:10px;padding:14px;background:#0e0812;font-family:sans-serif;box-shadow:0 6px 24px rgba(0,0,0,0.85);';el.appendChild(card);
+  var nel={};
+  N.forEach(function(n){
+    var ts=T[n.t];var pill=['health','jetpack','stamina','hazard'].indexOf(n.t)>=0;
+    var d=document.createElement('div');d.style.cssText='position:absolute;display:flex;align-items:center;padding:0 8px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;';d.style.left=n.x+'px';d.style.top=n.y+'px';d.style.width=NW+'px';d.style.height=NH+'px';d.style.borderRadius=pill?(NH/2)+'px':'7px';d.style.background=ts.bg;d.style.border='1px solid '+ts.bdr;
+    var lb=document.createElement('span');lb.style.cssText='pointer-events:none;font-weight:500;letter-spacing:.3px;';lb.style.color=ts.c+'bb';lb.style.fontSize=(n.l.length>18?'8':'9.5')+'px';lb.textContent=n.l;d.appendChild(lb);
+    function tap(ev){ev.stopPropagation();if(selected===n.id){selected=null;card.style.display='none';}else{selected=n.id;var ts2=T[n.t];card.style.border='1px solid '+ts2.c;var h='<button id="cfC" style="position:absolute;top:5px;right:8px;background:none;border:none;color:rgba(255,255,255,.5);font-size:20px;cursor:pointer;-webkit-tap-highlight-color:transparent;padding:2px 6px;">x</button><div style="font:8px/1 monospace;letter-spacing:2px;color:'+ts2.c+';text-transform:uppercase;margin-bottom:4px">'+ts2.tag+'</div><div style="font:bold 16px/1.2 serif;color:#f8f0ff;margin-bottom:8px">'+n.l+'</div>';if(n.e)h+='<span style="font:9px/1 monospace;padding:2px 10px;border-radius:14px;background:'+ts2.c+'20;color:'+ts2.c+';border:1px solid '+ts2.c+'44;display:inline-block;margin-bottom:8px">'+n.e+'</span><br>';if(n.r)h+='<div style="margin-bottom:8px"><div style="font:8px/1 monospace;color:'+ts2.c+';text-transform:uppercase;margin-bottom:3px">RECIPE</div><div style="font:10px/1.7 monospace;color:#c0a8d8;background:rgba(255,255,255,.03);padding:7px;border-radius:4px">'+n.r+'</div></div>';if(n.h)h+='<div style="font:8px/1 monospace;color:'+ts2.c+';text-transform:uppercase;margin-bottom:3px">'+(n.t==='raw'?'WHERE TO GET':'NOTES')+'</div><div style="font:12px/1.6 sans-serif;color:#7060a0">'+n.h+'</div>';card.innerHTML=h;var cw=el.offsetWidth||600,ch=el.offsetHeight||640;card.style.left=Math.max(4,Math.min(n.x+pan.x+NW+8,cw-256))+'px';card.style.top=Math.max(4,Math.min(n.y+pan.y-20,ch-200))+'px';card.style.display='block';var btn=document.getElementById('cfC');if(btn){function cc(e2){e2.stopPropagation();e2.preventDefault();card.style.display='none';selected=null;upd();}btn.addEventListener('click',cc);btn.addEventListener('touchend',cc);}}upd();}
+    d.addEventListener('click',tap);d.addEventListener('touchend',function(e){if(!hasMoved){e.preventDefault();tap(e);}});cv.appendChild(d);nel[n.id]=d;
   });
-
-  function updateHighlight(){
-    var connected=selected?new Set([selected].concat(EDGES.filter(function(e){return e.f===selected||e.t===selected;}).flatMap(function(e){return[e.f,e.t];}))) : null;
-    NODES.forEach(function(node){
-      var el=nodeEls[node.id];var ts=T[node.type];
-      var isSel=selected===node.id;
-      var isConn=connected&&connected.has(node.id);
-      var dim=!!selected&&!isConn;
-      el.style.opacity=dim?'.15':'1';
-      el.style.borderColor=isSel||isConn?ts.c:ts.bdr;
-      el.style.boxShadow=isSel?'0 0 18px '+ts.c+'55,0 0 36px '+ts.c+'22':isConn?'0 0 10px '+ts.c+'33':'none';
-      el.querySelector('span:last-child').style.color=isSel||isConn?ts.c:ts.c+'cc';
-    });
-    Object.keys(edgePaths).forEach(function(key){
-      var p=edgePaths[key];var parts=key.split('->');var f=parts[0],t=parts[1];
-      var isConn=connected&&(connected.has(f)||connected.has(t));
-      var dim=!!selected&&!isConn;
-      p.setAttribute('stroke',isConn?T[nodeMap[f].type].c:'rgba(217,70,239,.25)');
-      p.setAttribute('stroke-width',isConn?'2':'1');
-      p.setAttribute('stroke-opacity',dim?.05:isConn?1:.35);
-      p.setAttribute('marker-end',isConn?'url(#cfArrHi)':'url(#cfArr)');
-    });
-  }
-
-  function applyPan(){
-    canvas.style.transform='translate('+pan.x+'px,'+pan.y+'px)';
-  }
-
-  container.addEventListener('mousedown',function(e){
-    if(e.target.closest&&e.target.closest('[data-nid]'))return;
-    dragging=true;dragStart={x:e.clientX-pan.x,y:e.clientY-pan.y};
-    container.style.cursor='grabbing';
-  });
-  window.addEventListener('mousemove',function(e){
-    if(!dragging)return;
-    pan.x=e.clientX-dragStart.x;pan.y=e.clientY-dragStart.y;
-    applyPan();
-  });
-  window.addEventListener('mouseup',function(){dragging=false;container.style.cursor='grab';});
-  container.addEventListener('click',function(e){if(!e.target.closest('.cfNode')){selected=null;card.style.display='none';updateHighlight();}});
-
-  // Touch support
-  var lastTouch=null;
-  container.addEventListener('touchstart',function(e){lastTouch={x:e.touches[0].clientX-pan.x,y:e.touches[0].clientY-pan.y};},{passive:true});
-  container.addEventListener('touchmove',function(e){
-    if(!lastTouch)return;
-    pan.x=e.touches[0].clientX-lastTouch.x;pan.y=e.touches[0].clientY-lastTouch.y;
-    applyPan();e.preventDefault();
-  },{passive:false});
-
-  applyPan();
-  updateHighlight();
+  function upd(){var cn={};if(selected){cn[selected]=1;E.forEach(function(e){if(e.f===selected||e.t===selected){cn[e.f]=1;cn[e.t]=1;}});}var hs=!!selected;N.forEach(function(n){var d=nel[n.id];if(!d)return;var ts=T[n.t];var isSel=selected===n.id,isConn=cn[n.id],dim=hs&&!isConn;d.style.opacity=dim?'0.1':'1';d.style.borderColor=isSel||isConn?ts.c:ts.bdr;d.style.boxShadow=isSel?'0 0 14px '+ts.c+'55':isConn?'0 0 7px '+ts.c+'33':'none';d.querySelector('span').style.color=isSel||isConn?ts.c:ts.c+'bb';});Object.keys(ep).forEach(function(k){var obj=ep[k];if(!obj)return;var pts=k.split('->');var isConn=cn[pts[0]]||cn[pts[1]];var dim=hs&&!isConn;var col=isConn?T[nm[pts[0]].t].c:'rgba(217,70,239,0.25)';obj.p.setAttribute('stroke',col);obj.p.setAttribute('stroke-opacity',dim?'0.04':isConn?'1':'0.3');obj.p.setAttribute('stroke-width',isConn?'2':'1.5');if(obj.a){obj.a.setAttribute('stroke',isConn?col:'rgba(217,70,239,0.3)');obj.a.setAttribute('stroke-opacity',dim?'0.04':'0.45');}});}
+  function ap(){cv.style.webkitTransform='translate3d('+pan.x+'px,'+pan.y+'px,0)';cv.style.transform='translate3d('+pan.x+'px,'+pan.y+'px,0)';}
+  el.addEventListener('mousedown',function(e){if(card.contains(e.target))return;hasMoved=false;var sx=e.clientX-pan.x,sy=e.clientY-pan.y;function mm(ev){pan.x=ev.clientX-sx;pan.y=ev.clientY-sy;hasMoved=true;ap();}function mu(){el.style.cursor='grab';document.removeEventListener('mousemove',mm);document.removeEventListener('mouseup',mu);}el.style.cursor='grabbing';document.addEventListener('mousemove',mm);document.addEventListener('mouseup',mu);if(e.target===el||e.target===cv||e.target===sg){selected=null;card.style.display='none';upd();}});
+  el.addEventListener('touchstart',function(e){hasMoved=false;if(e.touches.length===1)t0={x:e.touches[0].clientX-pan.x,y:e.touches[0].clientY-pan.y};},{passive:true});
+  el.addEventListener('touchmove',function(e){if(!t0||e.touches.length!==1)return;var dx=e.touches[0].clientX-t0.x-pan.x,dy=e.touches[0].clientY-t0.y-pan.y;if(Math.abs(dx)>4||Math.abs(dy)>4)hasMoved=true;pan.x=e.touches[0].clientX-t0.x;pan.y=e.touches[0].clientY-t0.y;ap();e.preventDefault();},{passive:false});
+  el.addEventListener('touchend',function(e){t0=null;if(!hasMoved&&(e.target===el||e.target===sg||e.target===cv)){selected=null;card.style.display='none';upd();}},{passive:true});
+  ap();upd();
 })();
-} catch(e) { console.warn("Flowchart error:", e); }
 </script>
 </body>
 </html>
