@@ -675,13 +675,8 @@
     line-height: 1.8;
   }
 
-  /* ── SCROLL REVEAL ── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.55s ease, transform 0.55s ease;
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
+  /* ── SCROLL REVEAL (disabled — content always visible) ── */
+  .reveal { opacity: 1; }
 
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 4px; }
@@ -1349,18 +1344,8 @@
     th.addEventListener('click', function() { doSort(col); });
     th.addEventListener('touchend', function(e) { e.preventDefault(); doSort(col); });
   });
-})();})();
-
-// Scroll reveal
-(function() {
-  const els = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.08 });
-  els.forEach(el => io.observe(el));
 })();
+
 </script>
 
 <script>
